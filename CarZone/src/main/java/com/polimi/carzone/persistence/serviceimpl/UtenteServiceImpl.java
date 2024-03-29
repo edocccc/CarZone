@@ -7,6 +7,7 @@ import com.polimi.carzone.model.Utente;
 import com.polimi.carzone.persistence.repository.UtenteRepository;
 import com.polimi.carzone.persistence.service.UtenteService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +16,10 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class UtenteServiceImpl implements UtenteService {
 
-    @Autowired
-    UtenteRepository utenteRepo;
+    private final UtenteRepository utenteRepo;
 
     @Override
     public Utente findByUsername(String username) {
@@ -45,7 +46,7 @@ public class UtenteServiceImpl implements UtenteService {
 
     @Override
     public boolean registrazioneCliente(SignupRequestDTO request) {
-        //implementare i controlli sulla request
+        //TODO implementare i controlli sulla request
         Utente utente = new Utente();
         utente.setEmail(request.getEmail());
         utente.setDataNascita(request.getDataNascita());

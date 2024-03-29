@@ -32,6 +32,12 @@ public class Veicolo {
     @Column(unique = true,nullable = false)
     private String targa;
 
+    @Column(unique = true,nullable = false)
+    private String marca;
+
+    @Column(unique = true,nullable = false)
+    private String modello;
+
     @Column(nullable = false)
     private int chilometraggio;
 
@@ -46,7 +52,7 @@ public class Veicolo {
     private Alimentazione alimentazione;
 
     @Column(nullable = false)
-    private char prezzo;
+    private double prezzo;
 
     @ManyToOne
     @JoinColumn(

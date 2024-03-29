@@ -6,23 +6,21 @@ import com.polimi.carzone.dto.response.LoginResponseDTO;
 import com.polimi.carzone.model.Utente;
 import com.polimi.carzone.persistence.service.UtenteService;
 import com.polimi.carzone.security.TokenUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/api/v1/utente")
+@RestController
+@RequestMapping("/api/v1/utente")
+@RequiredArgsConstructor
 public class UtenteController {
 
     private final UtenteService utenteService;
 
     private final TokenUtil tokenUtil;
 
-
-    public UtenteController(UtenteService utenteService, TokenUtil tokenUtil) {
-        this.utenteService = utenteService;
-        this.tokenUtil = tokenUtil;
-    }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO request) {
@@ -59,3 +57,4 @@ public class UtenteController {
         return ResponseEntity.status(HttpStatus.OK).body(utente.getUsername() + " dice: Lazio Merda!");
     }
 }
+
