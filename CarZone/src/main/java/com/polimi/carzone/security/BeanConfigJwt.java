@@ -22,7 +22,7 @@ public class BeanConfigJwt {
 
     @Bean
     public UserDetailsService userDetailsService(){
-        // sostituire null con .orElseThrow(UtenteNonTrovatoException::new)
+        //TODO sostituire null con .orElseThrow(UtenteNonTrovatoException::new)
         return username -> utenteRepo.findByUsername(username).orElse(null);
     }
 

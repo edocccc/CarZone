@@ -29,7 +29,7 @@ public class GestoreFilterChain {
                 .authorizeHttpRequests(auth->auth
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/signup").permitAll()
-                        //permettere le cose che non richiedono autenticazione
+                        //TODO permettere le cose che non richiedono autenticazione
                         .requestMatchers("/manager/**").hasRole(Ruolo.MANAGER.toString())
                         .anyRequest().permitAll()
                 ).sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

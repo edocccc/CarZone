@@ -9,9 +9,12 @@ import com.polimi.carzone.persistence.service.UtenteService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -23,7 +26,7 @@ public class UtenteServiceImpl implements UtenteService {
 
     @Override
     public Utente findByUsername(String username) {
-        // sostituire null con .orElseThrow(UtenteNonTrovatoException::new)
+        //TODO sostituire null con .orElseThrow(UtenteNonTrovatoException::new)
         return utenteRepo.findByUsername(username).orElse(null);
     }
 
@@ -46,7 +49,11 @@ public class UtenteServiceImpl implements UtenteService {
 
     @Override
     public boolean registrazioneCliente(SignupRequestDTO request) {
-        //TODO implementare i controlli sulla request
+        boolean controlloRequest = ControllaSignupRequest(request);
+        if(!controlloRequest){
+            return false;
+        }
+
         Utente utente = new Utente();
         utente.setEmail(request.getEmail());
         utente.setDataNascita(request.getDataNascita());
@@ -64,7 +71,11 @@ public class UtenteServiceImpl implements UtenteService {
 
     @Override
     public boolean registrazioneDipendente(SignupRequestDTO request) {
-        //implementare i controlli sulla request
+        boolean controlloRequest = ControllaSignupRequest(request);
+        if(!controlloRequest){
+            return false;
+        }
+
         Utente utente = new Utente();
         utente.setEmail(request.getEmail());
         utente.setDataNascita(request.getDataNascita());
@@ -77,6 +88,36 @@ public class UtenteServiceImpl implements UtenteService {
             e.printStackTrace();
             return false;
         }
+        return true;
+    }
+
+    private boolean ControllaSignupRequest(SignupRequestDTO request){
+        if(request == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La richiesta non può essere vuota");
+        }
+        Optional<Utente> utenteCheck = utenteRepo.findByUsername(request.getUsername());
+        if(utenteCheck.isPresent()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username già in uso");
+        }
+        if(request.getEmail()==null || request.getEmail().isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Devi inserire una email valida");
+        }
+        if(request.getDataNascita()==null || request.getDataNascita().isAfter(LocalDate.now()) || request.getDataNascita().isBefore(LocalDate.of(1900,1,1))){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Devi inserire una data di nascita valida");
+        }
+        if(request.getUsername()==null || request.getUsername().isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Devi inserire uno username valido");
+        }
+        if(request.getPassword()==null || request.getPassword().isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Devi inserire una password valida");
+        }
+        if(request.getPasswordRipetuta()==null || request.getPasswordRipetuta().isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Devi ripetere la password");
+        }
+        if(!request.getPassword().equals(request.getPasswordRipetuta())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Le password non coincidono");
+        }
+
         return true;
     }
 }
