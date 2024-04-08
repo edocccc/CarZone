@@ -29,8 +29,7 @@ public class GestoreFilterChain {
                 .authorizeHttpRequests(auth->auth
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/signup").permitAll()
-                        //TODO permettere le cose che non richiedono autenticazione
-                        .requestMatchers("/manager/**").hasRole(Ruolo.MANAGER.toString())
+                        .requestMatchers("/api/v1/utente/manager/**").hasRole(Ruolo.MANAGER.toString())
                         .anyRequest().permitAll()
                 ).sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(AbstractHttpConfigurer::disable)

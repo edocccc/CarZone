@@ -26,8 +26,12 @@ public class UtenteServiceImpl implements UtenteService {
 
     @Override
     public Utente findByUsername(String username) {
-        //TODO sostituire null con .orElseThrow(UtenteNonTrovatoException::new)
-        return utenteRepo.findByUsername(username).orElse(null);
+        Optional<Utente> utente = utenteRepo.findByUsername(username);
+        if(utente.isPresent()) {
+            return utente.get();
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Utente non trovato");
+        }
     }
 
     @Override
@@ -43,7 +47,7 @@ public class UtenteServiceImpl implements UtenteService {
         if(utente.isPresent()) {
             return utente.get();
         } else {
-            return null;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Credenziali non valide");
         }
     }
 

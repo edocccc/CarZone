@@ -28,7 +28,7 @@ public class VeicoloController {
         }
     }
 
-    @GetMapping("/getAllVeicoli")
+    @GetMapping("/veicoli")
     public ResponseEntity<List<VeicoloResponseDTO>> stampaVeicoli() {
         List<VeicoloResponseDTO> veicoli = veicoloService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(veicoli);

@@ -3,6 +3,7 @@ package com.polimi.carzone.security;
 import com.polimi.carzone.persistence.repository.UtenteRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.server.ResponseStatusException;
 
 @Configuration
 public class BeanConfigJwt {
@@ -22,8 +24,7 @@ public class BeanConfigJwt {
 
     @Bean
     public UserDetailsService userDetailsService(){
-        //TODO sostituire null con .orElseThrow(UtenteNonTrovatoException::new)
-        return username -> utenteRepo.findByUsername(username).orElse(null);
+        return username -> utenteRepo.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Utente non trovato"));
     }
 
     @Bean

@@ -9,7 +9,9 @@ import com.polimi.carzone.persistence.service.VeicoloService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -55,9 +57,7 @@ public class VeicoloServiceImpl implements VeicoloService {
             case "IBRIDA" -> Alimentazione.IBRIDA;
             case "GPL" -> Alimentazione.GPL;
             case "ELETTRICA" -> Alimentazione.ELETTRICA;
-            //TODO da sostituire con un'eccezione
-            default -> Alimentazione.BENZINA;
-            //default -> throw new AlimentazioneNonValidaException("Ruolo non valido");
+            default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Alimentazione non valida");
         };
 
         veicolo.setAlimentazione(alimentazione);
@@ -83,10 +83,9 @@ public class VeicoloServiceImpl implements VeicoloService {
                     veicolo.getPrezzo()
             ));
         }
-        //TODO da sostituire con un'eccezione
-        /*if(veicoliResponse.isEmpty()) {
-            return null;
-        }*/
+        if(veicoliResponse.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Non ci sono veicoli disponibili");
+        }
         return veicoliResponse;
     }
 }
