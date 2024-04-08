@@ -115,12 +115,6 @@ public class UtenteServiceImpl implements UtenteService {
         if(request.getPassword()==null || request.getPassword().isEmpty()){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Devi inserire una password valida");
         }
-        if(request.getPasswordRipetuta()==null || request.getPasswordRipetuta().isEmpty()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Devi ripetere la password");
-        }
-        if(!request.getPassword().equals(request.getPasswordRipetuta())){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Le password non coincidono");
-        }
 
         return true;
     }

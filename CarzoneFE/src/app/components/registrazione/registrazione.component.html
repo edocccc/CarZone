@@ -1,0 +1,19 @@
+<input type="text" required placeholder="Email" [(ngModel)]="email" />
+<input
+  type="date"
+  required
+  placeholder="Data di nascita"
+  [(ngModel)]="dataNascita"
+/>
+<input type="text" required placeholder="Username" [(ngModel)]="username" />
+<input type="text" required placeholder="Password" [(ngModel)]="password" />
+<input
+  type="text"
+  required
+  placeholder="Ripeti password"
+  [(ngModel)]="passwordRipetuta"
+/>
+
+<button (click)="registra()" [disabled]="password != passwordRipetuta">
+  Registrati
+</button>
