@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RegisterRequest } from 'src/app/dto/request/RegisterRequest';
-import { AuthService } from 'src/app/services/auth.service';
+import { UtenteService } from 'src/app/services/utente.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-registrazione',
@@ -14,11 +15,17 @@ export class RegistrazioneComponent {
   protected password: string = '';
   protected passwordRipetuta: string = '';
 
-  constructor(private authService: AuthService) {}
+  constructor(private utenteService: UtenteService) {}
 
   registra(): void {
-    this.authService
-      .registra(this.email, this.dataNascita, this.username, this.password)
+    this.utenteService
+      .registra(
+        this.email,
+        this.dataNascita,
+        this.username,
+        this.password,
+        this.passwordRipetuta
+      )
       .subscribe({
         next: (response) => {
           console.log(response);

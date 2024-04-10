@@ -8,7 +8,7 @@ import { MessageResponse } from '../dto/response/MessageResponse';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+export class UtenteService {
   private backEndUrl: string = globalBackEndUrl + 'utente/';
 
   constructor(private http: HttpClient) {}
@@ -17,9 +17,16 @@ export class AuthService {
     email: string,
     dataNascita: Date,
     username: string,
-    password: string
+    password: string,
+    passwordRipetuta: string
   ): Observable<MessageResponse> {
-    const request: RegisterRequest = { email, dataNascita, username, password };
+    const request: RegisterRequest = {
+      email,
+      dataNascita,
+      username,
+      password,
+      passwordRipetuta,
+    };
     return this.http.post<MessageResponse>(this.backEndUrl + 'signup', request);
   }
 }

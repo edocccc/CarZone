@@ -10,5 +10,6 @@ public class SignupRequestDTO {
     private LocalDate dataNascita;
     private String username;
     private String password;
+    private String passwordRipetuta;
 
 }

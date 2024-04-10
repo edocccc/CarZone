@@ -17,38 +17,33 @@ public class CorsConfig {
    @Bean
    public CorsFilter corsFilter() {
 
-      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(); //Configurazione CORS basata su url.
+      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
       CorsConfiguration config = new CorsConfiguration();
 
-      config.setAllowCredentials(false); //Disattiva la richiesta di credenziali.
-      config.addAllowedOrigin("*"); //Consente l'accesso da qualsiasi origine.
-      config.addAllowedMethod("*"); //Consente tutti i metodi HTTP.
-      config.addAllowedHeader("*"); //Consente tutti gli header.
+      config.setAllowCredentials(false);
+      config.addAllowedOrigin("*");
+      config.addAllowedMethod("*");
+      config.addAllowedHeader("*");
 
-      source.registerCorsConfiguration("/**", config); //Registra la configurazione precedente.
+      source.registerCorsConfiguration("/**", config);
 
       return new CorsFilter(source);
    }
 
-   /**
-    * Configurazione avanzata dei CORS.
-    * @return Oggetto FilterRegistrationBean configurato.
-    */
+
    @Bean
    public FilterRegistrationBean<CorsFilter> simpleCorsFilter() {
 
-      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(); //Configurazione CORS basata su url.
+      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
       CorsConfiguration config = new CorsConfiguration();
 
-      config.setAllowCredentials(false); //Disattiva la richiesta di credenziali.
-      config.setAllowedOrigins(Arrays.asList("http://localhost:8080", "*")); //Consente l'accesso solo dalla porta locale 8080.
-      config.setAllowedMethods(Collections.singletonList("*")); //Qualsiasi metodo è consentito.
-      config.setAllowedHeaders(Collections.singletonList("*")); //Qualsiasi header è consentito.
-      source.registerCorsConfiguration("/**", config); //Registro la configurazione precedente.
+      config.setAllowCredentials(false);
+      config.setAllowedOrigins(Arrays.asList("http://localhost:8080", "*"));
+      config.setAllowedMethods(Collections.singletonList("*"));
+      config.setAllowedHeaders(Collections.singletonList("*"));
+      source.registerCorsConfiguration("/**", config);
 
-      //Registro la configurazione precedente.
       FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
-      //Imposta l'ordine di esecuzione del filtro al valore più alto.
       bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
 
       return bean;

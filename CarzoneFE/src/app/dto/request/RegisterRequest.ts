@@ -3,4 +3,5 @@ export interface RegisterRequest {
   dataNascita: Date;
   username: string;
   password: string;
+  passwordRipetuta: string;
 }

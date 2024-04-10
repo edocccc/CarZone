@@ -13,7 +13,10 @@
   placeholder="Ripeti password"
   [(ngModel)]="passwordRipetuta"
 />
+<div>
+  <button (click)="registra()" [disabled]="password != passwordRipetuta">
+    Registrati
+  </button>
+</div>
 
-<button (click)="registra()" [disabled]="password != passwordRipetuta">
-  Registrati
-</button>
+<a routerLink="/login">Accedi</a>
