@@ -6,6 +6,7 @@ import com.polimi.carzone.dto.response.LoginResponseDTO;
 import com.polimi.carzone.model.Utente;
 import com.polimi.carzone.persistence.service.UtenteService;
 import com.polimi.carzone.security.TokenUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class UtenteController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> registrazioneCliente(@RequestBody SignupRequestDTO request) {
+    public ResponseEntity<String> registrazioneCliente(@Valid @RequestBody SignupRequestDTO request) {
         boolean esito = utenteService.registrazioneCliente(request);
         if (esito) {
             return ResponseEntity.status(HttpStatus.OK).body("Registrazione effettuata con successo!");
@@ -42,7 +43,7 @@ public class UtenteController {
     }
 
     @PostMapping("/manager/registraDipendente")
-    public ResponseEntity<String> registrazioneDipendente(@RequestBody SignupRequestDTO request) {
+    public ResponseEntity<String> registrazioneDipendente(@Valid @RequestBody SignupRequestDTO request) {
         boolean esito = utenteService.registrazioneDipendente(request);
         if (esito) {
             return ResponseEntity.status(HttpStatus.OK).body("Registrazione effettuata con successo!");

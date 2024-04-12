@@ -1,5 +1,7 @@
 package com.polimi.carzone.model;
 
+import com.polimi.carzone.state.State;
+import com.polimi.carzone.state.implementation.Disponibile;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -47,6 +49,8 @@ public class Veicolo {
     @Column(nullable = false)
     private int potenzaCv;
 
+    private State stato;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Alimentazione alimentazione;
@@ -66,4 +70,17 @@ public class Veicolo {
 
     @OneToMany(mappedBy = "veicolo")
     private List<Appuntamento> appuntamentiVeicolo;
+
+    public Veicolo (){
+        this.stato = new Disponibile(this);
+    }
+
+    public void cambiaStato(State stato){
+        this.stato = stato;
+    }
+
+    public State getStato(){
+        return stato;
+    }
+
 }
