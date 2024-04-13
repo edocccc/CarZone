@@ -2,6 +2,7 @@ package com.polimi.carzone.model;
 
 import com.polimi.carzone.state.State;
 import com.polimi.carzone.state.implementation.Disponibile;
+import com.polimi.carzone.state.implementation.Venduto;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,6 @@ import java.util.List;
     )
 )
 @Data
-@NoArgsConstructor
 public class Veicolo {
     @Id
     @SequenceGenerator(
@@ -49,7 +49,8 @@ public class Veicolo {
     @Column(nullable = false)
     private int potenzaCv;
 
-    private State stato;
+    @Transient
+    private State<Veicolo> stato;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -72,10 +73,10 @@ public class Veicolo {
     private List<Appuntamento> appuntamentiVeicolo;
 
     public Veicolo (){
-        this.stato = new Disponibile(this);
+        this.stato = new Disponibile();
     }
 
-    public void cambiaStato(State stato){
+    public void cambiaStato(State<Veicolo> stato){
         this.stato = stato;
     }
 

@@ -15,6 +15,8 @@ export class UtenteService {
 
   registra(
     email: string,
+    nome: string,
+    cognome: string,
     dataNascita: Date,
     username: string,
     password: string,
@@ -22,6 +24,8 @@ export class UtenteService {
   ): Observable<MessageResponse> {
     const request: RegisterRequest = {
       email,
+      nome,
+      cognome,
       dataNascita,
       username,
       password,

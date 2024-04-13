@@ -33,7 +33,7 @@ public class UtenteController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> registrazioneCliente(@Valid @RequestBody SignupRequestDTO request) {
+    public ResponseEntity<String> registrazioneCliente(/*@Valid*/ @RequestBody SignupRequestDTO request) {
         boolean esito = utenteService.registrazioneCliente(request);
         if (esito) {
             return ResponseEntity.status(HttpStatus.OK).body("Registrazione effettuata con successo!");
@@ -43,7 +43,7 @@ public class UtenteController {
     }
 
     @PostMapping("/manager/registraDipendente")
-    public ResponseEntity<String> registrazioneDipendente(@Valid @RequestBody SignupRequestDTO request) {
+    public ResponseEntity<String> registrazioneDipendente(/*@Valid*/ @RequestBody SignupRequestDTO request) {
         boolean esito = utenteService.registrazioneDipendente(request);
         if (esito) {
             return ResponseEntity.status(HttpStatus.OK).body("Registrazione effettuata con successo!");

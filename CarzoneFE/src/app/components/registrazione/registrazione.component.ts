@@ -10,6 +10,8 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class RegistrazioneComponent {
   protected email: string = '';
+  protected nome: string = '';
+  protected cognome: string = '';
   protected dataNascita: Date = new Date();
   protected username: string = '';
   protected password: string = '';
@@ -21,6 +23,8 @@ export class RegistrazioneComponent {
     this.utenteService
       .registra(
         this.email,
+        this.nome,
+        this.cognome,
         this.dataNascita,
         this.username,
         this.password,

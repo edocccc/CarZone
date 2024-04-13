@@ -60,6 +60,8 @@ public class UtenteServiceImpl implements UtenteService {
 
         Utente utente = new Utente();
         utente.setEmail(request.getEmail());
+        utente.setNome(request.getNome());
+        utente.setCognome(request.getCognome());
         utente.setDataNascita(request.getDataNascita());
         utente.setUsername(request.getUsername());
         utente.setPassword(request.getPassword());
@@ -82,6 +84,8 @@ public class UtenteServiceImpl implements UtenteService {
 
         Utente utente = new Utente();
         utente.setEmail(request.getEmail());
+        utente.setNome(request.getNome());
+        utente.setCognome(request.getCognome());
         utente.setDataNascita(request.getDataNascita());
         utente.setUsername(request.getUsername());
         utente.setPassword(request.getPassword());
@@ -105,6 +109,12 @@ public class UtenteServiceImpl implements UtenteService {
         }
         if(request.getEmail()==null || request.getEmail().isEmpty()){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Devi inserire una email valida");
+        }
+        if(request.getNome()==null || request.getNome().isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Devi inserire un nome valido");
+        }
+        if(request.getCognome()==null || request.getCognome().isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Devi inserire un cognome valido");
         }
         if(request.getDataNascita()==null || request.getDataNascita().isAfter(LocalDate.now()) || request.getDataNascita().isBefore(LocalDate.of(1900,1,1))){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Devi inserire una data di nascita valida");
