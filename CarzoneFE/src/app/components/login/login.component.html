@@ -1,2 +1,8 @@
-<p>login works!</p>
-<a routerLink="/register">Register</a>
+<input type="text" required placeholder="Username" [(ngModel)]="username" />
+<input type="text" required placeholder="Password" [(ngModel)]="password" />
+<div>
+  <button (click)="login()">
+    Accedi
+  </button>
+</div>
+<a routerLink="/register">Registrati</a>

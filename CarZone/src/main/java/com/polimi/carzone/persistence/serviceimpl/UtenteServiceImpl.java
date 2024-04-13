@@ -41,7 +41,7 @@ public class UtenteServiceImpl implements UtenteService {
                 request.getUsername().isBlank() ||
                 request.getPassword().isEmpty() ||
                 request.getPassword().isBlank()) {
-            return null;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Inserisci tutte le credenziali");
         }
         Optional<Utente> utente = utenteRepo.findByUsernameAndPassword(request.getUsername(), request.getPassword());
         if(utente.isPresent()) {

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { globalBackEndUrl } from 'environment';
 import { HttpClient } from '@angular/common/http';
 import { RegisterRequest } from '../dto/request/RegisterRequest';
+import { LoginRequest } from '../dto/request/LoginRequest';
 import { Observable } from 'rxjs';
 import { MessageResponse } from '../dto/response/MessageResponse';
 
@@ -32,5 +33,13 @@ export class UtenteService {
       passwordRipetuta,
     };
     return this.http.post<MessageResponse>(this.backEndUrl + 'signup', request);
+  }
+
+  login(username: string, password: string): Observable<MessageResponse> {
+    const request: LoginRequest = {
+      username,
+      password,
+    };
+    return this.http.post<MessageResponse>(this.backEndUrl + 'login', request);
   }
 }
