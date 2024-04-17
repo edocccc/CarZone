@@ -2,13 +2,15 @@ package com.polimi.carzone.state.implementation;
 
 import com.polimi.carzone.model.Veicolo;
 import com.polimi.carzone.state.State;
-import org.springframework.stereotype.Component;
 
-@Component
-public class Trattativa implements State<Veicolo> {
+public class Trattativa extends State {
+
+    public Trattativa(Veicolo veicolo) {
+        super(veicolo);
+    }
 
     @Override
-    public void cambiaStato(Veicolo context) {
+    public void cambiaStato() {
 
     }
 }

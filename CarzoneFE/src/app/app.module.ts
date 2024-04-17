@@ -10,9 +10,10 @@ import { RegistrazioneComponent } from './components/registrazione/registrazione
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { HomepageClienteComponent } from './components/homepage-cliente/homepage-cliente.component';
+import { DettagliVeicoloComponent } from './components/dettagli-veicolo/dettagli-veicolo.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, RegistrazioneComponent, HomepageClienteComponent],
+  declarations: [AppComponent, LoginComponent, RegistrazioneComponent, HomepageClienteComponent, DettagliVeicoloComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

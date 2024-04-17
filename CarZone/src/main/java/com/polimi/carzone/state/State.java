@@ -2,8 +2,14 @@ package com.polimi.carzone.state;
 
 import com.polimi.carzone.model.Veicolo;
 
-public interface State<T> {
+public abstract class State {
 
-    void cambiaStato(T context);
+    Veicolo veicolo;
+
+    protected State(Veicolo veicolo){
+        this.veicolo = veicolo;
+    }
+
+    public abstract void cambiaStato();
 
 }

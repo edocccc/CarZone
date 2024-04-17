@@ -49,15 +49,15 @@ public class Veicolo {
     @Column(nullable = false)
     private int potenzaCv;
 
-    @Transient
-    private State<Veicolo> stato;
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Alimentazione alimentazione;
 
     @Column(nullable = false)
     private double prezzo;
+
+    @Transient
+    private State stato;
 
     @ManyToOne
     @JoinColumn(
@@ -72,11 +72,7 @@ public class Veicolo {
     @OneToMany(mappedBy = "veicolo")
     private List<Appuntamento> appuntamentiVeicolo;
 
-    public Veicolo (){
-        this.stato = new Disponibile();
-    }
-
-    public void cambiaStato(State<Veicolo> stato){
+    public void cambiaStato(State stato){
         this.stato = stato;
     }
 

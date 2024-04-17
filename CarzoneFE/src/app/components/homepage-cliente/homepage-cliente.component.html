@@ -1,4 +1,9 @@
-<p>homepage-cliente works!</p>
+<p>Ecco tutti i veicoli:</p>
+<br>
 <div *ngFor="let veicolo of veicoli">
-  <p>{{ veicolo }}</p>
+  <p>Marca: {{ veicolo.marca }}</p>
+  <p>Modello: {{ veicolo.modello }}</p>
+  <p>Prezzo: {{ veicolo.prezzo }}</p>
+  <a routerLink="/dettagli">Visualizza i dettagli del veicolo</a>
+  <br><br>
 </div>

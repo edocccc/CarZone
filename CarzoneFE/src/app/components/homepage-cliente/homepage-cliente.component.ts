@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {VeicoloService} from "../../services/veicolo.service";
-import {Veicolo} from "../../dto/response/ShowVeicoliResponse";
+import {ShowVeicoloResponse} from "../../dto/response/ShowVeicoloResponse";
 
 @Component({
   selector: 'app-homepage-cliente',
@@ -8,7 +8,7 @@ import {Veicolo} from "../../dto/response/ShowVeicoliResponse";
   styleUrls: ['./homepage-cliente.component.css']
 })
 export class HomepageClienteComponent {
-  veicoli: Veicolo[] = [];
+  veicoli: ShowVeicoloResponse[] = [];
 
   constructor(private veicoloService: VeicoloService) { }
 
@@ -17,16 +17,17 @@ export class HomepageClienteComponent {
   }
 
   getVeicoli(): void {
-    this.veicoloService
-      .getVeicoli()
-      .subscribe({
-        next: (response) => {
-          this.veicoli = response.veicoli;
-          console.log(response.veicoli)
-        },
-        error: (error) => {
-          console.log(error.error.message);
-        },
-      });
+    this.veicoloService.getVeicoli().subscribe({
+      next: (response) => {
+        this.veicoli = response;
+        console.log("inizio del componente");
+        console.log(response);
+        console.log(this.veicoli)
+        console.log("fine del componente");
+      },
+      error: (error) => {
+        console.log("Si è verificato un errore:", error);
+      },
+    });
   }
 }
