@@ -1,7 +1,9 @@
 package com.polimi.carzone.dto.response;
 
 import com.polimi.carzone.model.Alimentazione;
+import lombok.Data;
 
+@Data
 public class DettagliVeicoloResponseDTO {
     private String targa;
     private String marca;

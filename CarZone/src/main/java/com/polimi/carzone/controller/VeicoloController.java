@@ -1,6 +1,8 @@
 package com.polimi.carzone.controller;
 
 import com.polimi.carzone.dto.request.AggiuntaVeicoloRequestDTO;
+import com.polimi.carzone.dto.request.DettagliVeicoloRequestDTO;
+import com.polimi.carzone.dto.response.DettagliVeicoloResponseDTO;
 import com.polimi.carzone.dto.response.VeicoloResponseDTO;
 import com.polimi.carzone.model.Veicolo;
 import com.polimi.carzone.persistence.service.VeicoloService;
@@ -32,5 +34,11 @@ public class VeicoloController {
     public ResponseEntity<List<VeicoloResponseDTO>> stampaVeicoli() {
         List<VeicoloResponseDTO> veicoli = veicoloService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(veicoli);
+    }
+
+    @GetMapping("/dettagli")
+    public ResponseEntity<DettagliVeicoloResponseDTO> mostraDettagli(@RequestBody DettagliVeicoloRequestDTO request) {
+        DettagliVeicoloResponseDTO dettagli= veicoloService.recuperaDettagli(request);
+        return ResponseEntity.status(HttpStatus.OK).body(dettagli);
     }
 }

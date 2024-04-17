@@ -1,6 +1,8 @@
 package com.polimi.carzone.persistence.serviceimpl;
 
 import com.polimi.carzone.dto.request.AggiuntaVeicoloRequestDTO;
+import com.polimi.carzone.dto.request.DettagliVeicoloRequestDTO;
+import com.polimi.carzone.dto.response.DettagliVeicoloResponseDTO;
 import com.polimi.carzone.dto.response.VeicoloResponseDTO;
 import com.polimi.carzone.model.Alimentazione;
 import com.polimi.carzone.model.Veicolo;
@@ -87,5 +89,23 @@ public class VeicoloServiceImpl implements VeicoloService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Non ci sono veicoli disponibili");
         }
         return veicoliResponse;
+    }
+
+    @Override
+    public DettagliVeicoloResponseDTO recuperaDettagli(DettagliVeicoloRequestDTO request) {
+        if (request == null || request.getIdVeicolo() <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id veicolo non valido");
+        }
+        Veicolo veicolo = veicoloRepo.findById(request.getIdVeicolo()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Veicolo non trovato"));
+        DettagliVeicoloResponseDTO response = new DettagliVeicoloResponseDTO();
+        response.setTarga(veicolo.getTarga());
+        response.setMarca(veicolo.getMarca());
+        response.setModello(veicolo.getModello());
+        response.setChilometraggio(veicolo.getChilometraggio());
+        response.setAnnoProduzione(veicolo.getAnnoProduzione());
+        response.setPotenzaCv(veicolo.getPotenzaCv());
+        response.setAlimentazione(veicolo.getAlimentazione());
+        response.setPrezzo(veicolo.getPrezzo());
+        return response;
     }
 }
