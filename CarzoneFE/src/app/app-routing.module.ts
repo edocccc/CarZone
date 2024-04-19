@@ -4,12 +4,16 @@ import { RegistrazioneComponent } from './components/registrazione/registrazione
 import { LoginComponent } from './components/login/login.component';
 import {HomepageClienteComponent} from "./components/homepage-cliente/homepage-cliente.component";
 import {DettagliVeicoloComponent} from "./components/dettagli-veicolo/dettagli-veicolo.component";
+import {HomepageManagerComponent} from "./components/homepage-manager/homepage-manager.component";
+import {HomepageDipendenteComponent} from "./components/homepage-dipendente/homepage-dipendente.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegistrazioneComponent },
-  { path: 'homeCliente', component: HomepageClienteComponent },
+  { path: 'homeCliente/:id', component: HomepageClienteComponent },
+  { path: 'homeManager/:id', component: HomepageManagerComponent },
+  { path: 'homeDipendente/:id', component: HomepageDipendenteComponent },
   { path: 'dettagli/:id', component: DettagliVeicoloComponent},
 ];
 

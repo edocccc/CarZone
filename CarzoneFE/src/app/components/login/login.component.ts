@@ -22,7 +22,17 @@ export class LoginComponent {
       .subscribe({
         next: (response) => {
           console.log(response);
-          this.router.navigate(['/homeCliente']);
+          localStorage.setItem('token', response.token);
+          localStorage.setItem('username', this.username);
+          localStorage.setItem('ruolo', response.ruolo);
+          localStorage.setItem('id', response.id.toString());
+          localStorage.setItem('email', response.email);
+          localStorage.setItem('nome', response.nome);
+          localStorage.setItem('cognome', response.cognome);
+          localStorage.setItem('dataNascita', response.dataNascita.toString());
+          if (response.ruolo === 'MANAGER') this.router.navigate(['/homeManager/'+response.id]);
+          else if (response.ruolo === 'DIPENDENTE') this.router.navigate(['/homeDipendente/'+response.id]);
+          else this.router.navigate(['/homeCliente/'+response.id]);
         },
         error: (error) => {
           console.log(error.error.message);

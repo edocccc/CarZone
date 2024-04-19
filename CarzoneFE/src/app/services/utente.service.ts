@@ -5,6 +5,7 @@ import { RegisterRequest } from '../dto/request/RegisterRequest';
 import { LoginRequest } from '../dto/request/LoginRequest';
 import { Observable } from 'rxjs';
 import { MessageResponse } from '../dto/response/MessageResponse';
+import {LoginResponse} from "../dto/response/LoginResponse";
 
 @Injectable({
   providedIn: 'root',
@@ -35,11 +36,11 @@ export class UtenteService {
     return this.http.post<MessageResponse>(this.backEndUrl + 'signup', request);
   }
 
-  login(username: string, password: string): Observable<MessageResponse> {
+  login(username: string, password: string): Observable<LoginResponse> {
     const request: LoginRequest = {
       username,
       password,
     };
-    return this.http.post<MessageResponse>(this.backEndUrl + 'login', request);
+    return this.http.post<LoginResponse>(this.backEndUrl + 'login', request);
   }
 }

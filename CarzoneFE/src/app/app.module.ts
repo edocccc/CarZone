@@ -11,9 +11,11 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { HomepageClienteComponent } from './components/homepage-cliente/homepage-cliente.component';
 import { DettagliVeicoloComponent } from './components/dettagli-veicolo/dettagli-veicolo.component';
+import { HomepageDipendenteComponent } from './components/homepage-dipendente/homepage-dipendente.component';
+import { HomepageManagerComponent } from './components/homepage-manager/homepage-manager.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, RegistrazioneComponent, HomepageClienteComponent, DettagliVeicoloComponent],
+  declarations: [AppComponent, LoginComponent, RegistrazioneComponent, HomepageClienteComponent, DettagliVeicoloComponent, HomepageDipendenteComponent, HomepageManagerComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

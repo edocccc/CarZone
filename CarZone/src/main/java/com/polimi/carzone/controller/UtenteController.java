@@ -28,7 +28,14 @@ public class UtenteController {
         Utente utente = utenteService.login(request);
         String token = tokenUtil.generaToken(utente);
         LoginResponseDTO response = new LoginResponseDTO();
+        response.setId(utente.getId());
+        response.setEmail(utente.getEmail());
+        response.setNome(utente.getNome());
+        response.setCognome(utente.getCognome());
         response.setUsername(utente.getUsername());
+        response.setDataNascita(utente.getDataNascita());
+        response.setRuolo(utente.getRuolo());
+        response.setToken(token);
         return ResponseEntity.status(HttpStatus.OK).header("Authorization", token).body(response);
     }
 
