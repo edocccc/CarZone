@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class VeicoloResponseDTO {
+    private long id;
     private String marca;
     private String modello;
     private double prezzo;

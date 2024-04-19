@@ -3,6 +3,7 @@ import {globalBackEndUrl} from "../../../environment";
 import {map, Observable} from "rxjs";
 import {ShowVeicoloResponse} from "../dto/response/ShowVeicoloResponse";
 import {HttpClient} from "@angular/common/http";
+import {ShowDettagliVeicoloResponse} from "../dto/response/ShowDettagliVeicoloResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -22,4 +23,12 @@ export class VeicoloService {
       })
     );
   }
+
+  getVeicolo(id: string): Observable<ShowDettagliVeicoloResponse> {
+    if(id == null || id == "" ){
+        throw new Error("id non può essere nullo");
+    }
+    return this.http.get<ShowDettagliVeicoloResponse>(this.backEndUrl + 'dettagli/' + id);
+  }
+
 }

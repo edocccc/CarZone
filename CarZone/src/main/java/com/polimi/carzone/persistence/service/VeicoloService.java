@@ -12,7 +12,7 @@ public interface VeicoloService {
 
     boolean aggiungiVeicolo(AggiuntaVeicoloRequestDTO request);
 
-    DettagliVeicoloResponseDTO recuperaDettagli(DettagliVeicoloRequestDTO request);
+    DettagliVeicoloResponseDTO recuperaDettagli(long idVeicolo);
 
     List<VeicoloResponseDTO> findAll();
 }

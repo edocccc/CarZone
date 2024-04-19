@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {VeicoloService} from "../../services/veicolo.service";
 import {ShowVeicoloResponse} from "../../dto/response/ShowVeicoloResponse";
 
@@ -7,7 +7,7 @@ import {ShowVeicoloResponse} from "../../dto/response/ShowVeicoloResponse";
   templateUrl: './homepage-cliente.component.html',
   styleUrls: ['./homepage-cliente.component.css']
 })
-export class HomepageClienteComponent {
+export class HomepageClienteComponent implements OnInit{
   veicoli: ShowVeicoloResponse[] = [];
 
   constructor(private veicoloService: VeicoloService) { }

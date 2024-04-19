@@ -80,6 +80,7 @@ public class VeicoloServiceImpl implements VeicoloService {
         List<VeicoloResponseDTO> veicoliResponse = new ArrayList<>();
         for (Veicolo veicolo : veicoli) {
             veicoliResponse.add(new VeicoloResponseDTO(
+                    veicolo.getId(),
                     veicolo.getMarca(),
                     veicolo.getModello(),
                     veicolo.getPrezzo()
@@ -92,11 +93,11 @@ public class VeicoloServiceImpl implements VeicoloService {
     }
 
     @Override
-    public DettagliVeicoloResponseDTO recuperaDettagli(DettagliVeicoloRequestDTO request) {
-        if (request == null || request.getIdVeicolo() <= 0) {
+    public DettagliVeicoloResponseDTO recuperaDettagli(long idVeicolo) {
+        if (idVeicolo <= 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id veicolo non valido");
         }
-        Veicolo veicolo = veicoloRepo.findById(request.getIdVeicolo()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Veicolo non trovato"));
+        Veicolo veicolo = veicoloRepo.findById(idVeicolo).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Veicolo non trovato"));
         DettagliVeicoloResponseDTO response = new DettagliVeicoloResponseDTO();
         response.setTarga(veicolo.getTarga());
         response.setMarca(veicolo.getMarca());
