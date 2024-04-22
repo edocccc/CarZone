@@ -42,4 +42,34 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
+    @ExceptionHandler(AlimentazioneNonValidaException.class)
+    public ResponseEntity<ExceptionResponseDTO> gestisciAlimentazioneNonValidaException(AlimentazioneNonValidaException e) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO();
+        Map<String, String> errori = new TreeMap<>();
+        errori.put("alimentazione", e.getMessage());
+        response.setTimestamp(LocalDateTime.now());
+        response.setErrori(errori);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(VeicoliNonDisponibiliException.class)
+    public ResponseEntity<ExceptionResponseDTO> gestisciVeicoliNonDisponibiliException(VeicoliNonDisponibiliException e) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO();
+        Map<String, String> errori = new TreeMap<>();
+        errori.put("veicoli", e.getMessage());
+        response.setTimestamp(LocalDateTime.now());
+        response.setErrori(errori);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(VeicoloNonTrovatoException.class)
+    public ResponseEntity<ExceptionResponseDTO> gestisciVeicoloNonTrovatoException(VeicoloNonTrovatoException e) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO();
+        Map<String, String> errori = new TreeMap<>();
+        errori.put("veicolo", e.getMessage());
+        response.setTimestamp(LocalDateTime.now());
+        response.setErrori(errori);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
 }

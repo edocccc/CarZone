@@ -23,11 +23,7 @@ public class VeicoloController {
     @PostMapping("/aggiungiVeicolo")
     public ResponseEntity<String> aggiungiVeicolo(@RequestBody AggiuntaVeicoloRequestDTO request) {
         boolean esito = veicoloService.aggiungiVeicolo(request);
-        if (esito) {
-            return ResponseEntity.status(HttpStatus.OK).body("Aggiunta effettuata con successo!");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Aggiunta fallita!");
-        }
+        return ResponseEntity.status(HttpStatus.OK).body("Aggiunta effettuata con successo!");
     }
 
     @GetMapping("/veicoli")
