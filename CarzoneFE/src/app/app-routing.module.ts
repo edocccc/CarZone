@@ -8,10 +8,10 @@ import {HomepageManagerComponent} from "./components/homepage-manager/homepage-m
 import {HomepageDipendenteComponent} from "./components/homepage-dipendente/homepage-dipendente.component";
 
 const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '', redirectTo: '/homeCliente', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegistrazioneComponent },
-  { path: 'homeCliente/:id', component: HomepageClienteComponent },
+  { path: 'homeCliente', component: HomepageClienteComponent },
   { path: 'homeManager/:id', component: HomepageManagerComponent },
   { path: 'homeDipendente/:id', component: HomepageDipendenteComponent },
   { path: 'dettagli/:id', component: DettagliVeicoloComponent},

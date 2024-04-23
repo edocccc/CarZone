@@ -1,24 +1,32 @@
+<h3>Effettua la registrazione</h3>
 <input type="text" required placeholder="Email" [(ngModel)]="email" />
+<br><br>
 <input type="text" required placeholder="Nome" [(ngModel)]="nome" />
+<br><br>
 <input type="text" required placeholder="Cognome" [(ngModel)]="cognome" />
+<br><br>
 <input
   type="date"
   required
   placeholder="Data di nascita"
   [(ngModel)]="dataNascita"
 />
+<br><br>
 <input type="text" required placeholder="Username" [(ngModel)]="username" />
+<br><br>
 <input type="password" required placeholder="Password" [(ngModel)]="password" />
+<br><br>
 <input
   type="password"
   required
   placeholder="Ripeti password"
   [(ngModel)]="passwordRipetuta"
 />
+<br><br>
 <div>
   <button (click)="registra()" [disabled]="password != passwordRipetuta">
     Registrati
   </button>
 </div>
-
+<br>
 <a routerLink="/login">Accedi</a>

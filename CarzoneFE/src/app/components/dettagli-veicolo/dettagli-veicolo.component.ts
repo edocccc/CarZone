@@ -9,7 +9,7 @@ import {ShowDettagliVeicoloResponse} from "../../dto/response/ShowDettagliVeicol
   styleUrls: ['./dettagli-veicolo.component.css']
 })
 export class DettagliVeicoloComponent implements OnInit{
-  veicolo!: ShowDettagliVeicoloResponse;
+  veicolo?: ShowDettagliVeicoloResponse;
 
   constructor(private veicoloService: VeicoloService, private router: Router) { }
 

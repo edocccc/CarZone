@@ -1,8 +1,12 @@
+<h3>Effettua l'accesso</h3>
 <input type="text" required placeholder="Username" [(ngModel)]="username" />
+<br><br>
 <input type="password" required placeholder="Password" [(ngModel)]="password" />
+<br><br>
 <div>
   <button (click)="login()">
     Accedi
   </button>
 </div>
+<br>
 <a routerLink="/register">Registrati</a>
