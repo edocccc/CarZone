@@ -11,6 +11,9 @@
 </div>
 <br><br>
 <p>Funzionalità:</p>
-<button routerLink="/login">
+<button *ngIf="!accessoEffettuato" routerLink="/login">
   Accedi
+</button>
+<button *ngIf="accessoEffettuato" (click)="logout()">
+  Logout
 </button>

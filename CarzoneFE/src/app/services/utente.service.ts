@@ -12,7 +12,6 @@ import {LoginResponse} from "../dto/response/LoginResponse";
 })
 export class UtenteService {
   private backEndUrl: string = globalBackEndUrl + 'utente/';
-
   constructor(private http: HttpClient) {}
 
   registra(
@@ -42,5 +41,13 @@ export class UtenteService {
       password,
     };
     return this.http.post<LoginResponse>(this.backEndUrl + 'login', request);
+  }
+
+  accessoEffettuato(): boolean {
+    return !!localStorage.getItem('token');
+  }
+
+  logout(): void {
+    localStorage.clear();
   }
 }
