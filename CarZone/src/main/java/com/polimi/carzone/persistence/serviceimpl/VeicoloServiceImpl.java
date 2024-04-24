@@ -125,6 +125,7 @@ public class VeicoloServiceImpl implements VeicoloService {
         }
         Veicolo veicolo = veicoloRepo.findById(idVeicolo).orElseThrow(() -> new VeicoloNonTrovatoException("Veicolo non trovato"));
         DettagliVeicoloResponseDTO response = new DettagliVeicoloResponseDTO();
+        response.setId(veicolo.getId());
         response.setTarga(veicolo.getTarga());
         response.setMarca(veicolo.getMarca());
         response.setModello(veicolo.getModello());

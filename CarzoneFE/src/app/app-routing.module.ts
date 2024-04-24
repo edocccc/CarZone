@@ -6,6 +6,7 @@ import {HomepageClienteComponent} from "./components/homepage-cliente/homepage-c
 import {DettagliVeicoloComponent} from "./components/dettagli-veicolo/dettagli-veicolo.component";
 import {HomepageManagerComponent} from "./components/homepage-manager/homepage-manager.component";
 import {HomepageDipendenteComponent} from "./components/homepage-dipendente/homepage-dipendente.component";
+import {PrenotazioneVeicoloComponent} from "./components/prenotazione-veicolo/prenotazione-veicolo.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/homeCliente', pathMatch: 'full' },
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'homeManager/:id', component: HomepageManagerComponent },
   { path: 'homeDipendente/:id', component: HomepageDipendenteComponent },
   { path: 'dettagli/:id', component: DettagliVeicoloComponent},
+  { path: 'prenota/:id', component: PrenotazioneVeicoloComponent},
 ];
 
 @NgModule({

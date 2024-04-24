@@ -7,6 +7,12 @@
 <p>Potenza in CV: {{veicolo?.potenzaCv}}</p>
 <p>Alimentazione: {{veicolo?.alimentazione}}</p>
 <p>Prezzo: {{veicolo?.prezzo}}</p>
+<br><br>
+<p>Funzionalità</p>
+<button routerLink="/prenota/{{veicolo?.id}}">
+  Prenota un appuntamento
+  </button>
+<br>
 <button routerLink="/homeCliente">
   Torna alla HomePage
 </button>

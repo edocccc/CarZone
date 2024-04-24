@@ -76,8 +76,8 @@ public class Veicolo {
         this.stato = stato;
     }
 
+    @SuppressWarnings("pattern")
     public State getStato(){
         return stato;
     }
-
 }

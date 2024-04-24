@@ -1,4 +1,5 @@
 export interface ShowDettagliVeicoloResponse {
+  id: number;
   targa: string;
   marca: string;
   modello: string;

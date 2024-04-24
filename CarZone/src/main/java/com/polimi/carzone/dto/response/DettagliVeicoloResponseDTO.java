@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class DettagliVeicoloResponseDTO {
+    private long id;
     private String targa;
     private String marca;
     private String modello;
