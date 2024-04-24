@@ -72,12 +72,16 @@ public class Veicolo {
     @OneToMany(mappedBy = "veicolo")
     private List<Appuntamento> appuntamentiVeicolo;
 
-    public void cambiaStato(State stato){
+    public Veicolo() {
+        this.stato = new Disponibile(this);
+    }
+
+    public void cambiaStato(State stato) {
         this.stato = stato;
     }
 
-    @SuppressWarnings("pattern")
-    public State getStato(){
-        return stato;
+    @SuppressWarnings("getter del pattern state")
+    public State getStato() {
+        return this.stato;
     }
 }

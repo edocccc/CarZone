@@ -11,6 +11,7 @@ import {UtenteService} from "../../services/utente.service";
 export class HomepageClienteComponent implements OnInit{
   veicoli: ShowVeicoloResponse[] = [];
   accessoEffettuato: boolean = !!localStorage.getItem('token');
+  statoVeicolo: string = '';
 
   constructor(private veicoloService: VeicoloService, private utenteService: UtenteService) { }
 

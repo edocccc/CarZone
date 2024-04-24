@@ -12,6 +12,10 @@ import com.polimi.carzone.model.Alimentazione;
 import com.polimi.carzone.model.Veicolo;
 import com.polimi.carzone.persistence.repository.VeicoloRepository;
 import com.polimi.carzone.persistence.service.VeicoloService;
+import com.polimi.carzone.state.State;
+import com.polimi.carzone.state.implementation.Disponibile;
+import com.polimi.carzone.state.implementation.Trattativa;
+import com.polimi.carzone.state.implementation.Venduto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,7 +111,8 @@ public class VeicoloServiceImpl implements VeicoloService {
                     veicolo.getId(),
                     veicolo.getMarca(),
                     veicolo.getModello(),
-                    veicolo.getPrezzo()
+                    veicolo.getPrezzo(),
+                    checkStato(veicolo)
             ));
         }
         if(veicoliResponse.isEmpty()) {
@@ -135,5 +140,20 @@ public class VeicoloServiceImpl implements VeicoloService {
         response.setAlimentazione(veicolo.getAlimentazione());
         response.setPrezzo(veicolo.getPrezzo());
         return response;
+    }
+
+    private String checkStato(Veicolo veicolo){
+        if(veicolo.getAcquirente() == null){
+            if(veicolo.getAppuntamentiVeicolo().isEmpty()){
+                veicolo.setStato(new Disponibile(veicolo));
+                return "DISPONIBILE";
+            } else {
+                veicolo.setStato(new Trattativa(veicolo));
+                return "TRATTATIVA";
+            }
+        } else {
+            veicolo.setStato(new Venduto(veicolo));
+            return "VENDUTO";
+        }
     }
 }

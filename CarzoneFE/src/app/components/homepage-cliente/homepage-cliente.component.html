@@ -1,13 +1,24 @@
 <p>Ecco tutti i veicoli:</p>
 <br>
+<label>Seleziona lo stato dei veicoli da visualizzare</label>
+<br>
+<select [(ngModel)]="statoVeicolo">
+  <option value="" selected></option>
+  <option value="DISPONIBILE">Disponibile</option>
+  <option value="TRATTATIVA">Trattativa</option>
+  <option value="VENDUTO">Venduto</option>
+</select>
+<br>
 <div *ngFor="let veicolo of veicoli">
-  <p>Marca: {{ veicolo.marca }}</p>
-  <p>Modello: {{ veicolo.modello }}</p>
-  <p>Prezzo: {{ veicolo.prezzo }}</p>
-  <button routerLink="/dettagli/{{veicolo.id}}">
-    Visualizza dettagli
-  </button>
-  <br><br>
+  <ng-container *ngIf="statoVeicolo=='' || veicolo.stato.toUpperCase()==statoVeicolo">
+    <p>Marca: {{ veicolo.marca }}</p>
+    <p>Modello: {{ veicolo.modello }}</p>
+    <p>Prezzo: {{ veicolo.prezzo }}</p>
+    <button routerLink="/dettagli/{{veicolo.id}}">
+      Visualizza dettagli
+    </button>
+    <br><br>
+  </ng-container>
 </div>
 <br><br>
 <p>Funzionalità:</p>

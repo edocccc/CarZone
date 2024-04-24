@@ -7,6 +7,7 @@ import {DettagliVeicoloComponent} from "./components/dettagli-veicolo/dettagli-v
 import {HomepageManagerComponent} from "./components/homepage-manager/homepage-manager.component";
 import {HomepageDipendenteComponent} from "./components/homepage-dipendente/homepage-dipendente.component";
 import {PrenotazioneVeicoloComponent} from "./components/prenotazione-veicolo/prenotazione-veicolo.component";
+import {AutenticazioneGuard} from "./guards/autenticazione.guard";
 
 const routes: Routes = [
   { path: '', redirectTo: '/homeCliente', pathMatch: 'full' },
@@ -16,7 +17,7 @@ const routes: Routes = [
   { path: 'homeManager/:id', component: HomepageManagerComponent },
   { path: 'homeDipendente/:id', component: HomepageDipendenteComponent },
   { path: 'dettagli/:id', component: DettagliVeicoloComponent},
-  { path: 'prenota/:id', component: PrenotazioneVeicoloComponent},
+  { path: 'prenota/:id', component: PrenotazioneVeicoloComponent , canActivate: [AutenticazioneGuard]},
 ];
 
 @NgModule({

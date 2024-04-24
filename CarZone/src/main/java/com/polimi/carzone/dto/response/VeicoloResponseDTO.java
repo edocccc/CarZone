@@ -1,5 +1,6 @@
 package com.polimi.carzone.dto.response;
 
+import com.polimi.carzone.state.State;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -10,4 +11,5 @@ public class VeicoloResponseDTO {
     private String marca;
     private String modello;
     private double prezzo;
+    private String stato;
 }
