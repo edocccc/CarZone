@@ -2,6 +2,7 @@ package com.polimi.carzone.persistence.serviceimpl;
 
 import com.polimi.carzone.dto.request.AggiuntaVeicoloRequestDTO;
 import com.polimi.carzone.dto.request.DettagliVeicoloRequestDTO;
+import com.polimi.carzone.dto.request.RicercaRequestDTO;
 import com.polimi.carzone.dto.response.DettagliVeicoloResponseDTO;
 import com.polimi.carzone.dto.response.VeicoloResponseDTO;
 import com.polimi.carzone.exception.AlimentazioneNonValidaException;
@@ -32,6 +33,7 @@ import java.util.*;
 public class VeicoloServiceImpl implements VeicoloService {
 
     private final VeicoloRepository veicoloRepo;
+
 
     @Override
     public boolean aggiungiVeicolo(AggiuntaVeicoloRequestDTO request) {
@@ -107,6 +109,40 @@ public class VeicoloServiceImpl implements VeicoloService {
         List<Veicolo> veicoli = veicoloRepo.findAll();
         List<VeicoloResponseDTO> veicoliResponse = new ArrayList<>();
         for (Veicolo veicolo : veicoli) {
+            veicoliResponse.add(new VeicoloResponseDTO(
+                    veicolo.getId(),
+                    veicolo.getMarca(),
+                    veicolo.getModello(),
+                    veicolo.getPrezzo(),
+                    checkStato(veicolo)
+            ));
+        }
+        if(veicoliResponse.isEmpty()) {
+            throw new VeicoliNonDisponibiliException("Nessun veicolo disponibile");
+        }
+        return veicoliResponse;
+    }
+
+
+    @Override
+    public Veicolo findByTarga(String targa) {
+        Map<String,String> errori = new TreeMap<>();
+        if(targa == null || targa.isEmpty() || targa.isBlank()) {
+            errori.put("targa", "Devi inserire una targa valida");
+            throw new CredenzialiNonValideException(errori);
+        }
+        Optional<Veicolo> veicolo = veicoloRepo.findByTarga(targa);
+        if(veicolo.isPresent()){
+            return veicolo.get();
+        } else {
+            throw new VeicoloNonTrovatoException("Veicolo non trovato");
+        }
+    }
+
+    @Override
+    public List<VeicoloResponseDTO> convertiVeicoliInVeicoliResponse(List<Veicolo> veicoliTrovati) {
+        List<VeicoloResponseDTO> veicoliResponse = new ArrayList<>();
+        for (Veicolo veicolo : veicoliTrovati) {
             veicoliResponse.add(new VeicoloResponseDTO(
                     veicolo.getId(),
                     veicolo.getMarca(),

@@ -2,10 +2,13 @@ package com.polimi.carzone.controller;
 
 import com.polimi.carzone.dto.request.AggiuntaVeicoloRequestDTO;
 import com.polimi.carzone.dto.request.DettagliVeicoloRequestDTO;
+import com.polimi.carzone.dto.request.RicercaRequestDTO;
 import com.polimi.carzone.dto.response.DettagliVeicoloResponseDTO;
 import com.polimi.carzone.dto.response.VeicoloResponseDTO;
 import com.polimi.carzone.model.Veicolo;
 import com.polimi.carzone.persistence.service.VeicoloService;
+import com.polimi.carzone.strategy.RicercaStrategy;
+import com.polimi.carzone.strategy.implementation.RicercaTarga;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,5 +40,25 @@ public class VeicoloController {
         long id = Long.parseLong(idVeicolo);
         DettagliVeicoloResponseDTO dettagli= veicoloService.recuperaDettagli(id);
         return ResponseEntity.status(HttpStatus.OK).body(dettagli);
+    }
+
+    @GetMapping("/cerca")
+    public ResponseEntity<List<VeicoloResponseDTO>> cercaVeicoli(@RequestBody RicercaRequestDTO request) {
+        List<Veicolo> veicoliTrovati;
+        List<VeicoloResponseDTO> veicoliResponse;
+        RicercaStrategy ricercaStrategy = new RicercaTarga(veicoloService);
+        /*
+        TODO String criterio = veicoloService.trovaCriterio(request);
+        if (criterio.equals("targa")) {
+            ricercaStrategy = new RicercaTarga(request);
+        }
+
+         */
+
+        veicoliTrovati = ricercaStrategy.ricerca(request);
+        veicoliResponse = veicoloService.convertiVeicoliInVeicoliResponse(veicoliTrovati);
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(veicoliResponse);
     }
 }

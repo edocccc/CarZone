@@ -2,6 +2,7 @@ package com.polimi.carzone.persistence.service;
 
 import com.polimi.carzone.dto.request.AggiuntaVeicoloRequestDTO;
 import com.polimi.carzone.dto.request.DettagliVeicoloRequestDTO;
+import com.polimi.carzone.dto.request.RicercaRequestDTO;
 import com.polimi.carzone.dto.response.DettagliVeicoloResponseDTO;
 import com.polimi.carzone.dto.response.VeicoloResponseDTO;
 import com.polimi.carzone.model.Veicolo;
@@ -15,4 +16,9 @@ public interface VeicoloService {
     DettagliVeicoloResponseDTO recuperaDettagli(long idVeicolo);
 
     List<VeicoloResponseDTO> findAll();
+
+    Veicolo findByTarga(String targa);
+
+
+    List<VeicoloResponseDTO> convertiVeicoliInVeicoliResponse(List<Veicolo> veicoliTrovati);
 }
