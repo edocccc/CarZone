@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class RicercaRequestDTO {
+    private String criterio;
     private String targa;
     private String marca;
     private String modello;

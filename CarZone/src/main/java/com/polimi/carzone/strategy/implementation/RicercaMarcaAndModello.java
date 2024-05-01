@@ -9,15 +9,16 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class RicercaAlimentazione implements RicercaStrategy {
+public class RicercaMarcaAndModello implements RicercaStrategy {
 
     private final VeicoloService veicoloService;
 
     @Override
     public List<Veicolo> ricerca(RicercaRequestDTO request) {
         List<Veicolo> veicoli;
-        String alimentazioneCercata = request.getAlimentazione();
-        veicoli = veicoloService.findByAlimentazione(alimentazioneCercata);
+        String marcaCercata = request.getMarca();
+        String modelloCercato = request.getModello();
+        veicoli = veicoloService.findByMarcaAndModello(marcaCercata, modelloCercato);
         return veicoli;
     }
 }

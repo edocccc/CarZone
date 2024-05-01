@@ -72,4 +72,14 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
+    @ExceptionHandler(CriterioNonValidoException.class)
+    public ResponseEntity<ExceptionResponseDTO> gestisciCriterioNonValidoException(AlimentazioneNonValidaException e) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO();
+        Map<String, String> errori = new TreeMap<>();
+        errori.put("criterio", e.getMessage());
+        response.setTimestamp(LocalDateTime.now());
+        response.setErrori(errori);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
 }

@@ -1,11 +1,10 @@
 package com.polimi.carzone.persistence.service;
 
 import com.polimi.carzone.dto.request.AggiuntaVeicoloRequestDTO;
-import com.polimi.carzone.dto.request.DettagliVeicoloRequestDTO;
-import com.polimi.carzone.dto.request.RicercaRequestDTO;
 import com.polimi.carzone.dto.response.DettagliVeicoloResponseDTO;
 import com.polimi.carzone.dto.response.VeicoloResponseDTO;
 import com.polimi.carzone.model.Veicolo;
+import com.polimi.carzone.strategy.RicercaStrategy;
 
 import java.util.List;
 
@@ -19,6 +18,13 @@ public interface VeicoloService {
 
     Veicolo findByTarga(String targa);
 
-
     List<VeicoloResponseDTO> convertiVeicoliInVeicoliResponse(List<Veicolo> veicoliTrovati);
+
+    RicercaStrategy scegliRicerca(String criterio);
+
+    List<Veicolo> findByMarca(String marca);
+
+    List<Veicolo> findByMarcaAndModello(String marca, String modello);
+
+    List<Veicolo> findByAlimentazione(String alimentazione);
 }

@@ -42,23 +42,13 @@ public class VeicoloController {
         return ResponseEntity.status(HttpStatus.OK).body(dettagli);
     }
 
-    @GetMapping("/cerca")
+    @PostMapping("/cerca")
     public ResponseEntity<List<VeicoloResponseDTO>> cercaVeicoli(@RequestBody RicercaRequestDTO request) {
         List<Veicolo> veicoliTrovati;
         List<VeicoloResponseDTO> veicoliResponse;
-        RicercaStrategy ricercaStrategy = new RicercaTarga(veicoloService);
-        /*
-        TODO String criterio = veicoloService.trovaCriterio(request);
-        if (criterio.equals("targa")) {
-            ricercaStrategy = new RicercaTarga(request);
-        }
-
-         */
-
+        RicercaStrategy ricercaStrategy = veicoloService.scegliRicerca(request.getCriterio());
         veicoliTrovati = ricercaStrategy.ricerca(request);
         veicoliResponse = veicoloService.convertiVeicoliInVeicoliResponse(veicoliTrovati);
-
-
         return ResponseEntity.status(HttpStatus.OK).body(veicoliResponse);
     }
 }
