@@ -14,9 +14,10 @@ import { DettagliVeicoloComponent } from './components/dettagli-veicolo/dettagli
 import { HomepageDipendenteComponent } from './components/homepage-dipendente/homepage-dipendente.component';
 import { HomepageManagerComponent } from './components/homepage-manager/homepage-manager.component';
 import { PrenotazioneVeicoloComponent } from './components/prenotazione-veicolo/prenotazione-veicolo.component';
+import { RicercaComponent } from './components/ricerca/ricerca.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, RegistrazioneComponent, HomepageClienteComponent, DettagliVeicoloComponent, HomepageDipendenteComponent, HomepageManagerComponent, PrenotazioneVeicoloComponent],
+  declarations: [AppComponent, LoginComponent, RegistrazioneComponent, HomepageClienteComponent, DettagliVeicoloComponent, HomepageDipendenteComponent, HomepageManagerComponent, PrenotazioneVeicoloComponent, RicercaComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

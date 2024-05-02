@@ -8,6 +8,7 @@ import {HomepageManagerComponent} from "./components/homepage-manager/homepage-m
 import {HomepageDipendenteComponent} from "./components/homepage-dipendente/homepage-dipendente.component";
 import {PrenotazioneVeicoloComponent} from "./components/prenotazione-veicolo/prenotazione-veicolo.component";
 import {AutenticazioneGuard} from "./guards/autenticazione.guard";
+import {RicercaComponent} from "./components/ricerca/ricerca.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/homeCliente', pathMatch: 'full' },
@@ -16,8 +17,9 @@ const routes: Routes = [
   { path: 'homeCliente', component: HomepageClienteComponent },
   { path: 'homeManager/:id', component: HomepageManagerComponent },
   { path: 'homeDipendente/:id', component: HomepageDipendenteComponent },
-  { path: 'dettagli/:id', component: DettagliVeicoloComponent},
+  { path: 'dettagli/:id', component: DettagliVeicoloComponent },
   { path: 'prenota/:id', component: PrenotazioneVeicoloComponent , canActivate: [AutenticazioneGuard]},
+  { path: 'cerca', component: RicercaComponent }
 ];
 
 @NgModule({

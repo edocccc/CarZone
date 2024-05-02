@@ -25,6 +25,10 @@
 <button *ngIf="!accessoEffettuato" routerLink="/login">
   Accedi
 </button>
+<button *ngIf="accessoEffettuato" routerLink="/cerca">
+  Cerca un veicolo
+</button>
+<br><br>
 <button *ngIf="accessoEffettuato" (click)="logout()">
   Logout
 </button>

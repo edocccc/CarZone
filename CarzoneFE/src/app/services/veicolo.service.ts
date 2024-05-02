@@ -4,6 +4,7 @@ import {map, Observable} from "rxjs";
 import {ShowVeicoloResponse} from "../dto/response/ShowVeicoloResponse";
 import {HttpClient} from "@angular/common/http";
 import {ShowDettagliVeicoloResponse} from "../dto/response/ShowDettagliVeicoloResponse";
+import {RicercaRequest} from "../dto/request/RicercaRequest";
 
 @Injectable({
   providedIn: 'root'
@@ -31,4 +32,36 @@ export class VeicoloService {
     return this.http.get<ShowDettagliVeicoloResponse>(this.backEndUrl + 'dettagli/' + id);
   }
 
+  ricerca(
+    criterio: string,
+    targa: string,
+    marca: string,
+    modello: string,
+    potenzaMinima: number,
+    potenzaMassima: number,
+    prezzoMinimo: number,
+    prezzoMassimo: number,
+    alimentazione: string,
+    annoProduzioneMinimo: number,
+    annoProduzioneMassimo: number,
+    chilometraggioMinimo: number,
+    chilometraggioMassimo: number
+  ): Observable<ShowVeicoloResponse[]> {
+    const request: RicercaRequest = {
+      criterio,
+      targa,
+      marca,
+      modello,
+      potenzaMinima,
+      potenzaMassima,
+      prezzoMinimo,
+      prezzoMassimo,
+      alimentazione,
+      annoProduzioneMinimo,
+      annoProduzioneMassimo,
+      chilometraggioMinimo,
+      chilometraggioMassimo
+    };
+    return this.http.post<ShowVeicoloResponse[]>(this.backEndUrl + 'cerca', request);
+  }
 }

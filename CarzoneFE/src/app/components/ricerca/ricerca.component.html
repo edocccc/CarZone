@@ -1,0 +1,80 @@
+<p>Effettua una ricerca:</p>
+
+<p>Seleziona il criterio della ricerca: </p>
+<select [(ngModel)]="criterio">
+  <option value="targa">Targa</option>
+  <option value="marca">Marca</option>
+  <option value="marcamodello">Marca e modello</option>
+  <option value="potenza">Potenza (CV)</option>
+  <option value="prezzo">Prezzo</option>
+  <option value="alimentazione">Alimentazione</option>
+  <option value="annoProduzione">Anno di produzione</option>
+  <option value="chilometraggio">Chilometraggio</option>
+</select>
+<br>
+<div *ngIf="criterio === 'targa'">
+  <p>Inserisci la targa che vuoi cercare:</p>
+  <input type="text" [(ngModel)]="targa">
+</div>
+<div *ngIf="criterio === 'marca'">
+  <p>Inserisci la marca che vuoi cercare:</p>
+  <input type="text" [(ngModel)]="marca">
+</div>
+<div *ngIf="criterio === 'marcamodello'">
+  <p>Inserisci la marca che vuoi cercare:</p>
+  <input type="text" [(ngModel)]="marca">
+  <p>Inserisci il modello che vuoi cercare:</p>
+  <input type="text" [(ngModel)]="modello">
+</div>
+<div *ngIf="criterio === 'potenza'">
+  <p>Inserisci la potenza minima:</p>
+  <input type="number" [(ngModel)]="potenzaMinima">
+  <p>Inserisci la potenza massima:</p>
+  <input type="number" [(ngModel)]="potenzaMassima">
+</div>
+<div *ngIf="criterio === 'prezzo'">
+  <p>Inserisci il prezzo minimo:</p>
+  <input type="number" [(ngModel)]="prezzoMinimo">
+  <p>Inserisci il prezzo massimo:</p>
+  <input type="number" [(ngModel)]="prezzoMassimo">
+</div>
+<div *ngIf="criterio === 'alimentazione'">
+  <p>Inserisci il tipo di alimentazione che vuoi cercare:</p>
+  <select [(ngModel)]="alimentazione">
+    <option value="BENZINA">Benzina</option>
+    <option value="DIESEL">Diesel</option>
+    <option value="IBRIDA">Ibrida</option>
+    <option value="GPL">Gpl</option>
+    <option value="ELETTRICA">Elettrica</option>
+  </select>
+</div>
+<div *ngIf="criterio === 'annoProduzione'">
+  <p>Inserisci l'anno di produzione minimo:</p>
+  <input type="number" [(ngModel)]="annoProduzioneMinimo">
+  <p>Inserisci l'anno di produzione massimo:</p>
+  <input type="number" [(ngModel)]="annoProduzioneMassimo">
+</div>
+<div *ngIf="criterio === 'chilometraggio'">
+  <p>Inserisci il chilometraggio minimo:</p>
+  <input type="number" [(ngModel)]="chilometraggioMinimo">
+  <p>Inserisci il chilometraggio massimo:</p>
+  <input type="number" [(ngModel)]="chilometraggioMassimo">
+</div>
+<br>
+<button (click)="ricerca()">Cerca</button>
+<ng-container *ngIf="ricercaEffettuata">
+  <ng-container *ngIf="veicoli.length === 0">
+    <p>Nessun veicolo trovato</p>
+  </ng-container>
+  <p>Risultati della ricerca:</p>
+    <ng-container *ngFor="let veicolo of veicoli">
+      <p>Marca: {{ veicolo.marca }}</p>
+      <p>Modello: {{ veicolo.modello }}</p>
+      <p>Prezzo: {{ veicolo.prezzo }}</p>
+      <button routerLink="/dettagli/{{veicolo.id}}">
+        Visualizza dettagli
+      </button>
+      <br><br>
+  </ng-container>
+</ng-container>
+
