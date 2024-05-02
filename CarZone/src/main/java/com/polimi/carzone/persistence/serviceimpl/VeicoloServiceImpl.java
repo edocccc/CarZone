@@ -12,10 +12,7 @@ import com.polimi.carzone.state.implementation.Disponibile;
 import com.polimi.carzone.state.implementation.Trattativa;
 import com.polimi.carzone.state.implementation.Venduto;
 import com.polimi.carzone.strategy.RicercaStrategy;
-import com.polimi.carzone.strategy.implementation.RicercaAlimentazione;
-import com.polimi.carzone.strategy.implementation.RicercaMarca;
-import com.polimi.carzone.strategy.implementation.RicercaMarcaAndModello;
-import com.polimi.carzone.strategy.implementation.RicercaTarga;
+import com.polimi.carzone.strategy.implementation.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -158,19 +155,17 @@ public class VeicoloServiceImpl implements VeicoloService {
         if(criterio == null || criterio.isEmpty() || criterio.isBlank()) {
             throw new CriterioNonValidoException("Inserisci un criterio di ricerca valido");
         }
-        RicercaStrategy ricercaStrategy = switch (criterio) {
+        return switch (criterio) {
             case "targa" -> new RicercaTarga(this);
             case "marca" -> new RicercaMarca(this);
             case "marcamodello" -> new RicercaMarcaAndModello(this);
             case "alimentazione" -> new RicercaAlimentazione(this);
-            /*case "annoImmatricolazione" -> new RicercaAnnoImmatricolazione(veicoloRepo);
-            case "prezzo" -> new RicercaPrezzo(veicoloRepo);
-            case "potenza" -> new RicercaPotenza(veicoloRepo);
-            case "chilometraggio" -> new RicercaChilometraggio(veicoloRepo);
-            case "annoProduzione" -> new RicercaAnnoProduzione(veicoloRepo);*/
+            case "annoProduzione" -> new RicercaAnnoProduzione(this);
+            case "prezzo" -> new RicercaPrezzo(this);
+            case "potenza" -> new RicercaPotenza(this);
+            case "chilometraggio" -> new RicercaChilometraggio(this);
             default -> throw new CriterioNonValidoException("Criterio di ricerca non valido");
         };
-        return ricercaStrategy;
     }
 
     @Override
@@ -224,6 +219,129 @@ public class VeicoloServiceImpl implements VeicoloService {
             default -> throw new AlimentazioneNonValidaException("Tipo di alimentazione non valido");
         };
         Optional<List<Veicolo>> veicoli = veicoloRepo.findByAlimentazione(alimentazioneEnum);
+        if(veicoli.isPresent() && !veicoli.get().isEmpty()){
+            return veicoli.get();
+        } else {
+            throw new VeicoloNonTrovatoException("Nessun veicolo trovato");
+        }
+    }
+
+    @Override
+    public List<Veicolo> findByAnnoProduzione(Integer annoProduzioneMinimo, Integer annoProduzioneMassimo) {
+        Map<String,String> errori = new TreeMap<>();
+        if(annoProduzioneMinimo == null && annoProduzioneMassimo == null) {
+            errori.put("consistenza", "Devi inserire almeno un parametro per ricerca");
+        }
+        if(annoProduzioneMinimo == null) {
+            annoProduzioneMinimo = 1900;
+        }
+        if(annoProduzioneMassimo == null) {
+            annoProduzioneMassimo = LocalDateTime.now().getYear();
+        }
+        if(annoProduzioneMinimo < 1900) {
+            errori.put("annoProduzioneMinimo", "L'anno di produzione minimo non è valido");
+        }
+        if(annoProduzioneMassimo > LocalDateTime.now().getYear()) {
+            errori.put("annoProduzioneMassimo", "L'anno di produzione massimo non è valido");
+        }
+        if(annoProduzioneMassimo < annoProduzioneMinimo) {
+            errori.put("consistenza", "L'anno di produzione massimo non può essere prima dell'anno di produzione minimo");
+        }
+        if(!errori.isEmpty()) {
+            throw new CredenzialiNonValideException(errori);
+        }
+        Optional<List<Veicolo>> veicoli = veicoloRepo.findByAnnoProduzioneBetween(annoProduzioneMinimo, annoProduzioneMassimo);
+        if(veicoli.isPresent() && !veicoli.get().isEmpty()){
+            return veicoli.get();
+        } else {
+            throw new VeicoloNonTrovatoException("Nessun veicolo trovato");
+        }
+
+    }
+
+    @Override
+    public List<Veicolo> findByPrezzo(Double prezzoMinimo, Double prezzoMassimo) {
+        Map<String,String> errori = new TreeMap<>();
+        if(prezzoMinimo == null && prezzoMassimo == null) {
+            errori.put("consistenza", "Devi inserire almeno un parametro per ricerca");
+        }
+        if(prezzoMinimo == null) {
+            prezzoMinimo = 0.0;
+        }
+        if(prezzoMassimo == null) {
+            prezzoMassimo = Double.MAX_VALUE;
+        }
+        if(prezzoMinimo < 0.0) {
+            errori.put("prezzoMinimo", "Il prezzo minimo non è valido");
+        }
+        if(prezzoMassimo > Double.MAX_VALUE) {
+            errori.put("prezzoMassimo", "Il prezzo massimo non è valido");
+        }
+        if(prezzoMassimo < prezzoMinimo) {
+            errori.put("consistenza", "Il prezzo massimo non può essere minore del prezzo minimo");
+        }
+        if(!errori.isEmpty()) {
+            throw new CredenzialiNonValideException(errori);
+        }
+        Optional<List<Veicolo>> veicoli = veicoloRepo.findByPrezzoBetween(prezzoMinimo, prezzoMassimo);
+        if(veicoli.isPresent() && !veicoli.get().isEmpty()){
+            return veicoli.get();
+        } else {
+            throw new VeicoloNonTrovatoException("Nessun veicolo trovato");
+        }
+    }
+
+    @Override
+    public List<Veicolo> findByPotenza(Integer potenzaMinima, Integer potenzaMassima) {
+        Map<String,String> errori = new TreeMap<>();
+        if(potenzaMinima == null && potenzaMassima == null) {
+            errori.put("consistenza", "Devi inserire almeno un parametro per ricerca");
+        }
+        if(potenzaMinima == null) {
+            potenzaMinima = 0;
+        }
+        if(potenzaMassima == null) {
+            potenzaMassima = Integer.MAX_VALUE;
+        }
+        if(potenzaMinima < 0) {
+            errori.put("potenzaMinima", "La potenza minima non è valida");
+        }
+        if(potenzaMassima < potenzaMinima) {
+            errori.put("consistenza", "La potenza massima non può essere minore della potenza minima");
+        }
+        if(!errori.isEmpty()) {
+            throw new CredenzialiNonValideException(errori);
+        }
+        Optional<List<Veicolo>> veicoli = veicoloRepo.findByPotenzaCvBetween(potenzaMinima, potenzaMassima);
+        if(veicoli.isPresent() && !veicoli.get().isEmpty()){
+            return veicoli.get();
+        } else {
+            throw new VeicoloNonTrovatoException("Nessun veicolo trovato");
+        }
+    }
+
+    @Override
+    public List<Veicolo> findByChilometraggio(Integer chilometraggioMinimo, Integer chilometraggioMassimo) {
+        Map<String,String> errori = new TreeMap<>();
+        if(chilometraggioMinimo == null && chilometraggioMassimo == null) {
+            errori.put("consistenza", "Devi inserire almeno un parametro per ricerca");
+        }
+        if(chilometraggioMinimo == null) {
+            chilometraggioMinimo = 0;
+        }
+        if(chilometraggioMassimo == null) {
+            chilometraggioMassimo = Integer.MAX_VALUE;
+        }
+        if(chilometraggioMinimo < 0) {
+            errori.put("chilometraggioMinimo", "Il chilometraggio minimo non è valido");
+        }
+        if(chilometraggioMassimo < chilometraggioMinimo) {
+            errori.put("consistenza", "Il chilometraggio massimo non può essere minore del chilometraggio minimo");
+        }
+        if(!errori.isEmpty()) {
+            throw new CredenzialiNonValideException(errori);
+        }
+        Optional<List<Veicolo>> veicoli = veicoloRepo.findByChilometraggioBetween(chilometraggioMinimo, chilometraggioMassimo);
         if(veicoli.isPresent() && !veicoli.get().isEmpty()){
             return veicoli.get();
         } else {

@@ -27,4 +27,12 @@ public interface VeicoloService {
     List<Veicolo> findByMarcaAndModello(String marca, String modello);
 
     List<Veicolo> findByAlimentazione(String alimentazione);
+
+    List<Veicolo> findByAnnoProduzione(Integer annoProduzioneMinimo, Integer annoProduzioneMassimo);
+
+    List<Veicolo> findByPrezzo(Double prezzoMinimo, Double prezzoMassimo);
+
+    List<Veicolo> findByPotenza(Integer potenzaMinima, Integer potenzaMassima);
+
+    List<Veicolo> findByChilometraggio(Integer chilometraggioMinimo, Integer chilometraggioMassimo);
 }

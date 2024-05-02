@@ -18,4 +18,12 @@ public interface VeicoloRepository extends JpaRepository<Veicolo, Long> {
     Optional<List<Veicolo>> findByMarcaAndModello(String marca, String modello);
 
     Optional<List<Veicolo>> findByAlimentazione(Alimentazione alimentazione);
+
+    Optional<List<Veicolo>> findByAnnoProduzioneBetween(int annoProduzioneMinimo, int annoProduzioneMassimo);
+
+    Optional<List<Veicolo>> findByPrezzoBetween(double prezzoMinimo, double prezzoMassimo);
+
+    Optional<List<Veicolo>> findByPotenzaCvBetween(int potenzaMinima, int potenzaMassima);
+
+    Optional<List<Veicolo>> findByChilometraggioBetween(int chilometraggioMinimo, int chilometraggioMassimo);
 }
