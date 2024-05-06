@@ -99,6 +99,21 @@ public class UtenteServiceImpl implements UtenteService {
         return true;
     }
 
+    @Override
+    public Utente findById(long id) {
+        Map<String,String> errori = new TreeMap<>();
+        if(id <= 0){
+            errori.put("id", "L'id dell'utente non è valido");
+            throw new CredenzialiNonValideException(errori);
+        }
+        Optional<Utente> utente = utenteRepo.findById(id);
+        if(utente.isPresent()) {
+            return utente.get();
+        } else {
+            throw new UtenteNonTrovatoException("Utente non trovato");
+        }
+    }
+
     private boolean ControllaSignupRequest(SignupRequestDTO request){
         Map<String,String> errori = new TreeMap<>();
         if(request == null){

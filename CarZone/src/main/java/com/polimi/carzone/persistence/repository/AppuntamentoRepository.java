@@ -8,6 +8,8 @@ import java.util.Optional;
 
 public interface AppuntamentoRepository extends JpaRepository<Appuntamento, Long> {
 
+    Optional<Appuntamento> findById(long id);
+
     Optional<List<Appuntamento>> findByDipendente_Id(long idDipendente);
 
     Optional<List<Appuntamento>> findByDipendente_IdAndRecensioneVotoNotNull(long idDipendente);

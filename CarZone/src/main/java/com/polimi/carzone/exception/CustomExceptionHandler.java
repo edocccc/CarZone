@@ -92,4 +92,14 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
+    @ExceptionHandler(VeicoloVendutoException.class)
+    public ResponseEntity<ExceptionResponseDTO> gestisciVeicoloVendutoException (VeicoloVendutoException e) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO();
+        Map<String, String> errori = new TreeMap<>();
+        errori.put("veicolo", e.getMessage());
+        response.setTimestamp(LocalDateTime.now());
+        response.setErrori(errori);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
 }

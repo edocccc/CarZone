@@ -19,4 +19,8 @@ public interface AppuntamentoService {
     List<AppuntamentoResponseDTO> trovaAppuntamentiLiberi();
 
     void prendiInCarico(PresaInCaricoRequestDTO request);
+
+    long trovaIdVeicolo(long idAppuntamento);
+
+    long trovaIdCliente(long idAppuntamento);
 }

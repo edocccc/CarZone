@@ -7,6 +7,7 @@ import {ShowDettagliVeicoloResponse} from "../dto/response/ShowDettagliVeicoloRe
 import {RicercaRequest} from "../dto/request/RicercaRequest";
 import {ShowAppuntamentoResponse} from "../dto/response/ShowAppuntamentoResponse";
 import {AppuntamentiDipendenteRequest} from "../dto/request/AppuntamentiDipendenteRequest";
+import {RegistrazioneVenditaRequest} from "../dto/request/RegistrazioneVenditaRequest";
 
 @Injectable({
   providedIn: 'root'
@@ -65,5 +66,13 @@ export class VeicoloService {
       chilometraggioMassimo
     };
     return this.http.post<ShowVeicoloResponse[]>(this.backEndUrl + 'cerca', request);
+  }
+
+  registraVendita(idAppuntamento: number, venditaConclusa: boolean): Observable<any>{
+    const request: RegistrazioneVenditaRequest = {
+        idAppuntamento,
+        venditaConclusa
+    }
+    return this.http.post(this.backEndUrl + 'registraVendita', request);
   }
 }

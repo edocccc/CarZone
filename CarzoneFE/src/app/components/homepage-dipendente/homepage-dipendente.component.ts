@@ -67,7 +67,8 @@ export class HomepageDipendenteComponent implements OnInit{
         this.getAppuntamentiDipendente(this.idDipendente);
         alert('Appuntamento preso in carico con successo');
       },
-      error: () => {
+      error: (error) => {
+        console.log("Si è verificato un errore:", error.error);
         alert('Errore durante il prendere in carico');
       }
     });

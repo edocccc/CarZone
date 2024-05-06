@@ -5,6 +5,7 @@ import com.polimi.carzone.dto.response.DettagliVeicoloResponseDTO;
 import com.polimi.carzone.dto.response.VeicoloResponseDTO;
 import com.polimi.carzone.exception.*;
 import com.polimi.carzone.model.Alimentazione;
+import com.polimi.carzone.model.Utente;
 import com.polimi.carzone.model.Veicolo;
 import com.polimi.carzone.persistence.repository.VeicoloRepository;
 import com.polimi.carzone.persistence.service.VeicoloService;
@@ -125,6 +126,21 @@ public class VeicoloServiceImpl implements VeicoloService {
             throw new CredenzialiNonValideException(errori);
         }
         Optional<Veicolo> veicolo = veicoloRepo.findByTarga(targa);
+        if(veicolo.isPresent()){
+            return veicolo.get();
+        } else {
+            throw new VeicoloNonTrovatoException("Veicolo non trovato");
+        }
+    }
+
+    @Override
+    public Veicolo findById(long id) {
+        Map<String,String> errori = new TreeMap<>();
+        if(id <= 0) {
+            errori.put("id", "Id veicolo non valido");
+            throw new CredenzialiNonValideException(errori);
+        }
+        Optional<Veicolo> veicolo = veicoloRepo.findById(id);
         if(veicolo.isPresent()){
             return veicolo.get();
         } else {
@@ -347,6 +363,30 @@ public class VeicoloServiceImpl implements VeicoloService {
         } else {
             throw new VeicoloNonTrovatoException("Nessun veicolo trovato");
         }
+    }
+
+    @Override
+    public void registraVendita(long idVeicolo, Utente acquirente) {
+        Map<String,String> errori = new TreeMap<>();
+        if(idVeicolo <= 0) {
+            errori.put("veicolo", "Id veicolo non valido");
+        }
+        if(acquirente == null) {
+            errori.put("acquirente", "Acquirente non valido");
+        }
+        if(!errori.isEmpty()) {
+            throw new CredenzialiNonValideException(errori);
+        }
+        Optional<Veicolo> veicolo = veicoloRepo.findById(idVeicolo);
+        if(veicolo.isEmpty()) {
+            throw new VeicoloNonTrovatoException("Veicolo non trovato");
+        }
+        if(veicolo.get().getAcquirente() != null) {
+            throw new VeicoloVendutoException("Veicolo già venduto");
+        }
+        veicolo.get().setAcquirente(acquirente);
+        veicoloRepo.save(veicolo.get());
+
     }
 
     @Override

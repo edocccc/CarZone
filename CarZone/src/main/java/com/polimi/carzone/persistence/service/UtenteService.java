@@ -13,4 +13,6 @@ public interface UtenteService {
     boolean registrazioneCliente(SignupRequestDTO request);
 
     boolean registrazioneDipendente(SignupRequestDTO request);
+
+    Utente findById(long id);
 }

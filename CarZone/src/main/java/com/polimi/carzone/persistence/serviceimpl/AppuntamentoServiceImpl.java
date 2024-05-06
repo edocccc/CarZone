@@ -182,4 +182,36 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
         appuntamento.get().setDipendente(dipendente.get());
         appuntamentoRepo.save(appuntamento.get());
     }
+
+    @Override
+    public long trovaIdVeicolo(long idAppuntamento) {
+        Map<String,String> errori = new TreeMap<>();
+
+        if(idAppuntamento <= 0){
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        Optional<Appuntamento> appuntamento = appuntamentoRepo.findById(idAppuntamento);
+        if(appuntamento.isPresent()){
+            return appuntamento.get().getVeicolo().getId();
+        } else {
+            throw new AppuntamentoNonTrovatoException("Appuntamento non trovato");
+        }
+    }
+
+    @Override
+    public long trovaIdCliente(long idAppuntamento) {
+        Map<String,String> errori = new TreeMap<>();
+
+        if(idAppuntamento <= 0){
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        Optional<Appuntamento> appuntamento = appuntamentoRepo.findById(idAppuntamento);
+        if(appuntamento.isPresent()){
+            return appuntamento.get().getCliente().getId();
+        } else {
+            throw new AppuntamentoNonTrovatoException("Appuntamento non trovato");
+        }
+    }
 }

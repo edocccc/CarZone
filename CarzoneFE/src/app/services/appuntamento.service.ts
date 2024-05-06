@@ -53,6 +53,7 @@ export class AppuntamentoService {
       idDipendente,
       idAppuntamento
     }
-    return this.http.post<MessageResponse>(this.backEndUrl + 'prendiInCarico/', request);
+    return this.http.post<MessageResponse>(this.backEndUrl + 'prendiInCarico', request);
   }
+
 }
