@@ -4,6 +4,11 @@ import {ShowDettagliVeicoloResponse} from "../dto/response/ShowDettagliVeicoloRe
 import {MessageResponse} from "../dto/response/MessageResponse";
 import {globalBackEndUrl} from "../../../environment";
 import {PrenotazioneRequest} from "../dto/request/PrenotazioneRequest";
+import {Observable} from "rxjs";
+import {ShowAppuntamentoResponse} from "../dto/response/ShowAppuntamentoResponse";
+import {AppuntamentiDipendenteRequest} from "../dto/request/AppuntamentiDipendenteRequest";
+import {ValutazioneMediaDipendenteRequest} from "../dto/request/ValutazioneMediaDipendenteRequest";
+import {ShowValutazioneMediaResponse} from "../dto/response/ShowValutazioneMediaResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -21,5 +26,24 @@ export class AppuntamentoService {
     }
 
     return this.http.post<MessageResponse>(this.backEndUrl + 'prenota', request);
+  }
+
+  getAppuntamentiDipendente(idDipendente: number): Observable<ShowAppuntamentoResponse[]> {
+    const request: AppuntamentiDipendenteRequest = {
+      idDipendente
+    };
+    return this.http.get<ShowAppuntamentoResponse[]>(this.backEndUrl + 'dipendente/'+ request.idDipendente);
+  }
+
+  getValutazioneMedia(idDipendente: number): Observable<ShowValutazioneMediaResponse>{
+    const request: ValutazioneMediaDipendenteRequest = {
+      idDipendente
+    };
+    return this.http.get<ShowValutazioneMediaResponse>(this.backEndUrl + 'dipendente/' + request.idDipendente + '/valutazione');
+
+  }
+
+  getAppuntamentiLiberi(): Observable<ShowAppuntamentoResponse[]> {
+    return this.http.get<ShowAppuntamentoResponse[]>(this.backEndUrl + 'appuntamentiLiberi');
   }
 }

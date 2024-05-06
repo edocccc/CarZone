@@ -5,6 +5,8 @@ import {ShowVeicoloResponse} from "../dto/response/ShowVeicoloResponse";
 import {HttpClient} from "@angular/common/http";
 import {ShowDettagliVeicoloResponse} from "../dto/response/ShowDettagliVeicoloResponse";
 import {RicercaRequest} from "../dto/request/RicercaRequest";
+import {ShowAppuntamentoResponse} from "../dto/response/ShowAppuntamentoResponse";
+import {AppuntamentiDipendenteRequest} from "../dto/request/AppuntamentiDipendenteRequest";
 
 @Injectable({
   providedIn: 'root'

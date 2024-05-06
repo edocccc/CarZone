@@ -1,6 +1,9 @@
 package com.polimi.carzone.persistence.serviceimpl;
 
 import com.polimi.carzone.dto.request.PrenotazioneRequestDTO;
+import com.polimi.carzone.dto.response.AppuntamentoResponseDTO;
+import com.polimi.carzone.dto.response.ValutazioneMediaResponseDTO;
+import com.polimi.carzone.exception.AppuntamentoNonTrovatoException;
 import com.polimi.carzone.exception.CredenzialiNonValideException;
 import com.polimi.carzone.exception.UtenteNonTrovatoException;
 import com.polimi.carzone.exception.VeicoloNonTrovatoException;
@@ -13,13 +16,10 @@ import com.polimi.carzone.persistence.repository.VeicoloRepository;
 import com.polimi.carzone.persistence.service.AppuntamentoService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
 
 @Service
 @Transactional
@@ -68,5 +68,81 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
         appuntamento.setCliente(cliente.get());
         appuntamento.setVeicolo(veicolo.get());
         appuntamentoRepo.save(appuntamento);
+    }
+
+    @Override
+    public List<AppuntamentoResponseDTO> trovaAppuntamentiDipendente(long idDipendente) {
+        Map<String,String> errori = new TreeMap<>();
+        List<AppuntamentoResponseDTO> appuntamenti = new ArrayList<>();
+
+        if(idDipendente <= 0){
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        Optional<List<Appuntamento>> appuntamentiTrovati = appuntamentoRepo.findByDipendente_Id(idDipendente);
+        if(appuntamentiTrovati.isPresent() && !appuntamentiTrovati.get().isEmpty()){
+            for(Appuntamento appuntamento : appuntamentiTrovati.get()){
+                AppuntamentoResponseDTO appuntamentoDipendente = new AppuntamentoResponseDTO();
+                appuntamentoDipendente.setId(appuntamento.getId());
+                appuntamentoDipendente.setDataOra(appuntamento.getDataOra());
+                appuntamentoDipendente.setNomeCliente(appuntamento.getCliente().getNome());
+                appuntamentoDipendente.setCognomeCliente(appuntamento.getCliente().getCognome());
+                appuntamentoDipendente.setTargaVeicolo(appuntamento.getVeicolo().getTarga());
+                appuntamentoDipendente.setMarcaVeicolo(appuntamento.getVeicolo().getMarca());
+                appuntamentoDipendente.setModelloVeicolo(appuntamento.getVeicolo().getModello());
+                appuntamenti.add(appuntamentoDipendente);
+            }
+            return appuntamenti;
+        } else {
+            throw new AppuntamentoNonTrovatoException("Nessun appuntamento trovato");
+        }
+    }
+
+    @Override
+    public ValutazioneMediaResponseDTO calcolaValutazioneMediaDipendente(long idDipendente) {
+        Map<String,String> errori = new TreeMap<>();
+        ValutazioneMediaResponseDTO valutazioneMediaResponse = new ValutazioneMediaResponseDTO();
+        double valutazioneMedia = 0.0;
+
+        if(idDipendente <= 0){
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        Optional<List<Appuntamento>> appuntamentiTrovati = appuntamentoRepo.findByDipendente_Id(idDipendente);
+        if(appuntamentiTrovati.isPresent() && !appuntamentiTrovati.get().isEmpty()){
+            double sommaValutazioni = 0.0;
+            for(Appuntamento appuntamento : appuntamentiTrovati.get()){
+                if(appuntamento.getRecensioneVoto() != null){
+                    sommaValutazioni += appuntamento.getRecensioneVoto();
+                }
+            }
+            valutazioneMedia = sommaValutazioni / appuntamentiTrovati.get().size();
+            valutazioneMediaResponse.setValutazioneMedia(valutazioneMedia);
+            return valutazioneMediaResponse;
+        } else {
+            throw new AppuntamentoNonTrovatoException("Nessuna valutazione rilevata");
+        }
+    }
+
+    @Override
+    public List<AppuntamentoResponseDTO> trovaAppuntamentiLiberi() {
+        List<AppuntamentoResponseDTO> appuntamentiLiberi = new ArrayList<>();
+        Optional<List<Appuntamento>> appuntamenti = appuntamentoRepo.findByDipendenteIsNull();
+        if(appuntamenti.isPresent() && !appuntamenti.get().isEmpty()){
+            for(Appuntamento appuntamento : appuntamenti.get()){
+                AppuntamentoResponseDTO appuntamentoLiberi = new AppuntamentoResponseDTO();
+                appuntamentoLiberi.setId(appuntamento.getId());
+                appuntamentoLiberi.setDataOra(appuntamento.getDataOra());
+                appuntamentoLiberi.setNomeCliente(appuntamento.getCliente().getNome());
+                appuntamentoLiberi.setCognomeCliente(appuntamento.getCliente().getCognome());
+                appuntamentoLiberi.setTargaVeicolo(appuntamento.getVeicolo().getTarga());
+                appuntamentoLiberi.setMarcaVeicolo(appuntamento.getVeicolo().getMarca());
+                appuntamentoLiberi.setModelloVeicolo(appuntamento.getVeicolo().getModello());
+                appuntamentiLiberi.add(appuntamentoLiberi);
+            }
+            return appuntamentiLiberi;
+        } else {
+            throw new AppuntamentoNonTrovatoException("Nessun appuntamento libero trovato");
+        }
     }
 }

@@ -32,7 +32,7 @@ public class Appuntamento {
     private LocalDateTime dataOra;
 
     @Column()
-    private int recensioneVoto;
+    private Integer recensioneVoto;
 
     @Column()
     private String recensioneTesto;
