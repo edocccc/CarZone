@@ -1,1 +1,6 @@
-<p>registra-vendita works!</p>
+<p> Il cliente ha comprato il veicolo? </p>
+<select [(ngModel)]="venditaConclusa">
+  <option value="true">Si</option>
+  <option value="false">No</option>
+</select>
+<button (click)="registraVendita()">Registra vendita</button>

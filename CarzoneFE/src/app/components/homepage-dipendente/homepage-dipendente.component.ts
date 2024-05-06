@@ -17,6 +17,7 @@ export class HomepageDipendenteComponent implements OnInit{
   valutazioneMedia : number = 0.0;
   idDipendente: number = +this.router.url.split('/')[2];
   appuntamentiLiberi: ShowAppuntamentoResponse[] = [];
+  oraAttuale: Date = new Date();
 
   constructor(private veicoloService: VeicoloService, private utenteService: UtenteService, private appuntamentoService: AppuntamentoService, private router: Router) { }
 

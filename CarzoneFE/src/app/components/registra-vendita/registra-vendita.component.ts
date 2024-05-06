@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {AppuntamentoService} from "../../services/appuntamento.service";
 
 @Component({
   selector: 'app-registra-vendita',
@@ -6,6 +7,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./registra-vendita.component.css']
 })
 export class RegistraVenditaComponent {
+  venditaConclusa: boolean = false;
 
-  constructor() { }
+  constructor(private appuntamentoService: AppuntamentoService) { }
+
+
+  registraVendita() {
+
+  }
 }

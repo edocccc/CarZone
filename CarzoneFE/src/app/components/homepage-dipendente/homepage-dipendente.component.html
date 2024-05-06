@@ -6,7 +6,7 @@
   <p>Data: {{appuntamentoDipendente.dataOra | date:'yyyy-MM-dd'}} Ora: {{appuntamentoDipendente.dataOra | date:'HH:mm:ss'}}</p>
   <p>Veicolo: {{appuntamentoDipendente.marcaVeicolo}} {{appuntamentoDipendente.modelloVeicolo}}, targa: {{appuntamentoDipendente.targaVeicolo}} </p>
   <p>Cliente: {{appuntamentoDipendente.nomeCliente}} {{appuntamentoDipendente.cognomeCliente}}</p>
-  <button (click)="redirectRegistraVendita(appuntamentoDipendente.id)">
+  <button *ngIf="appuntamentoDipendente.dataPassata" (click)="redirectRegistraVendita(appuntamentoDipendente.id)">
     Registra vendita
   </button>
   <br>

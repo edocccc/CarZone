@@ -6,5 +6,6 @@ export interface ShowAppuntamentoResponse {
   targaVeicolo: string;
   marcaVeicolo: string;
   modelloVeicolo: string;
+  dataPassata: boolean;
 
 }

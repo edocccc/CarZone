@@ -13,4 +13,5 @@ public class AppuntamentoResponseDTO {
     private String targaVeicolo;
     private String marcaVeicolo;
     private String modelloVeicolo;
+    private boolean dataPassata;
 }

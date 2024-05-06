@@ -92,6 +92,7 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
                 appuntamentoDipendente.setTargaVeicolo(appuntamento.getVeicolo().getTarga());
                 appuntamentoDipendente.setMarcaVeicolo(appuntamento.getVeicolo().getMarca());
                 appuntamentoDipendente.setModelloVeicolo(appuntamento.getVeicolo().getModello());
+                appuntamentoDipendente.setDataPassata(appuntamento.getDataOra().isBefore(LocalDateTime.now()));
                 appuntamenti.add(appuntamentoDipendente);
             }
             return appuntamenti;
@@ -110,7 +111,7 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
             throw new CredenzialiNonValideException(errori);
         }
 
-        Optional<List<Appuntamento>> appuntamentiTrovati = appuntamentoRepo.findByDipendente_Id(idDipendente);
+        Optional<List<Appuntamento>> appuntamentiTrovati = appuntamentoRepo.findByDipendente_IdAndRecensioneVotoNotNull(idDipendente);
         if(appuntamentiTrovati.isPresent() && !appuntamentiTrovati.get().isEmpty()){
             double sommaValutazioni = 0.0;
             for(Appuntamento appuntamento : appuntamentiTrovati.get()){
