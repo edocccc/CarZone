@@ -9,6 +9,7 @@ import {HomepageDipendenteComponent} from "./components/homepage-dipendente/home
 import {PrenotazioneVeicoloComponent} from "./components/prenotazione-veicolo/prenotazione-veicolo.component";
 import {AutenticazioneGuard} from "./guards/autenticazione.guard";
 import {RicercaComponent} from "./components/ricerca/ricerca.component";
+import {RegistraVenditaComponent} from "./components/registra-vendita/registra-vendita.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/homeCliente', pathMatch: 'full' },
@@ -19,7 +20,8 @@ const routes: Routes = [
   { path: 'homeDipendente/:id', component: HomepageDipendenteComponent },
   { path: 'dettagli/:id', component: DettagliVeicoloComponent },
   { path: 'prenota/:id', component: PrenotazioneVeicoloComponent , canActivate: [AutenticazioneGuard]},
-  { path: 'cerca', component: RicercaComponent }
+  { path: 'cerca', component: RicercaComponent },
+  { path: 'registraVendita/:id', component: RegistraVenditaComponent },
 ];
 
 @NgModule({

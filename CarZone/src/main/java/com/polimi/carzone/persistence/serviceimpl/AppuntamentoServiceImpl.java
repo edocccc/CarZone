@@ -1,7 +1,9 @@
 package com.polimi.carzone.persistence.serviceimpl;
 
 import com.polimi.carzone.dto.request.PrenotazioneRequestDTO;
+import com.polimi.carzone.dto.request.PresaInCaricoRequestDTO;
 import com.polimi.carzone.dto.response.AppuntamentoResponseDTO;
+import com.polimi.carzone.dto.response.PresaInCaricoResponseDTO;
 import com.polimi.carzone.dto.response.ValutazioneMediaResponseDTO;
 import com.polimi.carzone.exception.AppuntamentoNonTrovatoException;
 import com.polimi.carzone.exception.CredenzialiNonValideException;
@@ -144,5 +146,39 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
         } else {
             throw new AppuntamentoNonTrovatoException("Nessun appuntamento libero trovato");
         }
+    }
+
+    @Override
+    public void prendiInCarico(PresaInCaricoRequestDTO request) {
+        Map<String,String> errori = new TreeMap<>();
+
+        if(request == null){
+            errori.put("request", "La request non può essere null");
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        if(request.getIdAppuntamento() <= 0){
+            errori.put("idAppuntamento", "L'id dell'appuntamento non è valido");
+        }
+
+        if(request.getIdDipendente() <= 0){
+            errori.put("idDipendente", "L'id del dipendente non è valido");
+        }
+
+        if(!errori.isEmpty()){
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        Optional<Appuntamento> appuntamento = appuntamentoRepo.findById(request.getIdAppuntamento());
+        Optional<Utente> dipendente = utenteRepo.findById(request.getIdDipendente());
+        if(appuntamento.isEmpty()){
+            throw new AppuntamentoNonTrovatoException("Appuntamento non trovato");
+        }
+        if(dipendente.isEmpty()){
+            throw new UtenteNonTrovatoException("Dipendente non trovato");
+        }
+
+        appuntamento.get().setDipendente(dipendente.get());
+        appuntamentoRepo.save(appuntamento.get());
     }
 }

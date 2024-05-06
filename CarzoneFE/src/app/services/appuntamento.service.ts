@@ -9,6 +9,7 @@ import {ShowAppuntamentoResponse} from "../dto/response/ShowAppuntamentoResponse
 import {AppuntamentiDipendenteRequest} from "../dto/request/AppuntamentiDipendenteRequest";
 import {ValutazioneMediaDipendenteRequest} from "../dto/request/ValutazioneMediaDipendenteRequest";
 import {ShowValutazioneMediaResponse} from "../dto/response/ShowValutazioneMediaResponse";
+import {PrendiInCaricoRequest} from "../dto/request/PrendiInCaricoRequest";
 
 @Injectable({
   providedIn: 'root'
@@ -45,5 +46,13 @@ export class AppuntamentoService {
 
   getAppuntamentiLiberi(): Observable<ShowAppuntamentoResponse[]> {
     return this.http.get<ShowAppuntamentoResponse[]>(this.backEndUrl + 'appuntamentiLiberi');
+  }
+
+  prendiInCarico(idDipendente: number, idAppuntamento: number): Observable<MessageResponse> {
+    const request: PrendiInCaricoRequest = {
+      idDipendente,
+      idAppuntamento
+    }
+    return this.http.post<MessageResponse>(this.backEndUrl + 'prendiInCarico/', request);
   }
 }

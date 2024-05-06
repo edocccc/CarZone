@@ -1,8 +1,10 @@
 package com.polimi.carzone.controller;
 
 import com.polimi.carzone.dto.request.PrenotazioneRequestDTO;
+import com.polimi.carzone.dto.request.PresaInCaricoRequestDTO;
 import com.polimi.carzone.dto.response.AppuntamentoResponseDTO;
 import com.polimi.carzone.dto.response.PrenotazioneResponseDTO;
+import com.polimi.carzone.dto.response.PresaInCaricoResponseDTO;
 import com.polimi.carzone.dto.response.ValutazioneMediaResponseDTO;
 import com.polimi.carzone.persistence.service.AppuntamentoService;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +43,14 @@ public class AppuntamentoController {
     @GetMapping("/appuntamentiLiberi")
     public ResponseEntity<List<AppuntamentoResponseDTO>> trovaAppuntamentiLiberi(){
         List<AppuntamentoResponseDTO> response = appuntamentoService.trovaAppuntamentiLiberi();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/prendiInCarico")
+    public ResponseEntity<PresaInCaricoResponseDTO> prendiInCarico(@RequestBody PresaInCaricoRequestDTO request){
+        appuntamentoService.prendiInCarico(request);
+        PresaInCaricoResponseDTO response = new PresaInCaricoResponseDTO();
+        response.setMessage("Appuntamento preso in carico con successo");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

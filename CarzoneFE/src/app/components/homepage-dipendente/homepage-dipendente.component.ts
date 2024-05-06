@@ -54,9 +54,25 @@ export class HomepageDipendenteComponent implements OnInit{
       next: (response) => {
         this.appuntamentiLiberi = response;
       },
-      error: () => {
-        alert('Errore durante il recupero degli appuntamenti liberi');
+      error: (error) => {
+        console.log("Si è verificato un errore:", error.error);
       }
     });
+  }
+
+  prendiInCarico(idAppuntamento: number) {
+    this.appuntamentoService.prendiInCarico(this.idDipendente, idAppuntamento).subscribe({
+      next: () => {
+        this.getAppuntamentiDipendente(this.idDipendente);
+        alert('Appuntamento preso in carico con successo');
+      },
+      error: () => {
+        alert('Errore durante il prendere in carico');
+      }
+    });
+  }
+
+  redirectRegistraVendita(idAppuntamento: number) {
+    this.router.navigate(['/registraVendita/'+idAppuntamento]);
   }
 }
