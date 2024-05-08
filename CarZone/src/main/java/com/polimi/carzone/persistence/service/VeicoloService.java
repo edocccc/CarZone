@@ -1,6 +1,8 @@
 package com.polimi.carzone.persistence.service;
 
 import com.polimi.carzone.dto.request.AggiuntaVeicoloRequestDTO;
+import com.polimi.carzone.dto.request.ModificaVeicoloRequestDTO;
+import com.polimi.carzone.dto.response.DettagliVeicoloManagerResponseDTO;
 import com.polimi.carzone.dto.response.DettagliVeicoloResponseDTO;
 import com.polimi.carzone.dto.response.VeicoloResponseDTO;
 import com.polimi.carzone.model.Utente;
@@ -11,7 +13,7 @@ import java.util.List;
 
 public interface VeicoloService {
 
-    boolean aggiungiVeicolo(AggiuntaVeicoloRequestDTO request);
+    void aggiungiVeicolo(AggiuntaVeicoloRequestDTO request);
 
     DettagliVeicoloResponseDTO recuperaDettagli(long idVeicolo);
 
@@ -40,4 +42,10 @@ public interface VeicoloService {
     List<Veicolo> findByChilometraggio(Integer chilometraggioMinimo, Integer chilometraggioMassimo);
 
     void registraVendita(long idVeicolo, Utente acquirente);
+
+    List<DettagliVeicoloManagerResponseDTO> findAllConDettagli();
+
+    void eliminaVeicolo(long idVeicolo);
+
+    void modificaVeicolo(long idVeicolo, ModificaVeicoloRequestDTO request);
 }

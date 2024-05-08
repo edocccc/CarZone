@@ -10,6 +10,11 @@ import {PrenotazioneVeicoloComponent} from "./components/prenotazione-veicolo/pr
 import {AutenticazioneGuard} from "./guards/autenticazione.guard";
 import {RicercaComponent} from "./components/ricerca/ricerca.component";
 import {RegistraVenditaComponent} from "./components/registra-vendita/registra-vendita.component";
+import {
+  GestioneVeicoliManagerComponent
+} from "./components/gestione-veicoli-manager/gestione-veicoli-manager.component";
+import {ModificaVeicoloComponent} from "./components/modifica-veicolo/modifica-veicolo.component";
+import {AggiungiVeicoloComponent} from "./components/aggiungi-veicolo/aggiungi-veicolo.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/homeCliente', pathMatch: 'full' },
@@ -22,6 +27,9 @@ const routes: Routes = [
   { path: 'prenota/:id', component: PrenotazioneVeicoloComponent , canActivate: [AutenticazioneGuard]},
   { path: 'cerca', component: RicercaComponent },
   { path: 'registraVendita/:id', component: RegistraVenditaComponent },
+  { path: 'gestioneVeicoli', component: GestioneVeicoliManagerComponent },
+  { path: 'modificaVeicolo/:id', component: ModificaVeicoloComponent },
+  { path: 'aggiungiVeicolo', component: AggiungiVeicoloComponent }
 ];
 
 @NgModule({

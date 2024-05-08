@@ -1,6 +1,8 @@
 package com.polimi.carzone.persistence.serviceimpl;
 
 import com.polimi.carzone.dto.request.AggiuntaVeicoloRequestDTO;
+import com.polimi.carzone.dto.request.ModificaVeicoloRequestDTO;
+import com.polimi.carzone.dto.response.DettagliVeicoloManagerResponseDTO;
 import com.polimi.carzone.dto.response.DettagliVeicoloResponseDTO;
 import com.polimi.carzone.dto.response.VeicoloResponseDTO;
 import com.polimi.carzone.exception.*;
@@ -30,7 +32,7 @@ public class VeicoloServiceImpl implements VeicoloService {
 
 
     @Override
-    public boolean aggiungiVeicolo(AggiuntaVeicoloRequestDTO request) {
+    public void aggiungiVeicolo(AggiuntaVeicoloRequestDTO request) {
         Map<String,String> errori = new TreeMap<>();
         if(request == null) {
             errori.put("request", "La request non può essere null");
@@ -95,7 +97,6 @@ public class VeicoloServiceImpl implements VeicoloService {
         veicolo.setPrezzo(request.getPrezzo());
 
         veicoloRepo.save(veicolo);
-        return true;
     }
 
     @Override
@@ -390,6 +391,110 @@ public class VeicoloServiceImpl implements VeicoloService {
     }
 
     @Override
+    public List<DettagliVeicoloManagerResponseDTO> findAllConDettagli() {
+        List<Veicolo> veicoli = veicoloRepo.findAll();
+        List<DettagliVeicoloManagerResponseDTO> veicoliResponse = new ArrayList<>();
+        for (Veicolo veicolo : veicoli) {
+            DettagliVeicoloManagerResponseDTO dettagli = new DettagliVeicoloManagerResponseDTO();
+            dettagli.setId(veicolo.getId());
+            dettagli.setTarga(veicolo.getTarga());
+            dettagli.setMarca(veicolo.getMarca());
+            dettagli.setModello(veicolo.getModello());
+            dettagli.setChilometraggio(veicolo.getChilometraggio());
+            dettagli.setAnnoProduzione(veicolo.getAnnoProduzione());
+            dettagli.setPotenzaCv(veicolo.getPotenzaCv());
+            dettagli.setAlimentazione(veicolo.getAlimentazione());
+            dettagli.setPrezzo(veicolo.getPrezzo());
+            dettagli.setStato(checkStato(veicolo));
+            veicoliResponse.add(dettagli);
+        }
+        if(veicoliResponse.isEmpty()) {
+            throw new VeicoliNonDisponibiliException("Nessun veicolo disponibile");
+        }
+        return veicoliResponse;
+    }
+
+    @Override
+    public void eliminaVeicolo(long idVeicolo) {
+        Map<String,String> errori = new TreeMap<>();
+        if(idVeicolo <= 0) {
+            errori.put("id", "Id veicolo non valido");
+            throw new CredenzialiNonValideException(errori);
+        }
+        Optional<Veicolo> veicolo = veicoloRepo.findById(idVeicolo);
+        if(veicolo.isEmpty()) {
+            throw new VeicoloNonTrovatoException("Veicolo non trovato");
+        }
+        veicoloRepo.delete(veicolo.get());
+    }
+
+    @Override
+    public void modificaVeicolo(long idVeicolo, ModificaVeicoloRequestDTO request) {
+        Map<String, String> errori = new TreeMap<>();
+        if (idVeicolo <= 0) {
+            errori.put("id", "Id veicolo non valido");
+        }
+        if (request == null) {
+            errori.put("request", "La request non può essere null");
+        }
+        if (request.getTarga() == null || request.getTarga().isEmpty() || request.getTarga().isBlank()) {
+            errori.put("targa", "Devi inserire una targa valida");
+        }
+        if (request.getMarca() == null || request.getMarca().isEmpty() || request.getMarca().isBlank()) {
+            errori.put("marca", "Devi inserire una marca valida");
+        }
+        if (request.getModello() == null || request.getModello().isEmpty() || request.getModello().isBlank()) {
+            errori.put("modello", "Devi inserire un modello valido");
+        }
+        if (request.getChilometraggio() < 0) {
+            errori.put("chilometraggio", "Devi inserire un chilometraggio valido");
+        }
+        if (request.getAnnoProduzione() < 1900 || request.getAnnoProduzione() > LocalDateTime.now().getYear()) {
+            errori.put("annoProduzione", "Devi inserire un anno di produzione valido");
+        }
+        if (request.getPotenzaCv() < 0) {
+            errori.put("potenzaCv", "Devi inserire una potenza valida");
+        }
+
+        if (request.getPrezzo() < 0.0) {
+            errori.put("prezzo", "Devi inserire un prezzo valido");
+        }
+
+        Alimentazione alimentazione = null;
+
+        if (request.getAlimentazione() == null || request.getAlimentazione().isEmpty() || request.getAlimentazione().isBlank()) {
+            errori.put("alimentazione", "Devi inserire un tipo di alimentazione valido");
+        } else {
+            alimentazione = switch (request.getAlimentazione()) {
+                case "BENZINA" -> Alimentazione.BENZINA;
+                case "DIESEL" -> Alimentazione.DIESEL;
+                case "IBRIDA" -> Alimentazione.IBRIDA;
+                case "GPL" -> Alimentazione.GPL;
+                case "ELETTRICA" -> Alimentazione.ELETTRICA;
+                default -> throw new AlimentazioneNonValidaException("Tipo di alimentazione non valido");
+            };
+        }
+
+        if (!errori.isEmpty()) {
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        Optional<Veicolo> veicolo = veicoloRepo.findById(idVeicolo);
+        if (veicolo.isEmpty()) {
+            throw new VeicoloNonTrovatoException("Veicolo non trovato");
+        }
+        veicolo.get().setTarga(request.getTarga());
+        veicolo.get().setMarca(request.getMarca());
+        veicolo.get().setModello(request.getModello());
+        veicolo.get().setChilometraggio(request.getChilometraggio());
+        veicolo.get().setAnnoProduzione(request.getAnnoProduzione());
+        veicolo.get().setPotenzaCv(request.getPotenzaCv());
+        veicolo.get().setAlimentazione(alimentazione);
+        veicolo.get().setPrezzo(request.getPrezzo());
+        veicoloRepo.save(veicolo.get());
+    }
+
+    @Override
     public DettagliVeicoloResponseDTO recuperaDettagli(long idVeicolo) {
         Map<String,String> errori = new TreeMap<>();
         if (idVeicolo <= 0) {
@@ -424,4 +529,5 @@ public class VeicoloServiceImpl implements VeicoloService {
             return "VENDUTO";
         }
     }
+
 }

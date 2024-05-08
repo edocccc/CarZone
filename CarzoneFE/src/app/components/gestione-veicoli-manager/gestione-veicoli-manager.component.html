@@ -1,0 +1,34 @@
+<p>Ecco tutti i veicoli, scegli un'azione</p>
+<br><br>
+<ng-container *ngIf="!veicoli.length">
+  <p>Non ci sono veicoli</p>
+</ng-container>
+<ng-container *ngFor="let veicolo of veicoli">
+  <p>Id: {{veicolo.id}}</p>
+  <p>Targa: {{veicolo.targa}}</p>
+  <p>Marca: {{veicolo.marca}}</p>
+  <p>Modello: {{veicolo.modello}}</p>
+  <p>Chilometraggio: {{veicolo.chilometraggio}}</p>
+  <p>Anno Di Produzione: {{veicolo.annoProduzione}}</p>
+  <p>Potenza in CV: {{veicolo.potenzaCv}}</p>
+  <p>Alimentazione: {{veicolo.alimentazione}}</p>
+  <p>Prezzo: {{veicolo.prezzo}}</p>
+  <p>Stato: {{veicolo.stato}}</p>
+  <ng-container *ngIf="veicolo.stato.toUpperCase()!='VENDUTO'">
+    <button (click)="redirectModificaVeicolo(veicolo.id)">
+      Modifica
+    </button>
+    <button (click)="eliminaVeicolo(veicolo.id)">
+      Elimina
+    </button>
+  </ng-container>
+  <ng-container *ngIf="veicolo.stato.toUpperCase()=='VENDUTO'">
+    <p>Non si possono effettuare azioni sui veicoli venduti</p>
+  </ng-container>
+  <br><br>
+</ng-container>
+
+<p>Funzionalità: </p>
+<button (click)="redirectAggiungiVeicolo()">
+  Aggiungi veicolo
+</button>

@@ -16,9 +16,12 @@ import { HomepageManagerComponent } from './components/homepage-manager/homepage
 import { PrenotazioneVeicoloComponent } from './components/prenotazione-veicolo/prenotazione-veicolo.component';
 import { RicercaComponent } from './components/ricerca/ricerca.component';
 import { RegistraVenditaComponent } from './components/registra-vendita/registra-vendita.component';
+import { GestioneVeicoliManagerComponent } from './components/gestione-veicoli-manager/gestione-veicoli-manager.component';
+import { ModificaVeicoloComponent } from './components/modifica-veicolo/modifica-veicolo.component';
+import { AggiungiVeicoloComponent } from './components/aggiungi-veicolo/aggiungi-veicolo.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, RegistrazioneComponent, HomepageClienteComponent, DettagliVeicoloComponent, HomepageDipendenteComponent, HomepageManagerComponent, PrenotazioneVeicoloComponent, RicercaComponent, RegistraVenditaComponent],
+  declarations: [AppComponent, LoginComponent, RegistrazioneComponent, HomepageClienteComponent, DettagliVeicoloComponent, HomepageDipendenteComponent, HomepageManagerComponent, PrenotazioneVeicoloComponent, RicercaComponent, RegistraVenditaComponent, GestioneVeicoliManagerComponent, ModificaVeicoloComponent, AggiungiVeicoloComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

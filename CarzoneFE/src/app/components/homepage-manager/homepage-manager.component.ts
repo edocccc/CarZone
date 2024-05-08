@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ShowValutazioniDipendenti} from "../../dto/response/ShowValutazioniDipendenti";
 import {AppuntamentoService} from "../../services/appuntamento.service";
 import {HttpErrorResponse} from "@angular/common/http";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-homepage-manager',
@@ -11,7 +12,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 export class HomepageManagerComponent implements OnInit{
   dipendentiConRecensioni: ShowValutazioniDipendenti[] = [];
 
-  constructor(private appuntamentoService: AppuntamentoService) { }
+  constructor(private appuntamentoService: AppuntamentoService, private router: Router) { }
 
   ngOnInit(): void {
     this.getDipendentiConRecensioni();
@@ -27,5 +28,9 @@ export class HomepageManagerComponent implements OnInit{
         console.log(error);
       }}
     );
+  }
+
+  redirectGestioneVeicoli() {
+    this.router.navigate(['gestioneVeicoli']);
   }
 }

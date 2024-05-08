@@ -1,19 +1,16 @@
 package com.polimi.carzone.controller;
 
 import com.polimi.carzone.dto.request.AggiuntaVeicoloRequestDTO;
-import com.polimi.carzone.dto.request.DettagliVeicoloRequestDTO;
+import com.polimi.carzone.dto.request.ModificaVeicoloRequestDTO;
 import com.polimi.carzone.dto.request.RegistrazioneVenditaRequestDTO;
 import com.polimi.carzone.dto.request.RicercaRequestDTO;
-import com.polimi.carzone.dto.response.DettagliVeicoloResponseDTO;
-import com.polimi.carzone.dto.response.RegistrazioneVenditaResponseDTO;
-import com.polimi.carzone.dto.response.VeicoloResponseDTO;
+import com.polimi.carzone.dto.response.*;
 import com.polimi.carzone.model.Utente;
 import com.polimi.carzone.model.Veicolo;
 import com.polimi.carzone.persistence.service.AppuntamentoService;
 import com.polimi.carzone.persistence.service.UtenteService;
 import com.polimi.carzone.persistence.service.VeicoloService;
 import com.polimi.carzone.strategy.RicercaStrategy;
-import com.polimi.carzone.strategy.implementation.RicercaTarga;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,9 +28,9 @@ public class VeicoloController {
     private final UtenteService utenteService;
 
     @PostMapping("/aggiungiVeicolo")
-    public ResponseEntity<String> aggiungiVeicolo(@RequestBody AggiuntaVeicoloRequestDTO request) {
-        boolean esito = veicoloService.aggiungiVeicolo(request);
-        return ResponseEntity.status(HttpStatus.OK).body("Aggiunta effettuata con successo!");
+    public ResponseEntity<AggiuntaVeicoloResponseDTO> aggiungiVeicolo(@RequestBody AggiuntaVeicoloRequestDTO request) {
+        veicoloService.aggiungiVeicolo(request);
+        return ResponseEntity.status(HttpStatus.OK).body(new AggiuntaVeicoloResponseDTO("Veicolo aggiunto con successo"));
     }
 
     @GetMapping("/veicoli")
@@ -73,5 +70,23 @@ public class VeicoloController {
             response.setMessaggio("Vendita non effettuata");
         }
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/veicoliConDettagli")
+    public ResponseEntity<List<DettagliVeicoloManagerResponseDTO>> stampaVeicoliConDettagli() {
+        List<DettagliVeicoloManagerResponseDTO> veicoliConDettagli = veicoloService.findAllConDettagli();
+        return ResponseEntity.status(HttpStatus.OK).body(veicoliConDettagli);
+    }
+
+    @DeleteMapping("/elimina/{idVeicolo}")
+    public ResponseEntity<EliminaVeicoloResponseDTO> eliminaVeicolo(@PathVariable long idVeicolo) {
+        veicoloService.eliminaVeicolo(idVeicolo);
+        return ResponseEntity.status(HttpStatus.OK).body(new EliminaVeicoloResponseDTO("Veicolo eliminato con successo"));
+    }
+
+    @PutMapping("/modifica/{idVeicolo}")
+    public ResponseEntity<ModificaVeicoloResponse> modificaVeicolo(@PathVariable long idVeicolo, @RequestBody ModificaVeicoloRequestDTO request) {
+        veicoloService.modificaVeicolo(idVeicolo, request);
+        return ResponseEntity.status(HttpStatus.OK).body(new ModificaVeicoloResponse("Veicolo modificato con successo"));
     }
 }

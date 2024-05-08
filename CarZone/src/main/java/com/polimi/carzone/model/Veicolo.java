@@ -69,7 +69,7 @@ public class Veicolo {
     )
     private Utente acquirente;
 
-    @OneToMany(mappedBy = "veicolo")
+    @OneToMany(mappedBy = "veicolo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Appuntamento> appuntamentiVeicolo;
 
     public Veicolo() {

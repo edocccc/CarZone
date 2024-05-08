@@ -8,6 +8,9 @@ import {RicercaRequest} from "../dto/request/RicercaRequest";
 import {ShowAppuntamentoResponse} from "../dto/response/ShowAppuntamentoResponse";
 import {AppuntamentiDipendenteRequest} from "../dto/request/AppuntamentiDipendenteRequest";
 import {RegistrazioneVenditaRequest} from "../dto/request/RegistrazioneVenditaRequest";
+import {MessageResponse} from "../dto/response/MessageResponse";
+import {ShowDettagliVeicoloManagerResponse} from "../dto/response/ShowDettagliVeicoloManagerResponse";
+import {AggiungiVeicoloRequest} from "../dto/request/AggiungiVeicoloRequest";
 
 @Injectable({
   providedIn: 'root'
@@ -68,11 +71,45 @@ export class VeicoloService {
     return this.http.post<ShowVeicoloResponse[]>(this.backEndUrl + 'cerca', request);
   }
 
-  registraVendita(idAppuntamento: number, venditaConclusa: boolean): Observable<any>{
+  registraVendita(idAppuntamento: number, venditaConclusa: boolean): Observable<MessageResponse>{
     const request: RegistrazioneVenditaRequest = {
         idAppuntamento,
         venditaConclusa
     }
-    return this.http.post(this.backEndUrl + 'registraVendita', request);
+    return this.http.post<MessageResponse>(this.backEndUrl + 'registraVendita', request);
+  }
+
+  getAllVeicoliConDettagli(): Observable<ShowDettagliVeicoloManagerResponse[]> {
+    return this.http.get<ShowDettagliVeicoloManagerResponse[]>(this.backEndUrl + 'veicoliConDettagli');
+  }
+
+  eliminaVeicolo(id: number): Observable<MessageResponse> {
+    return this.http.delete<MessageResponse>(this.backEndUrl + 'elimina/' + id);
+  }
+
+  modificaVeicolo(veicolo: ShowDettagliVeicoloResponse) {
+    return this.http.put<MessageResponse>(this.backEndUrl + 'modifica/' + veicolo.id.toString(), veicolo);
+  }
+
+  aggiungiVeicolo(
+    targa: string,
+    marca: string,
+    modello: string,
+    chilometraggio: number,
+    annoProduzione: number,
+    potenzaCv: number,
+    alimentazione: string,
+    prezzo: number) : Observable<MessageResponse> {
+    const request: AggiungiVeicoloRequest = {
+      targa,
+      marca,
+      modello,
+      chilometraggio,
+      annoProduzione,
+      potenzaCv,
+      alimentazione,
+      prezzo
+    };
+    return this.http.post<MessageResponse>(this.backEndUrl + 'aggiungiVeicolo', request);
   }
 }
