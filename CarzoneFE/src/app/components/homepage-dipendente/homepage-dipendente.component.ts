@@ -6,6 +6,7 @@ import {ShowAppuntamentoResponse} from "../../dto/response/ShowAppuntamentoRespo
 import {Router} from "@angular/router";
 import {AppuntamentoService} from "../../services/appuntamento.service";
 import {ShowValutazioneMediaResponse} from "../../dto/response/ShowValutazioneMediaResponse";
+import {ShowRecensioneResponse} from "../../dto/response/ShowRecensioneResponse";
 
 @Component({
   selector: 'app-homepage-dipendente',
@@ -18,6 +19,7 @@ export class HomepageDipendenteComponent implements OnInit{
   idDipendente: number = +this.router.url.split('/')[2];
   appuntamentiLiberi: ShowAppuntamentoResponse[] = [];
   oraAttuale: Date = new Date();
+  recensioniDipendente: ShowRecensioneResponse[] = [];
 
   constructor(private veicoloService: VeicoloService, private utenteService: UtenteService, private appuntamentoService: AppuntamentoService, private router: Router) { }
 
@@ -25,6 +27,7 @@ export class HomepageDipendenteComponent implements OnInit{
     this.getAppuntamentiDipendente(this.idDipendente);
     this.getValutazioneMedia(this.idDipendente);
     this.getAppuntamentiLiberi();
+    this.getRecensioniDipendente(this.idDipendente);
   }
 
   getAppuntamentiDipendente(idDipendente: number) {
@@ -76,5 +79,16 @@ export class HomepageDipendenteComponent implements OnInit{
 
   redirectRegistraVendita(idAppuntamento: number) {
     this.router.navigate(['/registraVendita/'+idAppuntamento]);
+  }
+
+  private getRecensioniDipendente(idDipendente: number) {
+    this.appuntamentoService.getRecensioniDipendente(idDipendente).subscribe({
+      next: (response) => {
+        this.recensioniDipendente = response;
+      },
+      error: (error) => {
+        console.log("Si è verificato un errore:", error.error);
+      }
+    });
   }
 }

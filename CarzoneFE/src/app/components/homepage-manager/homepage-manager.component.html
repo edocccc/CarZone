@@ -1,1 +1,18 @@
-<p>homepage-manager works!</p>
+<p>Ecco tutti i dipendenti:</p>
+<br>
+<ng-container *ngIf="!dipendentiConRecensioni.length">
+  <p>Non ci sono dipendenti</p>
+</ng-container>
+  <ng-container *ngFor="let dipendente of dipendentiConRecensioni">
+    <p>{{dipendente.nomeDipendente | titlecase}} {{dipendente.cognomeDipendente | titlecase}}</p>
+    <p>Valutazione media: {{dipendente.valutazioneMedia.valutazioneMedia}}</p>
+    <p>Recensioni: </p>
+    <ng-container *ngIf="!dipendente.recensioni.length">
+      <p>Non ci sono recensioni</p>
+    </ng-container>
+    <ng-container *ngFor="let recensione of dipendente.recensioni">
+      <p>{{recensione.nomeCliente | titlecase}} {{recensione.cognomeCliente | titlecase}}</p>
+      <p>Voto: {{recensione.voto}} | Testo: {{recensione.testo}}</p>
+    </ng-container>
+    <br>
+</ng-container>

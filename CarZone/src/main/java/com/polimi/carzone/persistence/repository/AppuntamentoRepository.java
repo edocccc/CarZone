@@ -14,5 +14,7 @@ public interface AppuntamentoRepository extends JpaRepository<Appuntamento, Long
 
     Optional<List<Appuntamento>> findByDipendente_IdAndRecensioneVotoNotNull(long idDipendente);
 
+    Optional<List<Appuntamento>> findByDipendente_IdAndRecensioneVotoNotNullAndRecensioneTestoNotNull(long idDipendente);
+
     Optional<List<Appuntamento>> findByDipendenteIsNull();
 }

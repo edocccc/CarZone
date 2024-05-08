@@ -2,10 +2,7 @@ package com.polimi.carzone.controller;
 
 import com.polimi.carzone.dto.request.PrenotazioneRequestDTO;
 import com.polimi.carzone.dto.request.PresaInCaricoRequestDTO;
-import com.polimi.carzone.dto.response.AppuntamentoResponseDTO;
-import com.polimi.carzone.dto.response.PrenotazioneResponseDTO;
-import com.polimi.carzone.dto.response.PresaInCaricoResponseDTO;
-import com.polimi.carzone.dto.response.ValutazioneMediaResponseDTO;
+import com.polimi.carzone.dto.response.*;
 import com.polimi.carzone.persistence.service.AppuntamentoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -51,6 +48,18 @@ public class AppuntamentoController {
         appuntamentoService.prendiInCarico(request);
         PresaInCaricoResponseDTO response = new PresaInCaricoResponseDTO();
         response.setMessage("Appuntamento preso in carico con successo");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/recensioni/{idDipendente}")
+    public ResponseEntity<List<RecensioneResponseDTO>> trovaRecensioniDipendente(@PathVariable long idDipendente){
+        List<RecensioneResponseDTO> response = appuntamentoService.trovaRecensioniDipendente(idDipendente);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/dipendentiConRecensioni")
+    public ResponseEntity<List<DipendenteConRecensioneDTO>> trovaDipendentiConRecensioni(){
+        List<DipendenteConRecensioneDTO> response = appuntamentoService.trovaDipendentiConRecensioni();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

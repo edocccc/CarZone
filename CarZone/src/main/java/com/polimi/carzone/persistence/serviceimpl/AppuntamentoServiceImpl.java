@@ -2,14 +2,13 @@ package com.polimi.carzone.persistence.serviceimpl;
 
 import com.polimi.carzone.dto.request.PrenotazioneRequestDTO;
 import com.polimi.carzone.dto.request.PresaInCaricoRequestDTO;
-import com.polimi.carzone.dto.response.AppuntamentoResponseDTO;
-import com.polimi.carzone.dto.response.PresaInCaricoResponseDTO;
-import com.polimi.carzone.dto.response.ValutazioneMediaResponseDTO;
+import com.polimi.carzone.dto.response.*;
 import com.polimi.carzone.exception.AppuntamentoNonTrovatoException;
 import com.polimi.carzone.exception.CredenzialiNonValideException;
 import com.polimi.carzone.exception.UtenteNonTrovatoException;
 import com.polimi.carzone.exception.VeicoloNonTrovatoException;
 import com.polimi.carzone.model.Appuntamento;
+import com.polimi.carzone.model.Ruolo;
 import com.polimi.carzone.model.Utente;
 import com.polimi.carzone.model.Veicolo;
 import com.polimi.carzone.persistence.repository.AppuntamentoRepository;
@@ -131,8 +130,8 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
     public List<AppuntamentoResponseDTO> trovaAppuntamentiLiberi() {
         List<AppuntamentoResponseDTO> appuntamentiLiberi = new ArrayList<>();
         Optional<List<Appuntamento>> appuntamenti = appuntamentoRepo.findByDipendenteIsNull();
-        if(appuntamenti.isPresent() && !appuntamenti.get().isEmpty()){
-            for(Appuntamento appuntamento : appuntamenti.get()){
+        if(appuntamenti.isPresent() && !appuntamenti.get().isEmpty()) {
+            for (Appuntamento appuntamento : appuntamenti.get()) {
                 AppuntamentoResponseDTO appuntamentoLiberi = new AppuntamentoResponseDTO();
                 appuntamentoLiberi.setId(appuntamento.getId());
                 appuntamentoLiberi.setDataOra(appuntamento.getDataOra());
@@ -143,10 +142,8 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
                 appuntamentoLiberi.setModelloVeicolo(appuntamento.getVeicolo().getModello());
                 appuntamentiLiberi.add(appuntamentoLiberi);
             }
-            return appuntamentiLiberi;
-        } else {
-            throw new AppuntamentoNonTrovatoException("Nessun appuntamento libero trovato");
         }
+        return appuntamentiLiberi;
     }
 
     @Override
@@ -213,5 +210,47 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
         } else {
             throw new AppuntamentoNonTrovatoException("Appuntamento non trovato");
         }
+    }
+
+    @Override
+    public List<RecensioneResponseDTO> trovaRecensioniDipendente(long idDipendente) {
+        Map<String,String> errori = new TreeMap<>();
+        List<RecensioneResponseDTO> recensioni = new ArrayList<>();
+
+        if(idDipendente <= 0){
+            errori.put("id", "L'id del dipendente non è valido");
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        Optional<List<Appuntamento>> appuntamentiTrovati = appuntamentoRepo.findByDipendente_IdAndRecensioneVotoNotNullAndRecensioneTestoNotNull(idDipendente);
+        if(appuntamentiTrovati.isPresent() && !appuntamentiTrovati.get().isEmpty()){
+            for(Appuntamento appuntamento : appuntamentiTrovati.get()){
+                recensioni.add(new RecensioneResponseDTO(
+                        appuntamento.getCliente().getNome(),
+                        appuntamento.getCliente().getCognome(),
+                        appuntamento.getRecensioneVoto(),
+                        appuntamento.getRecensioneTesto()
+                ));
+            }
+        }
+        return recensioni;
+    }
+
+    @Override
+    public List<DipendenteConRecensioneDTO> trovaDipendentiConRecensioni() {
+        List<DipendenteConRecensioneDTO> dipendentiConRecensioni = new ArrayList<>();
+        List<Utente> dipendenti = utenteRepo.findByRuolo(Ruolo.DIPENDENTE);
+        for(Utente dipendente : dipendenti){
+            List<RecensioneResponseDTO> recensioni = trovaRecensioniDipendente(dipendente.getId());
+            if(!recensioni.isEmpty()){
+                dipendentiConRecensioni.add(new DipendenteConRecensioneDTO(
+                        dipendente.getNome(),
+                        dipendente.getCognome(),
+                        calcolaValutazioneMediaDipendente(dipendente.getId()),
+                        recensioni
+                ));
+            }
+        }
+        return dipendentiConRecensioni;
     }
 }

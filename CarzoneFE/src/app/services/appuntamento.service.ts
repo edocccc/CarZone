@@ -10,6 +10,8 @@ import {AppuntamentiDipendenteRequest} from "../dto/request/AppuntamentiDipenden
 import {ValutazioneMediaDipendenteRequest} from "../dto/request/ValutazioneMediaDipendenteRequest";
 import {ShowValutazioneMediaResponse} from "../dto/response/ShowValutazioneMediaResponse";
 import {PrendiInCaricoRequest} from "../dto/request/PrendiInCaricoRequest";
+import {ShowRecensioneResponse} from "../dto/response/ShowRecensioneResponse";
+import {ShowValutazioniDipendenti} from "../dto/response/ShowValutazioniDipendenti";
 
 @Injectable({
   providedIn: 'root'
@@ -56,4 +58,11 @@ export class AppuntamentoService {
     return this.http.post<MessageResponse>(this.backEndUrl + 'prendiInCarico', request);
   }
 
+  getRecensioniDipendente(idDipendente: number): Observable<ShowRecensioneResponse[]> {
+    return this.http.get<ShowRecensioneResponse[]>(this.backEndUrl + 'recensioni/' + idDipendente);
+  }
+
+  getDipendentiConRecensioni(): Observable<ShowValutazioniDipendenti[]> {
+    return this.http.get<ShowValutazioniDipendenti[]>(this.backEndUrl + 'dipendentiConRecensioni');
+  }
 }

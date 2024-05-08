@@ -1,5 +1,14 @@
 <p>Ecco la tua valutazione media: {{valutazioneMedia}}</p>
-<br><br>
+
+<p>Le tue recensioni: </p>
+<ng-container *ngIf="!recensioniDipendente.length">
+  <p>Non ci sono recensioni</p>
+</ng-container>
+<ng-container *ngFor="let rencesioneDipendente of recensioniDipendente">
+  <p>{{rencesioneDipendente.nomeCliente | titlecase}} {{rencesioneDipendente.cognomeCliente | titlecase}}</p>
+  <p>Voto: {{rencesioneDipendente.voto}} | Testo: {{rencesioneDipendente.testo}}</p>
+</ng-container>
+<br>
 <p>I tuoi appuntamenti: </p>
 
 <ng-container *ngFor="let appuntamentoDipendente of appuntamentiDipendente">
@@ -13,6 +22,9 @@
 </ng-container>
 <br>
 <p>Appuntamenti liberi: </p>
+<ng-container *ngIf="!appuntamentiLiberi.length">
+  <p>Non ci sono appuntamenti liberi</p>
+</ng-container>
 <ng-container *ngFor="let appuntamentoLibero of appuntamentiLiberi">
   <p>Data: {{appuntamentoLibero.dataOra | date:'yyyy-MM-dd'}} Ora: {{appuntamentoLibero.dataOra | date:'HH:mm:ss'}}</p>
   <p>Veicolo: {{appuntamentoLibero.marcaVeicolo}} {{appuntamentoLibero.modelloVeicolo}}, targa: {{appuntamentoLibero.targaVeicolo}} </p>
