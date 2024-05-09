@@ -48,21 +48,21 @@ public class Utente implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false , updatable = false)
+    @Column(nullable = false)
     private LocalDate dataNascita;
 
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Ruolo ruolo;
 
-    @OneToMany(mappedBy = "acquirente")
+    @OneToMany(mappedBy = "acquirente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Veicolo> veicoliAcquistati;
 
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Appuntamento> appuntamentiCliente;
 
-    @OneToMany(mappedBy = "dipendente")
+    @OneToMany(mappedBy = "dipendente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Appuntamento> appuntamentiDipendente;
 
     @Override

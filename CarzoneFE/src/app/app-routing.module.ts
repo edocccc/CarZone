@@ -15,6 +15,9 @@ import {
 } from "./components/gestione-veicoli-manager/gestione-veicoli-manager.component";
 import {ModificaVeicoloComponent} from "./components/modifica-veicolo/modifica-veicolo.component";
 import {AggiungiVeicoloComponent} from "./components/aggiungi-veicolo/aggiungi-veicolo.component";
+import {GestioneUtentiManagerComponent} from "./components/gestione-utenti-manager/gestione-utenti-manager.component";
+import {ModificaUtenteComponent} from "./components/modifica-utente/modifica-utente.component";
+import {AggiungiDipendenteComponent} from "./components/aggiungi-dipendente/aggiungi-dipendente.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/homeCliente', pathMatch: 'full' },
@@ -29,7 +32,10 @@ const routes: Routes = [
   { path: 'registraVendita/:id', component: RegistraVenditaComponent },
   { path: 'gestioneVeicoli', component: GestioneVeicoliManagerComponent },
   { path: 'modificaVeicolo/:id', component: ModificaVeicoloComponent },
-  { path: 'aggiungiVeicolo', component: AggiungiVeicoloComponent }
+  { path: 'aggiungiVeicolo', component: AggiungiVeicoloComponent },
+  { path: 'gestioneUtenti', component: GestioneUtentiManagerComponent },
+  { path: 'modificaUtente/:id', component: ModificaUtenteComponent },
+  { path: 'registraDipendente', component: AggiungiDipendenteComponent },
 ];
 
 @NgModule({

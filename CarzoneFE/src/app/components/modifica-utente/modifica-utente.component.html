@@ -1,0 +1,23 @@
+<label>Email: </label>
+<input type="text" [(ngModel)]="utente.email">
+<br>
+<label>Nome: </label>
+<input type="text" [(ngModel)]="utente.nome">
+<br>
+<label>Cognome: </label>
+<input type="text" [(ngModel)]="utente.cognome">
+<br>
+<label>Data Di Nascita: </label>
+<input type="Date" [(ngModel)]="utente.dataNascita">
+<br>
+<label>Username: </label>
+<input type="text" [(ngModel)]="utente.username">
+<br>
+<label>Ruolo: </label>
+<select [(ngModel)]="utente.ruolo">
+  <option value="CLIENTE">Cliente</option>
+  <option value="DIPENDENTE">Dipendente</option>
+  <option value="MANAGER">Manager</option>
+</select>
+<br>
+<button (click)="modificaUtente()">Modifica utente</button>

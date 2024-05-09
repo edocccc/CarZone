@@ -33,4 +33,8 @@ export class HomepageManagerComponent implements OnInit{
   redirectGestioneVeicoli() {
     this.router.navigate(['gestioneVeicoli']);
   }
+
+  redirectGestioneUtenti() {
+    this.router.navigate(['gestioneUtenti']);
+  }
 }

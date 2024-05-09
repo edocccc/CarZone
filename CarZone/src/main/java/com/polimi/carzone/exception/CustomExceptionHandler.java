@@ -102,4 +102,14 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    @ExceptionHandler(RuoloNonValidoException.class)
+    public ResponseEntity<ExceptionResponseDTO> gestisciRuoloNonValidoException(RuoloNonValidoException e) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO();
+        Map<String, String> errori = new TreeMap<>();
+        errori.put("ruolo", e.getMessage());
+        response.setTimestamp(LocalDateTime.now());
+        response.setErrori(errori);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
 }

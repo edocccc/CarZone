@@ -1,0 +1,30 @@
+<p>Ecco gli utenti, scegli un'azione</p>
+<br><br>
+<ng-container *ngIf="!utenti.length">
+  <p>Non ci sono utenti</p>
+</ng-container>
+<ng-container *ngFor="let utente of utenti">
+  <p>Id: {{utente.id}}</p>
+  <p>Email: {{utente.email}}</p>
+  <p>Nome: {{utente.email}}</p>
+  <p>Cognome: {{utente.cognome}}</p>
+  <p>Username: {{utente.dataNascita}}</p>
+  <p>Ruolo: {{utente.ruolo}}</p>
+  <ng-container *ngIf="utente.ruolo.toUpperCase()!='MANAGER'">
+    <button (click)="redirectModificaUtente(utente.id)">
+      Modifica
+    </button>
+    <button (click)="eliminaUtente(utente.id)">
+      Elimina
+    </button>
+  </ng-container>
+  <ng-container *ngIf="utente.ruolo.toUpperCase()=='MANAGER'">
+    <p>Non si possono effettuare azioni sui manager</p>
+  </ng-container>
+  <br><br>
+</ng-container>
+
+<p>Funzionalità: </p>
+<button (click)="redirectAggiungiDipendente()">
+  Registra dipendente
+</button>
