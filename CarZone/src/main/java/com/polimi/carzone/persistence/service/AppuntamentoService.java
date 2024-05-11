@@ -1,5 +1,7 @@
 package com.polimi.carzone.persistence.service;
 
+import com.polimi.carzone.dto.request.ModificaAppuntamentoRequestDTO;
+import com.polimi.carzone.dto.request.PrenotazioneManagerRequestDTO;
 import com.polimi.carzone.dto.request.PrenotazioneRequestDTO;
 import com.polimi.carzone.dto.request.PresaInCaricoRequestDTO;
 import com.polimi.carzone.dto.response.*;
@@ -27,4 +29,12 @@ public interface AppuntamentoService {
     List<DipendenteConRecensioneDTO> trovaDipendentiConRecensioni();
 
     void registraVendita(long idAppuntamento, boolean venditaConclusa);
+
+    List<AppuntamentoManagerResponseDTO> trovaAppuntamentiPerManager();
+
+    void prenotaPerManager(PrenotazioneManagerRequestDTO request);
+
+    void eliminaAppuntamento(long idAppuntamento);
+
+    void modificaAppuntamento(long idAppuntamento, ModificaAppuntamentoRequestDTO request);
 }

@@ -87,8 +87,14 @@ public class VeicoloController {
     }
 
     @PutMapping("/modifica/{idVeicolo}")
-    public ResponseEntity<ModificaVeicoloResponse> modificaVeicolo(@PathVariable long idVeicolo, @RequestBody ModificaVeicoloRequestDTO request) {
+    public ResponseEntity<ModificaVeicoloResponseDTO> modificaVeicolo(@PathVariable long idVeicolo, @RequestBody ModificaVeicoloRequestDTO request) {
         veicoloService.modificaVeicolo(idVeicolo, request);
-        return ResponseEntity.status(HttpStatus.OK).body(new ModificaVeicoloResponse("Veicolo modificato con successo"));
+        return ResponseEntity.status(HttpStatus.OK).body(new ModificaVeicoloResponseDTO("Veicolo modificato con successo"));
+    }
+
+    @GetMapping("/veicoliDisponibili")
+    public ResponseEntity<List<DettagliVeicoloManagerResponseDTO>> stampaVeicoliDiponibiliPerManager() {
+        List<DettagliVeicoloManagerResponseDTO> veicoliDisponobili = veicoloService.findAllDisponibili();
+        return ResponseEntity.status(HttpStatus.OK).body(veicoliDisponobili);
     }
 }

@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ModificaVeicoloResponse {
+public class ModificaVeicoloResponseDTO {
     private String messaggio;
 }

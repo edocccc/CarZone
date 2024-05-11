@@ -67,7 +67,7 @@ public class UtenteController {
         return ResponseEntity.status(HttpStatus.OK).body(utenti);
     }
 
-    @GetMapping("/{idUtente}")
+    @GetMapping("/trova/{idUtente}")
     public ResponseEntity<UtenteManagerResponseDTO> trovaUtente(@PathVariable long idUtente) {
         UtenteManagerResponseDTO utente = utenteService.trovaUtenteManager(idUtente);
         return ResponseEntity.status(HttpStatus.OK).body(utente);
@@ -83,6 +83,18 @@ public class UtenteController {
     public ResponseEntity<EliminaUtenteResponseDTO> eliminaUtente(@PathVariable long idUtente) {
         utenteService.eliminaUtente(idUtente);
         return ResponseEntity.status(HttpStatus.OK).body(new EliminaUtenteResponseDTO("Utente eliminato con successo"));
+    }
+
+    @GetMapping("/trovaClienti")
+    public ResponseEntity<List<UtenteManagerResponseDTO>> trovaClienti() {
+        List<UtenteManagerResponseDTO> utenti = utenteService.trovaClienti();
+        return ResponseEntity.status(HttpStatus.OK).body(utenti);
+    }
+
+    @GetMapping("/trovaDipendenti")
+    public ResponseEntity<List<UtenteManagerResponseDTO>> trovaDipendenti() {
+        List<UtenteManagerResponseDTO> utenti = utenteService.trovaDipendenti();
+        return ResponseEntity.status(HttpStatus.OK).body(utenti);
     }
 }
 

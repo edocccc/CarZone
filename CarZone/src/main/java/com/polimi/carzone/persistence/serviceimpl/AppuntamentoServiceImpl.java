@@ -1,8 +1,6 @@
 package com.polimi.carzone.persistence.serviceimpl;
 
-import com.polimi.carzone.dto.request.PrenotazioneRequestDTO;
-import com.polimi.carzone.dto.request.PresaInCaricoRequestDTO;
-import com.polimi.carzone.dto.request.RegistrazioneVenditaRequestDTO;
+import com.polimi.carzone.dto.request.*;
 import com.polimi.carzone.dto.response.*;
 import com.polimi.carzone.exception.AppuntamentoNonTrovatoException;
 import com.polimi.carzone.exception.CredenzialiNonValideException;
@@ -272,6 +270,183 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
 
 
         appuntamento.get().setEsitoRegistrato(true);
+        appuntamentoRepo.save(appuntamento.get());
+    }
+
+    @Override
+    public List<AppuntamentoManagerResponseDTO> trovaAppuntamentiPerManager() {
+        List<AppuntamentoManagerResponseDTO> appuntamentiPerManager = new ArrayList<>();
+        List<Appuntamento> appuntamenti = appuntamentoRepo.findAll();
+        for(Appuntamento appuntamento : appuntamenti){
+            if(appuntamento.getDipendente() != null){
+                appuntamentiPerManager.add(new AppuntamentoManagerResponseDTO(
+                        appuntamento.getId(),
+                        appuntamento.getDataOra(),
+                        appuntamento.getCliente().getNome(),
+                        appuntamento.getCliente().getCognome(),
+                        appuntamento.getDipendente().getNome(),
+                        appuntamento.getDipendente().getCognome(),
+                        appuntamento.getVeicolo().getTarga(),
+                        appuntamento.getVeicolo().getMarca(),
+                        appuntamento.getVeicolo().getModello(),
+                        appuntamento.isEsitoRegistrato(),
+                        appuntamento.getDataOra().isBefore(LocalDateTime.now())
+
+                ));
+            } else {
+                appuntamentiPerManager.add(new AppuntamentoManagerResponseDTO(
+                        appuntamento.getId(),
+                        appuntamento.getDataOra(),
+                        appuntamento.getCliente().getNome(),
+                        appuntamento.getCliente().getCognome(),
+                        null,
+                        null,
+                        appuntamento.getVeicolo().getTarga(),
+                        appuntamento.getVeicolo().getMarca(),
+                        appuntamento.getVeicolo().getModello(),
+                        appuntamento.isEsitoRegistrato(),
+                        appuntamento.getDataOra().isBefore(LocalDateTime.now())
+                ));
+            }
+
+        }
+        return appuntamentiPerManager;
+    }
+
+    @Override
+    public void prenotaPerManager(PrenotazioneManagerRequestDTO request) {
+        Map<String,String> errori = new TreeMap<>();
+
+        if(request == null){
+            errori.put("request", "La request non può essere null");
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        if(request.getDataOra().isBefore(LocalDateTime.now()) || request.getDataOra().isEqual(LocalDateTime.now())) {
+            errori.put("dataOra", "La data e l'ora devono essere successive a quella attuale");
+        }
+
+        if(request.getIdVeicolo() <= 0) {
+            errori.put("idVeicolo", "L'id del veicolo non è valido");
+        }
+
+        if(request.getIdCliente() <= 0) {
+            errori.put("idCliente", "L'id del cliente non è valido");
+        }
+
+        if(request.getIdDipendente() < 0) {
+            errori.put("idDipendente", "L'id del dipendente non è valido");
+        }
+
+        if(!errori.isEmpty()){
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        Optional<Utente> cliente = utenteRepo.findById(request.getIdCliente());
+        Optional<Veicolo> veicolo = veicoloRepo.findById(request.getIdVeicolo());
+        Optional<Utente> dipendente = Optional.empty();
+        if(request.getIdDipendente() != 0){
+            dipendente = utenteRepo.findById(request.getIdDipendente());
+            if(dipendente.isEmpty()){
+                throw new UtenteNonTrovatoException("Dipendente non trovato");
+            }
+        }
+        if (cliente.isEmpty()){
+            throw new UtenteNonTrovatoException("Cliente non trovato");
+        }
+        if(veicolo.isEmpty()){
+            throw new VeicoloNonTrovatoException("Veicolo non trovato");
+        }
+
+        Appuntamento appuntamento = new Appuntamento();
+        appuntamento.setDataOra(request.getDataOra());
+        appuntamento.setCliente(cliente.get());
+        appuntamento.setVeicolo(veicolo.get());
+        if(request.getIdDipendente() != 0){
+            appuntamento.setDipendente(dipendente.get());
+        }
+        appuntamento.setEsitoRegistrato(false);
+        appuntamentoRepo.save(appuntamento);
+    }
+
+    @Override
+    public void eliminaAppuntamento(long idAppuntamento) {
+        Map<String,String> errori = new TreeMap<>();
+
+        if(idAppuntamento <= 0){
+            errori.put("idAppuntamento", "L'id dell'appuntamento non è valido");
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        Optional<Appuntamento> appuntamento = appuntamentoRepo.findById(idAppuntamento);
+        if(appuntamento.isEmpty()){
+            throw new AppuntamentoNonTrovatoException("Appuntamento non trovato");
+        }
+
+        appuntamentoRepo.delete(appuntamento.get());
+    }
+
+    @Override
+    public void modificaAppuntamento(long idAppuntamento, ModificaAppuntamentoRequestDTO request) {
+        Map<String,String> errori = new TreeMap<>();
+
+        if(idAppuntamento <= 0){
+            errori.put("idAppuntamento", "L'id dell'appuntamento non è valido");
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        if(request == null){
+            errori.put("request", "La request non può essere null");
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        if(request.getDataOra().isBefore(LocalDateTime.now()) || request.getDataOra().isEqual(LocalDateTime.now())) {
+            errori.put("dataOra", "La data e l'ora devono essere successive a quella attuale");
+        }
+
+        if(request.getIdVeicolo() <= 0) {
+            errori.put("idVeicolo", "L'id del veicolo non è valido");
+        }
+
+        if(request.getIdCliente() <= 0) {
+            errori.put("idCliente", "L'id del cliente non è valido");
+        }
+
+        if(request.getIdDipendente() < 0) {
+            errori.put("idDipendente", "L'id del dipendente non è valido");
+        }
+
+        if(!errori.isEmpty()){
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        Optional<Appuntamento> appuntamento = appuntamentoRepo.findById(idAppuntamento);
+        Optional<Utente> cliente = utenteRepo.findById(request.getIdCliente());
+        Optional<Veicolo> veicolo = veicoloRepo.findById(request.getIdVeicolo());
+        Optional<Utente> dipendente = Optional.empty();
+        if(request.getIdDipendente() != 0){
+            dipendente = utenteRepo.findById(request.getIdDipendente());
+            if(dipendente.isEmpty()){
+                throw new UtenteNonTrovatoException("Dipendente non trovato");
+            }
+        }
+        if(appuntamento.isEmpty()){
+            throw new AppuntamentoNonTrovatoException("Appuntamento non trovato");
+        }
+        if(cliente.isEmpty()){
+            throw new UtenteNonTrovatoException("Cliente non trovato");
+        }
+
+        if(veicolo.isEmpty()){
+            throw new VeicoloNonTrovatoException("Veicolo non trovato");
+        }
+
+        appuntamento.get().setDataOra(request.getDataOra());
+        appuntamento.get().setCliente(cliente.get());
+        appuntamento.get().setVeicolo(veicolo.get());
+        if(request.getIdDipendente() != 0){
+            appuntamento.get().setDipendente(dipendente.get());
+        }
         appuntamentoRepo.save(appuntamento.get());
     }
 }

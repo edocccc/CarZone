@@ -1,0 +1,22 @@
+<label>Ora: </label>
+<input type="datetime-local" [(ngModel)]="dataOra">
+<br>
+<label>Cliente: </label>
+<select [(ngModel)]="idCliente">
+  <option *ngFor="let cliente of clienti" [value]="cliente.id">{{cliente.nome}} {{cliente.cognome}} username: {{cliente.username}}</option>
+</select>
+<br>
+<label>Veicolo: </label>
+<select [(ngModel)]="idVeicolo">
+  <option *ngFor="let veicolo of veicoli" [value]="veicolo.id">{{veicolo.marca}} {{veicolo.modello}} targa: {{veicolo.targa}}</option>
+</select>
+<br>
+<label>Dipendente: </label>
+<select [(ngModel)]="idDipendente">
+  <option *ngFor="let dipendente of dipendenti" [value]="dipendente.id">{{dipendente.nome}} {{dipendente.cognome}} username: {{dipendente.username}}</option>
+</select>
+<br>
+<br>
+<button (click)="modificaAppuntamento()">
+  Modifica appuntamento
+</button>

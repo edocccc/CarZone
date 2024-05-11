@@ -1,7 +1,7 @@
 <p>Ecco tutti i dipendenti:</p>
 <br>
 <ng-container *ngIf="!dipendentiConRecensioni.length">
-  <p>Non ci sono dipendenti</p>
+  <p>Non ci sono dipendenti con recensioni</p>
 </ng-container>
   <ng-container *ngFor="let dipendente of dipendentiConRecensioni">
     <p>{{dipendente.nomeDipendente | titlecase}} {{dipendente.cognomeDipendente | titlecase}}</p>
@@ -17,6 +17,7 @@
     <br>
 </ng-container>
 
+<br><br>
 <p>Funzionalità:</p>
 <button (click)="redirectGestioneVeicoli()">
   Gestione veicoli
@@ -25,3 +26,9 @@
 <button (click)="redirectGestioneUtenti()">
   Gestione utenti
 </button>
+<br><br>
+<button (click)="redirectGestioneAppuntamenti()">
+  Gestione appuntamenti
+</button>
+
+

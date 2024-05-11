@@ -15,10 +15,10 @@ export class GestioneUtentiManagerComponent implements OnInit{
   constructor(private utenteService: UtenteService, private router: Router) { }
 
   ngOnInit(): void {
-    this.getAllUtentiNonManager();
+    this.getAllUtentiManager();
   }
 
-  private getAllUtentiNonManager() {
+  getAllUtentiManager() {
     this.utenteService.getAllUtentiManager().subscribe({
       next: (response: ShowUtenteManagerResponse[] )  => {
         this.utenti = response;
@@ -33,7 +33,7 @@ export class GestioneUtentiManagerComponent implements OnInit{
   eliminaUtente(id: number) {
     this.utenteService.eliminaUtente(id).subscribe({
       next: () => {
-        this.getAllUtentiNonManager();
+        this.getAllUtentiManager();
       },
       error: () => {
         alert('Errore durante l\'eliminazione dell\'utente');

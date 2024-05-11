@@ -22,9 +22,12 @@ import { AggiungiVeicoloComponent } from './components/aggiungi-veicolo/aggiungi
 import { GestioneUtentiManagerComponent } from './components/gestione-utenti-manager/gestione-utenti-manager.component';
 import { ModificaUtenteComponent } from './components/modifica-utente/modifica-utente.component';
 import { AggiungiDipendenteComponent } from './components/aggiungi-dipendente/aggiungi-dipendente.component';
+import { GestioneAppuntamentiManagerComponent } from './components/gestione-appuntamenti-manager/gestione-appuntamenti-manager.component';
+import { AggiungiAppuntamentoComponent } from './components/aggiungi-appuntamento/aggiungi-appuntamento.component';
+import { ModificaAppuntamentoComponent } from './components/modifica-appuntamento/modifica-appuntamento.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, RegistrazioneComponent, HomepageClienteComponent, DettagliVeicoloComponent, HomepageDipendenteComponent, HomepageManagerComponent, PrenotazioneVeicoloComponent, RicercaComponent, RegistraVenditaComponent, GestioneVeicoliManagerComponent, ModificaVeicoloComponent, AggiungiVeicoloComponent, GestioneUtentiManagerComponent, ModificaUtenteComponent, AggiungiDipendenteComponent],
+  declarations: [AppComponent, LoginComponent, RegistrazioneComponent, HomepageClienteComponent, DettagliVeicoloComponent, HomepageDipendenteComponent, HomepageManagerComponent, PrenotazioneVeicoloComponent, RicercaComponent, RegistraVenditaComponent, GestioneVeicoliManagerComponent, ModificaVeicoloComponent, AggiungiVeicoloComponent, GestioneUtentiManagerComponent, ModificaUtenteComponent, AggiungiDipendenteComponent, GestioneAppuntamentiManagerComponent, AggiungiAppuntamentoComponent, ModificaAppuntamentoComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

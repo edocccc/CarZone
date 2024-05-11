@@ -102,10 +102,18 @@ export class UtenteService {
   }
 
   getUtente(id: number): Observable<ShowUtenteManagerResponse> {
-    return this.http.get<ShowUtenteManagerResponse>(this.backEndUrl + '' + id);
+    return this.http.get<ShowUtenteManagerResponse>(this.backEndUrl + 'trova/' + id);
   }
 
   modificaUtente(utente: ShowUtenteManagerResponse):Observable<MessageResponse> {
     return this.http.put<MessageResponse>(this.backEndUrl + 'modifica/' + utente.id.toString(), utente);
+  }
+
+  getClienti() {
+    return this.http.get<ShowUtenteManagerResponse[]>(this.backEndUrl + 'trovaClienti');
+  }
+
+  getDipendenti() {
+    return this.http.get<ShowUtenteManagerResponse[]>(this.backEndUrl + 'trovaDipendenti');
   }
 }

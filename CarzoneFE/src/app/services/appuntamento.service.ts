@@ -12,6 +12,9 @@ import {ShowValutazioneMediaResponse} from "../dto/response/ShowValutazioneMedia
 import {PrendiInCaricoRequest} from "../dto/request/PrendiInCaricoRequest";
 import {ShowRecensioneResponse} from "../dto/response/ShowRecensioneResponse";
 import {ShowValutazioniDipendenti} from "../dto/response/ShowValutazioniDipendenti";
+import {ShowAppuntamentoManagerResponse} from "../dto/response/ShowAppuntamentoManagerResponse";
+import {PrenotazioneManagerRequest} from "../dto/request/PrenotazioneManagerRequest";
+import {ModificaAppuntamentoManagerRequest} from "../dto/request/ModificaAppuntamentoManagerRequest";
 
 @Injectable({
   providedIn: 'root'
@@ -64,5 +67,34 @@ export class AppuntamentoService {
 
   getDipendentiConRecensioni(): Observable<ShowValutazioniDipendenti[]> {
     return this.http.get<ShowValutazioniDipendenti[]>(this.backEndUrl + 'dipendentiConRecensioni');
+  }
+
+  getAllAppuntamentiManager(): Observable<ShowAppuntamentoManagerResponse[]> {
+    return this.http.get<ShowAppuntamentoManagerResponse[]>(this.backEndUrl + 'trovaPerManager');
+  }
+
+  eliminaAppuntamento(id: number) {
+    return this.http.delete<MessageResponse>(this.backEndUrl + 'elimina/' + id);
+  }
+
+  prenotaAppuntamento(dataOra: Date, idVeicolo: number, idCliente: number, idDipendente: number) {
+    const request: PrenotazioneManagerRequest = {
+      dataOra,
+      idVeicolo,
+      idCliente,
+      idDipendente
+    }
+    return this.http.post<MessageResponse>(this.backEndUrl + 'prenotaPerManager', request);
+  }
+
+  modificaAppuntamento(idAppuntamento: number, dataOra: Date, idVeicolo: number, idCliente: number, idDipendente: number) {
+    const request: ModificaAppuntamentoManagerRequest = {
+      idAppuntamento,
+      dataOra,
+      idVeicolo,
+      idCliente,
+      idDipendente
+    }
+    return this.http.put<MessageResponse>(this.backEndUrl + 'modifica/' + idAppuntamento, request);
   }
 }

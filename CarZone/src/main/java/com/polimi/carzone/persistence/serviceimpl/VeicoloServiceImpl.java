@@ -497,6 +497,34 @@ public class VeicoloServiceImpl implements VeicoloService {
     }
 
     @Override
+    public List<DettagliVeicoloManagerResponseDTO> findAllDisponibili() {
+        List<Veicolo> veicoli = veicoloRepo.findAll();
+        List<DettagliVeicoloManagerResponseDTO> veicoliResponse = new ArrayList<>();
+        for (Veicolo veicolo : veicoli) {
+
+            String stato = checkStato(veicolo);
+            if(stato.equals("DISPONIBILE")){
+                DettagliVeicoloManagerResponseDTO dettagli = new DettagliVeicoloManagerResponseDTO();
+                dettagli.setId(veicolo.getId());
+                dettagli.setTarga(veicolo.getTarga());
+                dettagli.setMarca(veicolo.getMarca());
+                dettagli.setModello(veicolo.getModello());
+                dettagli.setChilometraggio(veicolo.getChilometraggio());
+                dettagli.setAnnoProduzione(veicolo.getAnnoProduzione());
+                dettagli.setPotenzaCv(veicolo.getPotenzaCv());
+                dettagli.setAlimentazione(veicolo.getAlimentazione());
+                dettagli.setPrezzo(veicolo.getPrezzo());
+                dettagli.setStato(checkStato(veicolo));
+                veicoliResponse.add(dettagli);
+            }
+        }
+        if(veicoliResponse.isEmpty()) {
+            throw new VeicoliNonDisponibiliException("Nessun veicolo disponibile");
+        }
+        return veicoliResponse;
+    }
+
+    @Override
     public DettagliVeicoloResponseDTO recuperaDettagli(long idVeicolo) {
         Map<String,String> errori = new TreeMap<>();
         if (idVeicolo <= 0) {

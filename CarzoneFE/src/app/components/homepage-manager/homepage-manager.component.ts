@@ -37,4 +37,8 @@ export class HomepageManagerComponent implements OnInit{
   redirectGestioneUtenti() {
     this.router.navigate(['gestioneUtenti']);
   }
+
+  redirectGestioneAppuntamenti() {
+    this.router.navigate(['gestioneAppuntamenti']);
+  }
 }

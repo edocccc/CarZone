@@ -28,7 +28,7 @@ public class Appuntamento {
     )
     private long id;
 
-    @Column(updatable = false, nullable = false)
+    @Column(nullable = false)
     private LocalDateTime dataOra;
 
     @Column()

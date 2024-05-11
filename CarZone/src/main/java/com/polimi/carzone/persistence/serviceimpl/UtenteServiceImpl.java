@@ -134,6 +134,9 @@ public class UtenteServiceImpl implements UtenteService {
         }
 
         Optional<Utente> utente = utenteRepo.findById(id);
+        if(utente.isEmpty()){
+            throw new UtenteNonTrovatoException("Utente non trovato");
+        }
         UtenteManagerResponseDTO utenteResponse = new UtenteManagerResponseDTO();
         utenteResponse.setId(utente.get().getId());
         utenteResponse.setEmail(utente.get().getEmail());
@@ -211,6 +214,46 @@ public class UtenteServiceImpl implements UtenteService {
             throw new VeicoloNonTrovatoException("Utente non trovato");
         }
         utenteRepo.delete(utente.get());
+    }
+
+    @Override
+    public List<UtenteManagerResponseDTO> trovaClienti() {
+        List<Utente> utenti = utenteRepo.findAll();
+        List<UtenteManagerResponseDTO> utentiResponse = new ArrayList<>();
+        for (Utente utente : utenti) {
+            if(utente.getRuolo().equals(Ruolo.CLIENTE)) {
+                UtenteManagerResponseDTO utenteResponse = new UtenteManagerResponseDTO();
+                utenteResponse.setId(utente.getId());
+                utenteResponse.setEmail(utente.getEmail());
+                utenteResponse.setNome(utente.getNome());
+                utenteResponse.setCognome(utente.getCognome());
+                utenteResponse.setDataNascita(utente.getDataNascita());
+                utenteResponse.setUsername(utente.getUsername());
+                utenteResponse.setRuolo(utente.getRuolo());
+                utentiResponse.add(utenteResponse);
+            }
+        }
+        return utentiResponse;
+    }
+
+    @Override
+    public List<UtenteManagerResponseDTO> trovaDipendenti() {
+        List<Utente> utenti = utenteRepo.findAll();
+        List<UtenteManagerResponseDTO> utentiResponse = new ArrayList<>();
+        for (Utente utente : utenti) {
+            if(utente.getRuolo().equals(Ruolo.DIPENDENTE)) {
+                UtenteManagerResponseDTO utenteResponse = new UtenteManagerResponseDTO();
+                utenteResponse.setId(utente.getId());
+                utenteResponse.setEmail(utente.getEmail());
+                utenteResponse.setNome(utente.getNome());
+                utenteResponse.setCognome(utente.getCognome());
+                utenteResponse.setDataNascita(utente.getDataNascita());
+                utenteResponse.setUsername(utente.getUsername());
+                utenteResponse.setRuolo(utente.getRuolo());
+                utentiResponse.add(utenteResponse);
+            }
+        }
+        return utentiResponse;
     }
 
     private void ControllaSignupRequest(SignupRequestDTO request){

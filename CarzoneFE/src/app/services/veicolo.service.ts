@@ -112,4 +112,15 @@ export class VeicoloService {
     };
     return this.http.post<MessageResponse>(this.backEndUrl + 'aggiungiVeicolo', request);
   }
+
+  getVeicoliDisponibili() {
+    return this.http.get<ShowDettagliVeicoloManagerResponse[]>(this.backEndUrl + 'veicoliDisponibili').pipe(
+      map(response => {
+        console.log("inizio del service")
+        console.log(response);
+        console.log("fine del service")
+        return response;
+      })
+    );
+  }
 }

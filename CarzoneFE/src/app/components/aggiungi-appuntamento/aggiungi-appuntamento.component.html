@@ -1,0 +1,22 @@
+<label>Scegli una data per la prenotazione</label>
+<br>
+<input [(ngModel)]="dataOra" type="datetime-local">
+<br><br>
+<label>Scegli un cliente:</label>
+<select [(ngModel)]="idCliente">
+  <option *ngFor="let cliente of clienti" [value]="cliente.id">{{cliente.nome}} {{cliente.cognome}} username: {{cliente.username}}</option>
+</select>
+<br><br>
+<label>Scegli un veicolo:</label>
+<select [(ngModel)]="idVeicolo">
+  <option *ngFor="let veicolo of veicoli" [value]="veicolo.id">{{veicolo.marca}} {{veicolo.modello}} targa: {{veicolo.targa}}</option>
+</select>
+<br><br>
+<label>Scegli un dipendente se vuoi assegnarne uno:</label>
+<select [(ngModel)]="idDipendente">
+  <option *ngFor="let dipendente of dipendenti" [value]="dipendente.id">{{dipendente.nome}} {{dipendente.cognome}} username: {{dipendente.username}}</option>
+</select>
+<br><br>
+<button (click)="prenota()">
+  Prenota
+</button>

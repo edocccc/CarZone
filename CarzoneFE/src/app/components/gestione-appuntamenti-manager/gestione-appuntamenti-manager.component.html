@@ -1,0 +1,45 @@
+<p>Ecco tutti gli appuntamenti, scegli un'azione</p>
+<br><br>
+<ng-container *ngIf="!appuntamenti.length">
+  <p>Non ci sono appuntamenti</p>
+</ng-container>
+<ng-container *ngFor="let appuntamento of appuntamenti">
+  <p>Id: {{appuntamento.id}}</p>
+  <p>Data: {{appuntamento.dataOra | date:'yyyy-MM-dd'}} Ora: {{appuntamento.dataOra | date:'HH:mm:ss'}}</p>
+  <p>Cliente: {{appuntamento.nomeCliente}} {{appuntamento.cognomeCliente}}</p>
+  <ng-container *ngIf="appuntamento.nomeDipendente!=null && appuntamento.cognomeDipendente!=null">
+  <p>Dipendente: {{appuntamento.nomeDipendente}} {{appuntamento.cognomeDipendente}}</p>
+  </ng-container>
+  <ng-container *ngIf="appuntamento.nomeDipendente==null && appuntamento.cognomeDipendente==null">
+    <p>Dipendente: Non assegnato</p>
+  </ng-container>
+  <p>Veicolo: {{appuntamento.marcaVeicolo}} {{appuntamento.modelloVeicolo}}</p>
+  <ng-container *ngIf="appuntamento.esitoRegistrato">
+    <p>Esito registrato: SI</p>
+  </ng-container>
+  <ng-container *ngIf="!appuntamento.esitoRegistrato">
+    <p>Esito registrato: NO</p>
+  </ng-container>
+  <ng-container *ngIf="!appuntamento.esitoRegistrato">
+    <ng-container *ngIf="appuntamento.dataPassata">
+    <button (click)="redirectRegistraVendita(appuntamento.id)">
+      Registra vendita
+    </button>
+    </ng-container>
+    <button (click)="modificaAppuntamento(appuntamento.id)">
+      Modifica
+    </button>
+    <button (click)="eliminaAppuntamento(appuntamento.id)">
+      Elimina
+    </button>
+  </ng-container>
+  <ng-container *ngIf="appuntamento.esitoRegistrato">
+    <p>Non si possono effettuare azioni su appuntamenti già registrati</p>
+  </ng-container>
+  <br><br>
+</ng-container>
+
+<p>Funzionalità: </p>
+<button (click)="redirectAggiungiAppuntamento()">
+  Aggiungi un appuntamento
+</button>

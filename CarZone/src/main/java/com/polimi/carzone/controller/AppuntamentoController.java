@@ -1,7 +1,6 @@
 package com.polimi.carzone.controller;
 
-import com.polimi.carzone.dto.request.PrenotazioneRequestDTO;
-import com.polimi.carzone.dto.request.PresaInCaricoRequestDTO;
+import com.polimi.carzone.dto.request.*;
 import com.polimi.carzone.dto.response.*;
 import com.polimi.carzone.persistence.service.AppuntamentoService;
 import lombok.RequiredArgsConstructor;
@@ -61,5 +60,30 @@ public class AppuntamentoController {
     public ResponseEntity<List<DipendenteConRecensioneDTO>> trovaDipendentiConRecensioni(){
         List<DipendenteConRecensioneDTO> response = appuntamentoService.trovaDipendentiConRecensioni();
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/trovaPerManager")
+    public ResponseEntity<List<AppuntamentoManagerResponseDTO>> trovaAppuntamentiPerManager(){
+        List<AppuntamentoManagerResponseDTO> response = appuntamentoService.trovaAppuntamentiPerManager();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/prenotaPerManager")
+    public ResponseEntity<PrenotazioneResponseDTO> prenotaPerManager(@RequestBody PrenotazioneManagerRequestDTO request){
+        appuntamentoService.prenotaPerManager(request);
+        PrenotazioneResponseDTO response = new PrenotazioneResponseDTO("Prenotazione effettuata con successo!");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @DeleteMapping("/elimina/{idAppuntamento}")
+    public ResponseEntity<EliminaUtenteResponseDTO> eliminaUtente(@PathVariable long idAppuntamento) {
+        appuntamentoService.eliminaAppuntamento(idAppuntamento);
+        return ResponseEntity.status(HttpStatus.OK).body(new EliminaUtenteResponseDTO("Appuntamento eliminato con successo"));
+    }
+
+    @PutMapping("/modifica/{idAppuntamento}")
+    public ResponseEntity<ModificaAppuntamentoResponseDTO> modificaAppuntamento(@PathVariable long idAppuntamento, @RequestBody ModificaAppuntamentoRequestDTO request) {
+        appuntamentoService.modificaAppuntamento(idAppuntamento, request);
+        return ResponseEntity.status(HttpStatus.OK).body(new ModificaAppuntamentoResponseDTO("Appuntamento modificato con successo"));
     }
 }
