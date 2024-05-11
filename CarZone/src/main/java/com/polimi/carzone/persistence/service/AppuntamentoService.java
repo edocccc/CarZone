@@ -25,4 +25,6 @@ public interface AppuntamentoService {
     List<RecensioneResponseDTO> trovaRecensioniDipendente(long idDipendente);
 
     List<DipendenteConRecensioneDTO> trovaDipendentiConRecensioni();
+
+    void registraVendita(long idAppuntamento, boolean venditaConclusa);
 }

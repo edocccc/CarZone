@@ -2,6 +2,7 @@ package com.polimi.carzone.persistence.serviceimpl;
 
 import com.polimi.carzone.dto.request.PrenotazioneRequestDTO;
 import com.polimi.carzone.dto.request.PresaInCaricoRequestDTO;
+import com.polimi.carzone.dto.request.RegistrazioneVenditaRequestDTO;
 import com.polimi.carzone.dto.response.*;
 import com.polimi.carzone.exception.AppuntamentoNonTrovatoException;
 import com.polimi.carzone.exception.CredenzialiNonValideException;
@@ -68,6 +69,7 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
         appuntamento.setDataOra(request.getDataOra());
         appuntamento.setCliente(cliente.get());
         appuntamento.setVeicolo(veicolo.get());
+        appuntamento.setEsitoRegistrato(false);
         appuntamentoRepo.save(appuntamento);
     }
 
@@ -80,7 +82,7 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
             throw new CredenzialiNonValideException(errori);
         }
 
-        Optional<List<Appuntamento>> appuntamentiTrovati = appuntamentoRepo.findByDipendente_Id(idDipendente);
+        Optional<List<Appuntamento>> appuntamentiTrovati = appuntamentoRepo.findByDipendente_IdAndEsitoRegistratoIsFalse(idDipendente);
         if(appuntamentiTrovati.isPresent() && !appuntamentiTrovati.get().isEmpty()){
             for(Appuntamento appuntamento : appuntamentiTrovati.get()){
                 AppuntamentoResponseDTO appuntamentoDipendente = new AppuntamentoResponseDTO();
@@ -252,5 +254,24 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
             }
         }
         return dipendentiConRecensioni;
+    }
+
+    @Override
+    public void registraVendita(long idAppuntamento, boolean venditaConclusa) {
+        Map<String,String> errori = new TreeMap<>();
+
+        if(idAppuntamento <= 0){
+            errori.put("idAppuntamento", "L'id dell'appuntamento non è valido");
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        Optional<Appuntamento> appuntamento = appuntamentoRepo.findById(idAppuntamento);
+        if(appuntamento.isEmpty()){
+            throw new AppuntamentoNonTrovatoException("Appuntamento non trovato");
+        }
+
+
+        appuntamento.get().setEsitoRegistrato(true);
+        appuntamentoRepo.save(appuntamento.get());
     }
 }

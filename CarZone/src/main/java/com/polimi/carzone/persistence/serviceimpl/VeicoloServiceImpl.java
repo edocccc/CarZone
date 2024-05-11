@@ -9,6 +9,7 @@ import com.polimi.carzone.exception.*;
 import com.polimi.carzone.model.Alimentazione;
 import com.polimi.carzone.model.Utente;
 import com.polimi.carzone.model.Veicolo;
+import com.polimi.carzone.persistence.repository.AppuntamentoRepository;
 import com.polimi.carzone.persistence.repository.VeicoloRepository;
 import com.polimi.carzone.persistence.service.VeicoloService;
 import com.polimi.carzone.state.implementation.Disponibile;
@@ -29,6 +30,7 @@ import java.util.*;
 public class VeicoloServiceImpl implements VeicoloService {
 
     private final VeicoloRepository veicoloRepo;
+    private final AppuntamentoRepository appuntamentoRepo;
 
 
     @Override
@@ -520,14 +522,14 @@ public class VeicoloServiceImpl implements VeicoloService {
             if(veicolo.getAppuntamentiVeicolo().isEmpty()){
                 veicolo.setStato(new Disponibile(veicolo));
                 return "DISPONIBILE";
-            } else {
+            } else if(appuntamentoRepo.findByVeicolo_IdAndEsitoRegistratoIsFalse(veicolo.getId()).isPresent()) {
                 veicolo.setStato(new Trattativa(veicolo));
                 return "TRATTATIVA";
             }
-        } else {
-            veicolo.setStato(new Venduto(veicolo));
-            return "VENDUTO";
         }
+
+        veicolo.setStato(new Venduto(veicolo));
+        return "VENDUTO";
     }
 
 }

@@ -37,6 +37,9 @@ public class Appuntamento {
     @Column()
     private String recensioneTesto;
 
+    @Column(nullable = false)
+    private boolean esitoRegistrato;
+
     @ManyToOne
     @JoinColumn(
             name = "id_cliente",

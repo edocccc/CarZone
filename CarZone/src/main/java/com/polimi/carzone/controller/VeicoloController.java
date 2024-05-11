@@ -64,10 +64,12 @@ public class VeicoloController {
             long idCliente = appuntamentoService.trovaIdCliente(request.getIdAppuntamento());
             Utente acquirente = utenteService.findById(idCliente);
             veicoloService.registraVendita(idVeicolo, acquirente);
-            response.setMessaggio("Vendita effettuata con successo");
+            appuntamentoService.registraVendita(request.getIdAppuntamento(), true);
+            response.setMessaggio("Registrazione esito positivo effettuata con successo");
 
         } else {
-            response.setMessaggio("Vendita non effettuata");
+            appuntamentoService.registraVendita(request.getIdAppuntamento(), false);
+            response.setMessaggio("Registrazione esito negativo effettuata con successo");
         }
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
