@@ -77,12 +77,13 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
         List<AppuntamentoResponseDTO> appuntamenti = new ArrayList<>();
 
         if(idDipendente <= 0){
+            errori.put("idDipendente", "L'id del dipendente non è valido");
             throw new CredenzialiNonValideException(errori);
         }
 
         Optional<List<Appuntamento>> appuntamentiTrovati = appuntamentoRepo.findByDipendente_IdAndEsitoRegistratoIsFalse(idDipendente);
-        if(appuntamentiTrovati.isPresent() && !appuntamentiTrovati.get().isEmpty()){
-            for(Appuntamento appuntamento : appuntamentiTrovati.get()){
+        if(appuntamentiTrovati.isPresent() && !appuntamentiTrovati.get().isEmpty()) {
+            for (Appuntamento appuntamento : appuntamentiTrovati.get()) {
                 AppuntamentoResponseDTO appuntamentoDipendente = new AppuntamentoResponseDTO();
                 appuntamentoDipendente.setId(appuntamento.getId());
                 appuntamentoDipendente.setDataOra(appuntamento.getDataOra());
@@ -94,10 +95,40 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
                 appuntamentoDipendente.setDataPassata(appuntamento.getDataOra().isBefore(LocalDateTime.now()));
                 appuntamenti.add(appuntamentoDipendente);
             }
-            return appuntamenti;
-        } else {
-            throw new AppuntamentoNonTrovatoException("Nessun appuntamento trovato");
         }
+        return appuntamenti;
+    }
+
+    @Override
+    public List<AppuntamentoConRecensioneResponseDTO> trovaAppuntamentiCliente(long idCliente) {
+        Map<String,String> errori = new TreeMap<>();
+        List<AppuntamentoConRecensioneResponseDTO> appuntamenti = new ArrayList<>();
+
+        if(idCliente <= 0){
+            errori.put("idCliente", "L'id del cliente non è valido");
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        Optional<List<Appuntamento>> appuntamentiTrovati = appuntamentoRepo.findByCliente_IdAndRecensioneVotoIsNullAndRecensioneTestoIsNull(idCliente);
+        if(appuntamentiTrovati.isPresent() && !appuntamentiTrovati.get().isEmpty()) {
+            for (Appuntamento appuntamento : appuntamentiTrovati.get()) {
+                AppuntamentoConRecensioneResponseDTO appuntamentoCliente = new AppuntamentoConRecensioneResponseDTO();
+                appuntamentoCliente.setId(appuntamento.getId());
+                appuntamentoCliente.setDataOra(appuntamento.getDataOra());
+                appuntamentoCliente.setNomeCliente(appuntamento.getCliente().getNome());
+                appuntamentoCliente.setCognomeCliente(appuntamento.getCliente().getCognome());
+                if(appuntamento.getDipendente() != null) {
+                    appuntamentoCliente.setNomeDipendente(appuntamento.getDipendente().getNome());
+                    appuntamentoCliente.setCognomeDipendente(appuntamento.getDipendente().getCognome());
+                }
+                appuntamentoCliente.setTargaVeicolo(appuntamento.getVeicolo().getTarga());
+                appuntamentoCliente.setMarcaVeicolo(appuntamento.getVeicolo().getMarca());
+                appuntamentoCliente.setModelloVeicolo(appuntamento.getVeicolo().getModello());
+                appuntamentoCliente.setDataPassata(appuntamento.getDataOra().isBefore(LocalDateTime.now()));
+                appuntamenti.add(appuntamentoCliente);
+            }
+        }
+        return appuntamenti;
     }
 
     @Override
@@ -448,5 +479,66 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
             appuntamento.get().setDipendente(dipendente.get());
         }
         appuntamentoRepo.save(appuntamento.get());
+    }
+
+    @Override
+    public void lasciaRecensione(LasciaRecensioneRequestDTO request) {
+        Map<String,String> errori = new TreeMap<>();
+
+        if(request == null){
+            errori.put("request", "La request non può essere null");
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        if(request.getIdAppuntamento()==null || request.getIdAppuntamento() <= 0){
+            errori.put("idAppuntamento", "L'id dell'appuntamento non è valido");
+        }
+
+        if(request.getVotoRecensione()==null || request.getVotoRecensione() < 1 || request.getVotoRecensione() > 5){
+            errori.put("voto", "Il voto deve essere compreso tra 1 e 5");
+        }
+
+        if(request.getTestoRecensione().isEmpty() || request.getTestoRecensione().isBlank()){
+            errori.put("testo", "Il testo non può essere vuoto");
+        }
+
+        if(!errori.isEmpty()){
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        Optional<Appuntamento> appuntamento = appuntamentoRepo.findById(request.getIdAppuntamento());
+        if(appuntamento.isEmpty()){
+            throw new AppuntamentoNonTrovatoException("Appuntamento non trovato");
+        }
+
+        appuntamento.get().setRecensioneVoto(request.getVotoRecensione());
+        appuntamento.get().setRecensioneTesto(request.getTestoRecensione());
+        appuntamentoRepo.save(appuntamento.get());
+    }
+
+    @Override
+    public List<RecensioneClienteResponseDTO> trovaRecensioniCliente(long idCliente) {
+        Map<String,String> errori = new TreeMap<>();
+        List<RecensioneClienteResponseDTO> recensioni = new ArrayList<>();
+
+        if(idCliente <= 0){
+            errori.put("idCliente", "L'id del cliente non è valido");
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        Optional<List<Appuntamento>> appuntamentiTrovati = appuntamentoRepo.findByCliente_IdAndRecensioneVotoNotNullAndRecensioneTestoNotNull(idCliente);
+        if(appuntamentiTrovati.isPresent() && !appuntamentiTrovati.get().isEmpty()){
+            for(Appuntamento appuntamento : appuntamentiTrovati.get()){
+                recensioni.add(new RecensioneClienteResponseDTO(
+                        appuntamento.getDipendente().getNome(),
+                        appuntamento.getDipendente().getCognome(),
+                        appuntamento.getRecensioneVoto(),
+                        appuntamento.getRecensioneTesto()
+                ));
+            }
+            return recensioni;
+        } else {
+            throw new AppuntamentoNonTrovatoException("Nessuna recensione trovata");
+        }
     }
 }

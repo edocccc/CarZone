@@ -25,9 +25,11 @@ import { AggiungiDipendenteComponent } from './components/aggiungi-dipendente/ag
 import { GestioneAppuntamentiManagerComponent } from './components/gestione-appuntamenti-manager/gestione-appuntamenti-manager.component';
 import { AggiungiAppuntamentoComponent } from './components/aggiungi-appuntamento/aggiungi-appuntamento.component';
 import { ModificaAppuntamentoComponent } from './components/modifica-appuntamento/modifica-appuntamento.component';
+import { MieiAppuntamentiComponent } from './components/miei-appuntamenti/miei-appuntamenti.component';
+import { LasciaRecensioneComponent } from './components/lascia-recensione/lascia-recensione.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, RegistrazioneComponent, HomepageClienteComponent, DettagliVeicoloComponent, HomepageDipendenteComponent, HomepageManagerComponent, PrenotazioneVeicoloComponent, RicercaComponent, RegistraVenditaComponent, GestioneVeicoliManagerComponent, ModificaVeicoloComponent, AggiungiVeicoloComponent, GestioneUtentiManagerComponent, ModificaUtenteComponent, AggiungiDipendenteComponent, GestioneAppuntamentiManagerComponent, AggiungiAppuntamentoComponent, ModificaAppuntamentoComponent],
+  declarations: [AppComponent, LoginComponent, RegistrazioneComponent, HomepageClienteComponent, DettagliVeicoloComponent, HomepageDipendenteComponent, HomepageManagerComponent, PrenotazioneVeicoloComponent, RicercaComponent, RegistraVenditaComponent, GestioneVeicoliManagerComponent, ModificaVeicoloComponent, AggiungiVeicoloComponent, GestioneUtentiManagerComponent, ModificaUtenteComponent, AggiungiDipendenteComponent, GestioneAppuntamentiManagerComponent, AggiungiAppuntamentoComponent, ModificaAppuntamentoComponent, MieiAppuntamentiComponent, LasciaRecensioneComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

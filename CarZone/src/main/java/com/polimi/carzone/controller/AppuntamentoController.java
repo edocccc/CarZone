@@ -86,4 +86,23 @@ public class AppuntamentoController {
         appuntamentoService.modificaAppuntamento(idAppuntamento, request);
         return ResponseEntity.status(HttpStatus.OK).body(new ModificaAppuntamentoResponseDTO("Appuntamento modificato con successo"));
     }
+
+    @GetMapping("/appuntamentiCliente/{idCliente}")
+    public ResponseEntity<List<AppuntamentoConRecensioneResponseDTO>> trovaAppuntamentiCliente(@PathVariable long idCliente){
+        List<AppuntamentoConRecensioneResponseDTO> response = appuntamentoService.trovaAppuntamentiCliente(idCliente);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/lasciaRecensione")
+    public ResponseEntity<LasciaRecensioneResponseDTO> lasciaRecensione(@RequestBody LasciaRecensioneRequestDTO request){
+        appuntamentoService.lasciaRecensione(request);
+        LasciaRecensioneResponseDTO response = new LasciaRecensioneResponseDTO("Recensione lasciata con successo!");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/recensioniCliente/{idCliente}")
+    public ResponseEntity<List<RecensioneClienteResponseDTO>> trovaRecensioniCliente(@PathVariable long idCliente){
+        List<RecensioneClienteResponseDTO> response = appuntamentoService.trovaRecensioniCliente(idCliente);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

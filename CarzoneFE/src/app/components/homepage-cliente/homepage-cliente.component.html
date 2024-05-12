@@ -28,6 +28,10 @@
 <button *ngIf="accessoEffettuato" routerLink="/cerca">
   Cerca un veicolo
 </button>
+<br>
+<button *ngIf="accessoEffettuato" (click)="redirectIMieiAppuntamenti()">
+  I miei appuntamenti
+</button>
 <br><br>
 <button *ngIf="accessoEffettuato" (click)="logout()">
   Logout

@@ -1,0 +1,37 @@
+<p>Ecco le tue recensioni</p>
+<br><br>
+<ng-container *ngIf="!recensioni.length">
+  <p>Non hai lasciato recensioni</p>
+</ng-container>
+<ng-container *ngFor="let recensione of recensioni">
+  <p>Dipendente: {{recensione.nomeDipendente}} {{recensione.cognomeDipendente}}</p>
+  <p>Voto: {{recensione.recensioneVoto}}</p>
+  <p>Descrizione: {{recensione.recensioneTesto}}</p>
+  <br>
+</ng-container>
+<br><br>
+<p>Ecco i tuoi appuntamenti, scegli un'azione</p>
+<br><br>
+<ng-container *ngIf="!appuntamenti.length">
+  <p>Non ci sono appuntamenti</p>
+</ng-container>
+<ng-container *ngFor="let appuntamento of appuntamenti">
+  <p>Id: {{appuntamento.id}}</p>
+  <p>Data: {{appuntamento.dataOra | date:'yyyy-MM-dd'}} Ora: {{appuntamento.dataOra | date:'HH:mm:ss'}}</p>
+  <p>Cliente: {{appuntamento.nomeCliente}} {{appuntamento.cognomeCliente}}</p>
+  <ng-container *ngIf="appuntamento.nomeDipendente!=null && appuntamento.cognomeDipendente!=null">
+    <p>Dipendente: {{appuntamento.nomeDipendente}} {{appuntamento.cognomeDipendente}}</p>
+  </ng-container>
+  <ng-container *ngIf="appuntamento.nomeDipendente==null && appuntamento.cognomeDipendente==null">
+    <p>Dipendente: Non assegnato</p>
+  </ng-container>
+  <p>Veicolo: {{appuntamento.marcaVeicolo}} {{appuntamento.modelloVeicolo}}</p>
+  <ng-container *ngIf="appuntamento.dataPassata">
+    <button (click)="redirectLasciaRecensione(appuntamento.id)">
+      Lascia una recensione
+    </button>
+  </ng-container>
+  <br><br>
+</ng-container>
+
+

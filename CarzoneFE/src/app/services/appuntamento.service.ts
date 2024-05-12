@@ -15,6 +15,9 @@ import {ShowValutazioniDipendenti} from "../dto/response/ShowValutazioniDipenden
 import {ShowAppuntamentoManagerResponse} from "../dto/response/ShowAppuntamentoManagerResponse";
 import {PrenotazioneManagerRequest} from "../dto/request/PrenotazioneManagerRequest";
 import {ModificaAppuntamentoManagerRequest} from "../dto/request/ModificaAppuntamentoManagerRequest";
+import {LasciaRecensioneRequest} from "../dto/request/LasciaRecensioneRequest";
+import {ShowAppuntamentoConRecensioneResponse} from "../dto/response/ShowAppuntamentoConRecensioneResponse";
+import {ShowRecensioniClienteResponse} from "../dto/response/ShowRecensioniClienteResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -96,5 +99,22 @@ export class AppuntamentoService {
       idDipendente
     }
     return this.http.put<MessageResponse>(this.backEndUrl + 'modifica/' + idAppuntamento, request);
+  }
+
+  getAllAppuntamentiCliente(idCliente: number): Observable<ShowAppuntamentoConRecensioneResponse[]> {
+    return this.http.get<ShowAppuntamentoConRecensioneResponse[]>(this.backEndUrl + 'appuntamentiCliente/' + idCliente.toString());
+  }
+
+  inviaRecensione(idAppuntamento: number, votoRecensione: number, testoRecensione: string):Observable<MessageResponse> {
+    const request: LasciaRecensioneRequest = {
+      idAppuntamento,
+      votoRecensione,
+      testoRecensione
+    }
+    return this.http.post<MessageResponse>(this.backEndUrl + 'lasciaRecensione', request);
+  }
+
+  getAllRecensioniCliente(idCliente: number): Observable<ShowRecensioniClienteResponse[]> {
+    return this.http.get<ShowRecensioniClienteResponse[]>(this.backEndUrl + 'recensioniCliente/' + idCliente.toString());
   }
 }

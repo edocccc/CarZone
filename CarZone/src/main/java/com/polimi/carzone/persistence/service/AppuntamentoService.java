@@ -1,9 +1,6 @@
 package com.polimi.carzone.persistence.service;
 
-import com.polimi.carzone.dto.request.ModificaAppuntamentoRequestDTO;
-import com.polimi.carzone.dto.request.PrenotazioneManagerRequestDTO;
-import com.polimi.carzone.dto.request.PrenotazioneRequestDTO;
-import com.polimi.carzone.dto.request.PresaInCaricoRequestDTO;
+import com.polimi.carzone.dto.request.*;
 import com.polimi.carzone.dto.response.*;
 
 import java.util.List;
@@ -13,6 +10,8 @@ public interface AppuntamentoService {
     void prenota(PrenotazioneRequestDTO request);
 
     List<AppuntamentoResponseDTO> trovaAppuntamentiDipendente(long id);
+
+    List<AppuntamentoConRecensioneResponseDTO> trovaAppuntamentiCliente(long id);
 
     ValutazioneMediaResponseDTO calcolaValutazioneMediaDipendente(long idDipendente);
 
@@ -37,4 +36,8 @@ public interface AppuntamentoService {
     void eliminaAppuntamento(long idAppuntamento);
 
     void modificaAppuntamento(long idAppuntamento, ModificaAppuntamentoRequestDTO request);
+
+    void lasciaRecensione(LasciaRecensioneRequestDTO request);
+
+    List<RecensioneClienteResponseDTO> trovaRecensioniCliente(long idCliente);
 }

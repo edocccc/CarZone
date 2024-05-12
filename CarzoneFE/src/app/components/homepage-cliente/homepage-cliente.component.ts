@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {VeicoloService} from "../../services/veicolo.service";
 import {ShowVeicoloResponse} from "../../dto/response/ShowVeicoloResponse";
 import {UtenteService} from "../../services/utente.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-homepage-cliente',
@@ -13,7 +14,7 @@ export class HomepageClienteComponent implements OnInit{
   accessoEffettuato: boolean = !!localStorage.getItem('token');
   statoVeicolo: string = '';
 
-  constructor(private veicoloService: VeicoloService, private utenteService: UtenteService) { }
+  constructor(private veicoloService: VeicoloService, private utenteService: UtenteService, private router: Router) { }
 
   ngOnInit(): void {
     this.getVeicoli();
@@ -36,5 +37,10 @@ export class HomepageClienteComponent implements OnInit{
   logout(): void {
     this.utenteService.logout();
     this.accessoEffettuato = false;
+  }
+
+  redirectIMieiAppuntamenti() {
+    // @ts-ignore
+    this.router.navigate(['mieiAppuntamenti/'+ localStorage.getItem('id').toString()]);
   }
 }

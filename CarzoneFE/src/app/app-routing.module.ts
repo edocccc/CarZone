@@ -23,6 +23,8 @@ import {
 } from "./components/gestione-appuntamenti-manager/gestione-appuntamenti-manager.component";
 import {AggiungiAppuntamentoComponent} from "./components/aggiungi-appuntamento/aggiungi-appuntamento.component";
 import {ModificaAppuntamentoComponent} from "./components/modifica-appuntamento/modifica-appuntamento.component";
+import {MieiAppuntamentiComponent} from "./components/miei-appuntamenti/miei-appuntamenti.component";
+import {LasciaRecensioneComponent} from "./components/lascia-recensione/lascia-recensione.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/homeCliente', pathMatch: 'full' },
@@ -44,6 +46,8 @@ const routes: Routes = [
   { path: 'gestioneAppuntamenti', component: GestioneAppuntamentiManagerComponent },
   { path: 'aggiungiAppuntamento', component: AggiungiAppuntamentoComponent },
   { path: 'modificaAppuntamento/:id', component: ModificaAppuntamentoComponent },
+  { path: 'mieiAppuntamenti/:id', component: MieiAppuntamentiComponent },
+  { path: 'lasciaRecensione/:id', component: LasciaRecensioneComponent }
 ];
 
 @NgModule({
