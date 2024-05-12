@@ -170,24 +170,6 @@ public class VeicoloServiceImpl implements VeicoloService {
     }
 
     @Override
-    public RicercaStrategy scegliRicerca(String criterio) {
-        if(criterio == null || criterio.isEmpty() || criterio.isBlank()) {
-            throw new CriterioNonValidoException("Inserisci un criterio di ricerca valido");
-        }
-        return switch (criterio) {
-                case "targa" -> new RicercaTarga(this);
-                case "marca" -> new RicercaMarca(this);
-                case "marcamodello" -> new RicercaMarcaAndModello(this);
-                case "alimentazione" -> new RicercaAlimentazione(this);
-                case "annoProduzione" -> new RicercaAnnoProduzione(this);
-                case "prezzo" -> new RicercaPrezzo(this);
-                case "potenza" -> new RicercaPotenza(this);
-                case "chilometraggio" -> new RicercaChilometraggio(this);
-                default -> throw new CriterioNonValidoException("Criterio di ricerca non valido");
-        };
-    }
-
-    @Override
     public List<Veicolo> findByMarca(String marca) {
         Map<String,String> errori = new TreeMap<>();
         if(marca == null || marca.isEmpty() || marca.isBlank()) {

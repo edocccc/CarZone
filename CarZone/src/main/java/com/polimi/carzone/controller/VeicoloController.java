@@ -11,6 +11,7 @@ import com.polimi.carzone.persistence.service.AppuntamentoService;
 import com.polimi.carzone.persistence.service.UtenteService;
 import com.polimi.carzone.persistence.service.VeicoloService;
 import com.polimi.carzone.strategy.RicercaStrategy;
+import com.polimi.carzone.strategy.context.RicercaManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ public class VeicoloController {
     private final VeicoloService veicoloService;
     private final AppuntamentoService appuntamentoService;
     private final UtenteService utenteService;
+    private final RicercaManager ricercaManager;
 
     @PostMapping("/aggiungiVeicolo")
     public ResponseEntity<AggiuntaVeicoloResponseDTO> aggiungiVeicolo(@RequestBody AggiuntaVeicoloRequestDTO request) {
@@ -50,8 +52,8 @@ public class VeicoloController {
     public ResponseEntity<List<VeicoloResponseDTO>> cercaVeicoli(@RequestBody RicercaRequestDTO request) {
         List<Veicolo> veicoliTrovati;
         List<VeicoloResponseDTO> veicoliResponse;
-        RicercaStrategy ricercaStrategy = veicoloService.scegliRicerca(request.getCriterio());
-        veicoliTrovati = ricercaStrategy.ricerca(request);
+        RicercaStrategy ricercaStrategy = ricercaManager.scegliRicerca(request.getCriterio());
+        veicoliTrovati = ricercaManager.executeRicerca(ricercaStrategy,request);
         veicoliResponse = veicoloService.convertiVeicoliInVeicoliResponse(veicoliTrovati);
         return ResponseEntity.status(HttpStatus.OK).body(veicoliResponse);
     }

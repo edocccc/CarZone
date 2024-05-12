@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {VeicoloService} from "../../services/veicolo.service";
 import {ShowVeicoloResponse} from "../../dto/response/ShowVeicoloResponse";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-ricerca',
@@ -48,8 +49,9 @@ export class RicercaComponent {
         this.ricercaEffettuata = true;
         console.log(response);
       },
-      error: (error) => {
+      error: (error: HttpErrorResponse) => {
         console.log(error.error.message);
+        this.veicoli = [];
       },
     });
     }

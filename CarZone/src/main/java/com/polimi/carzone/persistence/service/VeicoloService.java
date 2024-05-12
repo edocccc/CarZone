@@ -25,8 +25,6 @@ public interface VeicoloService {
 
     List<VeicoloResponseDTO> convertiVeicoliInVeicoliResponse(List<Veicolo> veicoliTrovati);
 
-    RicercaStrategy scegliRicerca(String criterio);
-
     List<Veicolo> findByMarca(String marca);
 
     List<Veicolo> findByMarcaAndModello(String marca, String modello);

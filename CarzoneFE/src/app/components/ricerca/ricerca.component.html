@@ -63,10 +63,12 @@
 <br>
 <button (click)="ricerca()">Cerca</button>
 <ng-container *ngIf="ricercaEffettuata">
-  <ng-container *ngIf="veicoli.length === 0">
+  <ng-container *ngIf="veicoli.length == 0">
     <p>Nessun veicolo trovato</p>
   </ng-container>
-  <p>Risultati della ricerca:</p>
+  <ng-container *ngIf="veicoli.length != 0">
+    <p>Risultati della ricerca:</p>
+  </ng-container>
     <ng-container *ngFor="let veicolo of veicoli">
       <p>Marca: {{ veicolo.marca }}</p>
       <p>Modello: {{ veicolo.modello }}</p>
