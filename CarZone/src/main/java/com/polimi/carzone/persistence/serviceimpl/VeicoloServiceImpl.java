@@ -7,6 +7,7 @@ import com.polimi.carzone.dto.response.DettagliVeicoloResponseDTO;
 import com.polimi.carzone.dto.response.VeicoloResponseDTO;
 import com.polimi.carzone.exception.*;
 import com.polimi.carzone.model.Alimentazione;
+import com.polimi.carzone.model.Appuntamento;
 import com.polimi.carzone.model.Utente;
 import com.polimi.carzone.model.Veicolo;
 import com.polimi.carzone.persistence.repository.AppuntamentoRepository;
@@ -528,18 +529,19 @@ public class VeicoloServiceImpl implements VeicoloService {
     }
 
     private String checkStato(Veicolo veicolo){
-        if(veicolo.getAcquirente() == null){
-            if(veicolo.getAppuntamentiVeicolo().isEmpty()){
+        if(veicolo.getAcquirente() != null){
+            veicolo.setStato(new Venduto(veicolo));
+            return "VENDUTO";
+        } else {
+            Optional<List<Appuntamento>> appuntamenti = appuntamentoRepo.findByVeicolo_IdAndEsitoRegistratoIsFalse(veicolo.getId());
+            if (appuntamenti.isPresent() && appuntamenti.get().isEmpty()) {
                 veicolo.setStato(new Disponibile(veicolo));
                 return "DISPONIBILE";
-            } else if(appuntamentoRepo.findByVeicolo_IdAndEsitoRegistratoIsFalse(veicolo.getId()).isPresent()) {
+            } else {
                 veicolo.setStato(new Trattativa(veicolo));
                 return "TRATTATIVA";
             }
         }
-
-        veicolo.setStato(new Venduto(veicolo));
-        return "VENDUTO";
     }
 
 }

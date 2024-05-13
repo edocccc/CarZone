@@ -5,8 +5,10 @@ import com.polimi.carzone.dto.request.ModificaVeicoloRequestDTO;
 import com.polimi.carzone.dto.request.RegistrazioneVenditaRequestDTO;
 import com.polimi.carzone.dto.request.RicercaRequestDTO;
 import com.polimi.carzone.dto.response.*;
+import com.polimi.carzone.model.Appuntamento;
 import com.polimi.carzone.model.Utente;
 import com.polimi.carzone.model.Veicolo;
+import com.polimi.carzone.persistence.repository.AppuntamentoRepository;
 import com.polimi.carzone.persistence.service.AppuntamentoService;
 import com.polimi.carzone.persistence.service.UtenteService;
 import com.polimi.carzone.persistence.service.VeicoloService;
@@ -18,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/veicolo")
@@ -28,6 +31,7 @@ public class VeicoloController {
     private final AppuntamentoService appuntamentoService;
     private final UtenteService utenteService;
     private final RicercaManager ricercaManager;
+    private final AppuntamentoRepository appuntamentoRepo;
 
     @PostMapping("/aggiungiVeicolo")
     public ResponseEntity<AggiuntaVeicoloResponseDTO> aggiungiVeicolo(@RequestBody AggiuntaVeicoloRequestDTO request) {
@@ -98,5 +102,11 @@ public class VeicoloController {
     public ResponseEntity<List<DettagliVeicoloManagerResponseDTO>> stampaVeicoliDiponibiliPerManager() {
         List<DettagliVeicoloManagerResponseDTO> veicoliDisponobili = veicoloService.findAllDisponibili();
         return ResponseEntity.status(HttpStatus.OK).body(veicoliDisponobili);
+    }
+
+    @GetMapping("/prova/{idVeicolo}")
+    public ResponseEntity<Optional<List<Appuntamento>>> prova(@PathVariable long idVeicolo) {
+        Optional<List<Appuntamento>> prova=appuntamentoRepo.findByVeicolo_IdAndEsitoRegistratoIsFalse(idVeicolo);
+        return ResponseEntity.status(HttpStatus.OK).body(prova);
     }
 }
