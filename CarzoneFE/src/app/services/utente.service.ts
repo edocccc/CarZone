@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { globalBackEndUrl } from 'environment';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { RegisterRequest } from '../dto/request/RegisterRequest';
 import { LoginRequest } from '../dto/request/LoginRequest';
 import {BehaviorSubject, Observable} from 'rxjs';
@@ -28,6 +28,7 @@ export class UtenteService {
     password: string,
     passwordRipetuta: string
   ): Observable<MessageResponse> {
+    const token: HttpHeaders = this.recuperaToken();
     const request: RegisterRequest = {
       email,
       nome,
@@ -37,16 +38,17 @@ export class UtenteService {
       password,
       passwordRipetuta,
     };
-    return this.http.post<MessageResponse>(this.backEndUrl + 'signup', request);
+    return this.http.post<MessageResponse>(this.backEndUrl + 'signup', request, {headers: token});
   }
 
   login(username: string, password: string): Observable<LoginResponse> {
+    const token: HttpHeaders = this.recuperaToken();
     const request: LoginRequest = {
       username,
       password,
     };
     this.setIsAuthenticated(true);
-    return this.http.post<LoginResponse>(this.backEndUrl + 'login', request);
+    return this.http.post<LoginResponse>(this.backEndUrl + 'login', request, {headers: token});
   }
 
   accessoEffettuato(): boolean {
@@ -73,11 +75,13 @@ export class UtenteService {
   }
 
   getAllUtentiManager(): Observable<ShowUtenteManagerResponse[]> {
-    return this.http.get<ShowUtenteManagerResponse[]>(this.backEndUrl + 'utentiManager');
+    const token: HttpHeaders = this.recuperaToken();
+    return this.http.get<ShowUtenteManagerResponse[]>(this.backEndUrl + 'utentiManager', {headers: token});
   }
 
   eliminaUtente(id: number): Observable<MessageResponse> {
-    return this.http.delete<MessageResponse>(this.backEndUrl + 'elimina/' + id);
+    const token: HttpHeaders = this.recuperaToken();
+    return this.http.delete<MessageResponse>(this.backEndUrl + 'elimina/' + id, {headers: token});
   }
 
   registraDipendente(
@@ -89,6 +93,7 @@ export class UtenteService {
     password: string,
     passwordRipetuta: string
   ): Observable<MessageResponse> {
+    const token: HttpHeaders = this.recuperaToken();
     const request: RegisterRequest = {
       email,
       nome,
@@ -98,22 +103,31 @@ export class UtenteService {
       password,
       passwordRipetuta,
     };
-    return this.http.post<MessageResponse>(this.backEndUrl + 'registraDipendente', request);
+    return this.http.post<MessageResponse>(this.backEndUrl + 'registraDipendente', request, {headers: token});
   }
 
   getUtente(id: number): Observable<ShowUtenteManagerResponse> {
-    return this.http.get<ShowUtenteManagerResponse>(this.backEndUrl + 'trova/' + id);
+    const token: HttpHeaders = this.recuperaToken();
+    return this.http.get<ShowUtenteManagerResponse>(this.backEndUrl + 'trova/' + id, {headers: token});
   }
 
   modificaUtente(utente: ShowUtenteManagerResponse):Observable<MessageResponse> {
-    return this.http.put<MessageResponse>(this.backEndUrl + 'modifica/' + utente.id.toString(), utente);
+    const token: HttpHeaders = this.recuperaToken();
+    return this.http.put<MessageResponse>(this.backEndUrl + 'modifica/' + utente.id.toString(), utente, {headers: token});
   }
 
   getClienti() {
-    return this.http.get<ShowUtenteManagerResponse[]>(this.backEndUrl + 'trovaClienti');
+    const token: HttpHeaders = this.recuperaToken();
+    return this.http.get<ShowUtenteManagerResponse[]>(this.backEndUrl + 'trovaClienti', {headers: token});
   }
 
   getDipendenti() {
-    return this.http.get<ShowUtenteManagerResponse[]>(this.backEndUrl + 'trovaDipendenti');
+    const token: HttpHeaders = this.recuperaToken();
+    return this.http.get<ShowUtenteManagerResponse[]>(this.backEndUrl + 'trovaDipendenti', {headers: token});
+  }
+
+  private recuperaToken(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({'Authorization': 'Bearer ' + token})
   }
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {globalBackEndUrl} from "../../../environment";
 import {map, Observable} from "rxjs";
 import {ShowVeicoloResponse} from "../dto/response/ShowVeicoloResponse";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {ShowDettagliVeicoloResponse} from "../dto/response/ShowDettagliVeicoloResponse";
 import {RicercaRequest} from "../dto/request/RicercaRequest";
 import {ShowAppuntamentoResponse} from "../dto/response/ShowAppuntamentoResponse";
@@ -21,7 +21,8 @@ export class VeicoloService {
   constructor(private http: HttpClient) { }
 
   getVeicoli(): Observable<ShowVeicoloResponse[]> {
-    return this.http.get<ShowVeicoloResponse[]>(this.backEndUrl + 'veicoli').pipe(
+    const token: HttpHeaders = this.recuperaToken();
+    return this.http.get<ShowVeicoloResponse[]>(this.backEndUrl + 'veicoli', {headers: token}).pipe(
       map(response => {
         console.log("inizio del service")
         console.log(response);
@@ -32,10 +33,11 @@ export class VeicoloService {
   }
 
   getVeicolo(id: string): Observable<ShowDettagliVeicoloResponse> {
+    const token: HttpHeaders = this.recuperaToken();
     if(id == null || id == "" ){
         throw new Error("id non può essere nullo");
     }
-    return this.http.get<ShowDettagliVeicoloResponse>(this.backEndUrl + 'dettagli/' + id);
+    return this.http.get<ShowDettagliVeicoloResponse>(this.backEndUrl + 'dettagli/' + id, {headers: token});
   }
 
   ricerca(
@@ -53,6 +55,7 @@ export class VeicoloService {
     chilometraggioMinimo: number,
     chilometraggioMassimo: number
   ): Observable<ShowVeicoloResponse[]> {
+    const token: HttpHeaders = this.recuperaToken();
     const request: RicercaRequest = {
       criterio,
       targa,
@@ -68,27 +71,31 @@ export class VeicoloService {
       chilometraggioMinimo,
       chilometraggioMassimo
     };
-    return this.http.post<ShowVeicoloResponse[]>(this.backEndUrl + 'cerca', request);
+    return this.http.post<ShowVeicoloResponse[]>(this.backEndUrl + 'cerca', request, {headers: token});
   }
 
   registraVendita(idAppuntamento: number, venditaConclusa: boolean): Observable<MessageResponse>{
+    const token: HttpHeaders = this.recuperaToken();
     const request: RegistrazioneVenditaRequest = {
         idAppuntamento,
         venditaConclusa
     }
-    return this.http.post<MessageResponse>(this.backEndUrl + 'registraVendita', request);
+    return this.http.post<MessageResponse>(this.backEndUrl + 'registraVendita', request, {headers: token});
   }
 
   getAllVeicoliConDettagli(): Observable<ShowDettagliVeicoloManagerResponse[]> {
-    return this.http.get<ShowDettagliVeicoloManagerResponse[]>(this.backEndUrl + 'veicoliConDettagli');
+    const token: HttpHeaders = this.recuperaToken();
+    return this.http.get<ShowDettagliVeicoloManagerResponse[]>(this.backEndUrl + 'veicoliConDettagli', {headers: token});
   }
 
   eliminaVeicolo(id: number): Observable<MessageResponse> {
-    return this.http.delete<MessageResponse>(this.backEndUrl + 'elimina/' + id);
+    const token: HttpHeaders = this.recuperaToken();
+    return this.http.delete<MessageResponse>(this.backEndUrl + 'elimina/' + id, {headers: token});
   }
 
   modificaVeicolo(veicolo: ShowDettagliVeicoloResponse) {
-    return this.http.put<MessageResponse>(this.backEndUrl + 'modifica/' + veicolo.id.toString(), veicolo);
+    const token: HttpHeaders = this.recuperaToken();
+    return this.http.put<MessageResponse>(this.backEndUrl + 'modifica/' + veicolo.id.toString(), veicolo, {headers: token});
   }
 
   aggiungiVeicolo(
@@ -100,6 +107,7 @@ export class VeicoloService {
     potenzaCv: number,
     alimentazione: string,
     prezzo: number) : Observable<MessageResponse> {
+    const token: HttpHeaders = this.recuperaToken();
     const request: AggiungiVeicoloRequest = {
       targa,
       marca,
@@ -110,11 +118,12 @@ export class VeicoloService {
       alimentazione,
       prezzo
     };
-    return this.http.post<MessageResponse>(this.backEndUrl + 'aggiungiVeicolo', request);
+    return this.http.post<MessageResponse>(this.backEndUrl + 'aggiungiVeicolo', request, {headers: token});
   }
 
   getVeicoliDisponibili() {
-    return this.http.get<ShowDettagliVeicoloManagerResponse[]>(this.backEndUrl + 'veicoliDisponibili').pipe(
+    const token: HttpHeaders = this.recuperaToken();
+    return this.http.get<ShowDettagliVeicoloManagerResponse[]>(this.backEndUrl + 'veicoliDisponibili', {headers: token}).pipe(
       map(response => {
         console.log("inizio del service")
         console.log(response);
@@ -122,5 +131,10 @@ export class VeicoloService {
         return response;
       })
     );
+  }
+
+  private recuperaToken(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({'Authorization': 'Bearer ' + token})
   }
 }

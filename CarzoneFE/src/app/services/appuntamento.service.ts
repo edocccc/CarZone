@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpRequest} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpRequest} from "@angular/common/http";
 import {ShowDettagliVeicoloResponse} from "../dto/response/ShowDettagliVeicoloResponse";
 import {MessageResponse} from "../dto/response/MessageResponse";
 import {globalBackEndUrl} from "../../../environment";
@@ -28,69 +28,80 @@ export class AppuntamentoService {
   constructor(private http: HttpClient) { }
 
   prenota(data: Date, idVeicolo: number, idCliente : number) {
+    const token: HttpHeaders = this.recuperaToken();
     const request: PrenotazioneRequest = {
       dataOra: data,
       idVeicolo: idVeicolo,
       idCliente: idCliente
     }
 
-    return this.http.post<MessageResponse>(this.backEndUrl + 'prenota', request);
+    return this.http.post<MessageResponse>(this.backEndUrl + 'prenota', request, {headers: token});
   }
 
   getAppuntamentiDipendente(idDipendente: number): Observable<ShowAppuntamentoResponse[]> {
+    const token: HttpHeaders = this.recuperaToken();
     const request: AppuntamentiDipendenteRequest = {
       idDipendente
     };
-    return this.http.get<ShowAppuntamentoResponse[]>(this.backEndUrl + 'dipendente/'+ request.idDipendente);
+    return this.http.get<ShowAppuntamentoResponse[]>(this.backEndUrl + 'dipendente/'+ request.idDipendente, {headers: token});
   }
 
   getValutazioneMedia(idDipendente: number): Observable<ShowValutazioneMediaResponse>{
+    const token: HttpHeaders = this.recuperaToken();
     const request: ValutazioneMediaDipendenteRequest = {
       idDipendente
     };
-    return this.http.get<ShowValutazioneMediaResponse>(this.backEndUrl + 'dipendente/' + request.idDipendente + '/valutazione');
+    return this.http.get<ShowValutazioneMediaResponse>(this.backEndUrl + 'dipendente/' + request.idDipendente + '/valutazione', {headers: token});
 
   }
 
   getAppuntamentiLiberi(): Observable<ShowAppuntamentoResponse[]> {
-    return this.http.get<ShowAppuntamentoResponse[]>(this.backEndUrl + 'appuntamentiLiberi');
+    const token: HttpHeaders = this.recuperaToken();
+    return this.http.get<ShowAppuntamentoResponse[]>(this.backEndUrl + 'appuntamentiLiberi', {headers: token});
   }
 
   prendiInCarico(idDipendente: number, idAppuntamento: number): Observable<MessageResponse> {
+    const token: HttpHeaders = this.recuperaToken();
     const request: PrendiInCaricoRequest = {
       idDipendente,
       idAppuntamento
     }
-    return this.http.post<MessageResponse>(this.backEndUrl + 'prendiInCarico', request);
+    return this.http.post<MessageResponse>(this.backEndUrl + 'prendiInCarico', request, {headers: token});
   }
 
   getRecensioniDipendente(idDipendente: number): Observable<ShowRecensioneResponse[]> {
-    return this.http.get<ShowRecensioneResponse[]>(this.backEndUrl + 'recensioni/' + idDipendente);
+    const token: HttpHeaders = this.recuperaToken();
+    return this.http.get<ShowRecensioneResponse[]>(this.backEndUrl + 'recensioni/' + idDipendente, {headers: token});
   }
 
   getDipendentiConRecensioni(): Observable<ShowValutazioniDipendenti[]> {
-    return this.http.get<ShowValutazioniDipendenti[]>(this.backEndUrl + 'dipendentiConRecensioni');
+    const token: HttpHeaders = this.recuperaToken();
+    return this.http.get<ShowValutazioniDipendenti[]>(this.backEndUrl + 'dipendentiConRecensioni', {headers: token});
   }
 
   getAllAppuntamentiManager(): Observable<ShowAppuntamentoManagerResponse[]> {
-    return this.http.get<ShowAppuntamentoManagerResponse[]>(this.backEndUrl + 'trovaPerManager');
+    const token: HttpHeaders = this.recuperaToken();
+    return this.http.get<ShowAppuntamentoManagerResponse[]>(this.backEndUrl + 'trovaPerManager', {headers: token});
   }
 
   eliminaAppuntamento(id: number) {
-    return this.http.delete<MessageResponse>(this.backEndUrl + 'elimina/' + id);
+    const token: HttpHeaders = this.recuperaToken();
+    return this.http.delete<MessageResponse>(this.backEndUrl + 'elimina/' + id, {headers: token});
   }
 
   prenotaAppuntamento(dataOra: Date, idVeicolo: number, idCliente: number, idDipendente: number) {
+    const token: HttpHeaders = this.recuperaToken();
     const request: PrenotazioneManagerRequest = {
       dataOra,
       idVeicolo,
       idCliente,
       idDipendente
     }
-    return this.http.post<MessageResponse>(this.backEndUrl + 'prenotaPerManager', request);
+    return this.http.post<MessageResponse>(this.backEndUrl + 'prenotaPerManager', request, {headers: token});
   }
 
   modificaAppuntamento(idAppuntamento: number, dataOra: Date, idVeicolo: number, idCliente: number, idDipendente: number) {
+    const token: HttpHeaders = this.recuperaToken();
     const request: ModificaAppuntamentoManagerRequest = {
       idAppuntamento,
       dataOra,
@@ -98,23 +109,32 @@ export class AppuntamentoService {
       idCliente,
       idDipendente
     }
-    return this.http.put<MessageResponse>(this.backEndUrl + 'modifica/' + idAppuntamento, request);
+    return this.http.put<MessageResponse>(this.backEndUrl + 'modifica/' + idAppuntamento, request, {headers: token});
   }
 
   getAllAppuntamentiCliente(idCliente: number): Observable<ShowAppuntamentoConRecensioneResponse[]> {
-    return this.http.get<ShowAppuntamentoConRecensioneResponse[]>(this.backEndUrl + 'appuntamentiCliente/' + idCliente.toString());
+    const token: HttpHeaders = this.recuperaToken();
+    return this.http.get<ShowAppuntamentoConRecensioneResponse[]>(this.backEndUrl + 'appuntamentiCliente/' + idCliente.toString(), {headers: token});
   }
 
   inviaRecensione(idAppuntamento: number, votoRecensione: number, testoRecensione: string):Observable<MessageResponse> {
+    const token: HttpHeaders = this.recuperaToken();
     const request: LasciaRecensioneRequest = {
       idAppuntamento,
       votoRecensione,
       testoRecensione
     }
-    return this.http.post<MessageResponse>(this.backEndUrl + 'lasciaRecensione', request);
+    return this.http.post<MessageResponse>(this.backEndUrl + 'lasciaRecensione', request, {headers: token});
   }
 
   getAllRecensioniCliente(idCliente: number): Observable<ShowRecensioniClienteResponse[]> {
-    return this.http.get<ShowRecensioniClienteResponse[]>(this.backEndUrl + 'recensioniCliente/' + idCliente.toString());
+    const token: HttpHeaders = this.recuperaToken();
+    return this.http.get<ShowRecensioniClienteResponse[]>(this.backEndUrl + 'recensioniCliente/' + idCliente.toString(), {headers: token} );
   }
+
+  private recuperaToken(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({'Authorization': 'Bearer ' + token})
+  }
+
 }
