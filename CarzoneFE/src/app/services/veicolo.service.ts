@@ -21,8 +21,7 @@ export class VeicoloService {
   constructor(private http: HttpClient) { }
 
   getVeicoli(): Observable<ShowVeicoloResponse[]> {
-    const token: HttpHeaders = this.recuperaToken();
-    return this.http.get<ShowVeicoloResponse[]>(this.backEndUrl + 'veicoli', {headers: token}).pipe(
+    return this.http.get<ShowVeicoloResponse[]>(this.backEndUrl + 'veicoli').pipe(
       map(response => {
         console.log("inizio del service")
         console.log(response);
@@ -32,12 +31,11 @@ export class VeicoloService {
     );
   }
 
-  getVeicolo(id: string): Observable<ShowDettagliVeicoloResponse> {
-    const token: HttpHeaders = this.recuperaToken();
+  getVeicolo(id: string): Observable<ShowDettagliVeicoloManagerResponse> {
     if(id == null || id == "" ){
         throw new Error("id non può essere nullo");
     }
-    return this.http.get<ShowDettagliVeicoloResponse>(this.backEndUrl + 'dettagli/' + id, {headers: token});
+    return this.http.get<ShowDettagliVeicoloManagerResponse>(this.backEndUrl + 'dettagli/' + id);
   }
 
   ricerca(

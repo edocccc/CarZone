@@ -48,4 +48,8 @@ export class GestioneUtentiManagerComponent implements OnInit{
   redirectAggiungiDipendente() {
     this.router.navigate(['registraDipendente']);
   }
+
+  redirectHomepageManager() {
+    this.router.navigate(['homeManager/' + localStorage.getItem('id')]);
+  }
 }

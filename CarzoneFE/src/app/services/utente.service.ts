@@ -42,13 +42,12 @@ export class UtenteService {
   }
 
   login(username: string, password: string): Observable<LoginResponse> {
-    const token: HttpHeaders = this.recuperaToken();
     const request: LoginRequest = {
       username,
       password,
     };
     this.setIsAuthenticated(true);
-    return this.http.post<LoginResponse>(this.backEndUrl + 'login', request, {headers: token});
+    return this.http.post<LoginResponse>(this.backEndUrl + 'login', request);
   }
 
   accessoEffettuato(): boolean {

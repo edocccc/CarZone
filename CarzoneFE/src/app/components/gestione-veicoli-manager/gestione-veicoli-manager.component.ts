@@ -47,4 +47,8 @@ export class GestioneVeicoliManagerComponent implements OnInit{
   redirectAggiungiVeicolo() {
     this.router.navigate(['aggiungiVeicolo']);
   }
+
+  redirectHomepageManager() {
+    this.router.navigate(['homeManager/' + localStorage.getItem('id')]);
+  }
 }

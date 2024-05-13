@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {VeicoloService} from "../../services/veicolo.service";
 import {ShowVeicoloResponse} from "../../dto/response/ShowVeicoloResponse";
 import {HttpErrorResponse} from "@angular/common/http";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-ricerca',
@@ -26,7 +27,7 @@ export class RicercaComponent {
   chilometraggioMinimo: number = 0;
   chilometraggioMassimo: number = 0;
 
-  constructor(private veicoloService: VeicoloService) { }
+  constructor(private veicoloService: VeicoloService, private router: Router) { }
 
   ricerca() {
     this.veicoloService.ricerca(
@@ -55,4 +56,8 @@ export class RicercaComponent {
       },
     });
     }
+
+  redirectHomepageCliente() {
+    this.router.navigate(['homeCliente/']);
+  }
 }

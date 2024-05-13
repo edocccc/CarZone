@@ -1,21 +1,21 @@
 <label>Targa: </label>
 <input type="text" [(ngModel)]="targa">
-<br>
+<br><br>
 <label>Marca: </label>
 <input type="text" [(ngModel)]="marca">
-<br>
+<br><br>
 <label>Modello: </label>
 <input type="text" [(ngModel)]="modello">
-<br>
+<br><br>
 <label>Chilometraggio: </label>
 <input type="number" [(ngModel)]="chilometraggio">
-<br>
+<br><br>
 <label>Anno Di Produzione: </label>
 <input type="number" [(ngModel)]="annoProduzione">
-<br>
+<br><br>
 <label>Potenza in CV: </label>
 <input type="number" [(ngModel)]="potenzaCv">
-<br>
+<br><br>
 <label>Alimentazione: </label>
 <select [(ngModel)]="alimentazione">
   <option value="" selected></option>
@@ -25,8 +25,12 @@
   <option value="GPL">Gpl</option>
   <option value="ELETTRICA">Elettrica</option>
 </select>
-<br>
+<br><br>
 <label>Prezzo: </label>
 <input type="number" [(ngModel)]="prezzo">
-<br>
+<br><br>
 <button (click)="aggiungiVeicolo()">Aggiungi veicolo</button>
+<br><br>
+<button (click)="redirectHomepageManager()">
+  Torna alla HomePage
+</button>

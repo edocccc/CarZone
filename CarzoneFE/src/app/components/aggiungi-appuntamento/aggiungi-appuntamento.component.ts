@@ -6,6 +6,7 @@ import {UtenteService} from "../../services/utente.service";
 import {VeicoloService} from "../../services/veicolo.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {MessageResponse} from "../../dto/response/MessageResponse";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-aggiungi-appuntamento',
@@ -21,7 +22,7 @@ export class AggiungiAppuntamentoComponent implements OnInit{
   veicoli: ShowDettagliVeicoloManagerResponse[] = [];
   clienti: ShowUtenteManagerResponse[] = [];
   dipendenti: ShowUtenteManagerResponse[] = [];
-  constructor(private utenteService: UtenteService, private veicoloService: VeicoloService, private appuntamentoService: AppuntamentoService) { }
+  constructor(private utenteService: UtenteService, private veicoloService: VeicoloService, private appuntamentoService: AppuntamentoService, private router: Router) { }
 
   ngOnInit(): void {
     this.getVeicoliDisponibili();
@@ -33,6 +34,7 @@ export class AggiungiAppuntamentoComponent implements OnInit{
     this.appuntamentoService.prenotaAppuntamento(this.dataOra, this.idVeicolo, this.idCliente, this.idDipendente).subscribe({
       next: (response:MessageResponse) => {
         console.log(response);
+        this.router.navigate(['gestioneUtenti' ]);
       },
       error: (error: HttpErrorResponse) => {
         console.log("Si è verificato un errore:", error);
@@ -77,5 +79,9 @@ export class AggiungiAppuntamentoComponent implements OnInit{
         console.log("Si è verificato un errore:", error.message);
       },
     });
+  }
+
+  redirectGestioneAppuntamenti() {
+    this.router.navigate(['gestioneAppuntamenti' ]);
   }
 }

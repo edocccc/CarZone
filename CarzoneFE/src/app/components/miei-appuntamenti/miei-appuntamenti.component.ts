@@ -51,4 +51,8 @@ export class MieiAppuntamentiComponent implements OnInit{
       }
     });
   }
+
+  redirectHomepageCliente() {
+    this.router.navigate(['homeCliente/']);
+  }
 }

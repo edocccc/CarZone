@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {UtenteService} from "../../services/utente.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-aggiungi-dipendente',
@@ -15,7 +16,7 @@ export class AggiungiDipendenteComponent {
   password: string = '';
   passwordRipetuta: string = '';
 
-  constructor(private utenteService: UtenteService) {  }
+  constructor(private utenteService: UtenteService, private router: Router) {  }
 
   registraDipendente() {
     this.utenteService
@@ -36,5 +37,9 @@ export class AggiungiDipendenteComponent {
           console.log(error.error.message);
         },
       });
+  }
+
+  redirectGestioneUtenti() {
+    this.router.navigate(['gestioneUtenti' ]);
   }
 }

@@ -19,16 +19,22 @@
 
 <br><br>
 <p>Funzionalità:</p>
-<button (click)="redirectGestioneVeicoli()">
-  Gestione veicoli
-</button>
-<br><br>
-<button (click)="redirectGestioneUtenti()">
-  Gestione utenti
-</button>
-<br><br>
-<button (click)="redirectGestioneAppuntamenti()">
-  Gestione appuntamenti
-</button>
+<ng-container *ngIf="accessoEffettuato">
+  <button (click)="redirectGestioneVeicoli()">
+    Gestione veicoli
+  </button>
+  <br><br>
+  <button (click)="redirectGestioneUtenti()">
+    Gestione utenti
+  </button>
+  <br><br>
+  <button (click)="redirectGestioneAppuntamenti()">
+    Gestione appuntamenti
+  </button>
+  <br><br>
+  <button (click)="logout()">
+    Logout
+  </button>
+</ng-container>
 
 

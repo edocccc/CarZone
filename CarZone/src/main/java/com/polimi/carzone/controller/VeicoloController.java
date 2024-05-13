@@ -46,9 +46,9 @@ public class VeicoloController {
     }
 
     @GetMapping("/dettagli/{idVeicolo}")
-    public ResponseEntity<DettagliVeicoloResponseDTO> mostraDettagli(@PathVariable String idVeicolo) {
+    public ResponseEntity<DettagliVeicoloManagerResponseDTO> mostraDettagli(@PathVariable String idVeicolo) {
         long id = Long.parseLong(idVeicolo);
-        DettagliVeicoloResponseDTO dettagli= veicoloService.recuperaDettagli(id);
+        DettagliVeicoloManagerResponseDTO dettagli= veicoloService.recuperaDettagli(id);
         return ResponseEntity.status(HttpStatus.OK).body(dettagli);
     }
 

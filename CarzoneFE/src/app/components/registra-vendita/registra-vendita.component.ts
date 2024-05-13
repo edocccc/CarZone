@@ -19,10 +19,23 @@ export class RegistraVenditaComponent {
     this.veicoloService.registraVendita(this.idAppuntamento, this.venditaConclusa).subscribe({
       next: () => {
         alert('Esito della vendita registrato con successo');
+        if (localStorage.getItem('ruolo') === 'DIPENDENTE') {
+          this.router.navigate(['homeDipendente/' + localStorage.getItem('id')]);
+        } else {
+          this.router.navigate(['homeManager/' + localStorage.getItem('id')]);
+        }
       },
       error: () => {
         alert('Errore durante la registrazione della vendita');
       }
     });
+  }
+
+  redirectHomepage() {
+    if (localStorage.getItem('ruolo') === 'DIPENDENTE') {
+      this.router.navigate(['homeDipendente/' + localStorage.getItem('id')]);
+    } else {
+      this.router.navigate(['homeManager/' + localStorage.getItem('id')]);
+    }
   }
 }

@@ -9,10 +9,12 @@
 <p>Prezzo: {{veicolo?.prezzo}}</p>
 <br><br>
 <p>Funzionalità</p>
-<button routerLink="/prenota/{{veicolo?.id}}">
-  Prenota un appuntamento
+<ng-container *ngIf="veicolo?.stato == 'DISPONIBILE'">
+  <button (click)="redirectPrenotazioneVeicolo()">
+    Prenota un appuntamento
   </button>
-<br>
-<button routerLink="/homeCliente">
+</ng-container>
+<br><br>
+<button (click)="redirectHomepageCliente()">
   Torna alla HomePage
 </button>

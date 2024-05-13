@@ -38,4 +38,8 @@ export class ModificaVeicoloComponent implements OnInit{
     })
 
   }
+
+  redirectGestioneVeicoli() {
+    this.router.navigate(['gestioneVeicoli']);
+  }
 }

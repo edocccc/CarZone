@@ -1,5 +1,10 @@
 <label>Scegli una data per la prenotazione</label>
-<br>
+<br><br>
 <input [(ngModel)]="dataPrenotazione" type="datetime-local">
-<br>
+<br><br>
 <button (click)="prenota()">Prenota</button>
+<br><br>
+<p>Funzionalità</p>
+<button (click)="redirectHomepageCliente()">
+  Torna alla HomePage
+</button>

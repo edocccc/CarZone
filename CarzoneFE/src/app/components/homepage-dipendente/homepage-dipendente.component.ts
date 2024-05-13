@@ -20,6 +20,7 @@ export class HomepageDipendenteComponent implements OnInit{
   appuntamentiLiberi: ShowAppuntamentoResponse[] = [];
   oraAttuale: Date = new Date();
   recensioniDipendente: ShowRecensioneResponse[] = [];
+  accessoEffettuato: boolean = !!localStorage.getItem('token');
 
   constructor(private veicoloService: VeicoloService, private utenteService: UtenteService, private appuntamentoService: AppuntamentoService, private router: Router) { }
 
@@ -90,5 +91,11 @@ export class HomepageDipendenteComponent implements OnInit{
         console.log("Si è verificato un errore:", error.error);
       }
     });
+  }
+
+  logout() {
+    this.utenteService.logout();
+    this.accessoEffettuato = false;
+    this.router.navigate(['homeCliente/']);
   }
 }

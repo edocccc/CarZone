@@ -3,6 +3,7 @@ import {ShowValutazioniDipendenti} from "../../dto/response/ShowValutazioniDipen
 import {AppuntamentoService} from "../../services/appuntamento.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Router} from "@angular/router";
+import {UtenteService} from "../../services/utente.service";
 
 @Component({
   selector: 'app-homepage-manager',
@@ -11,8 +12,9 @@ import {Router} from "@angular/router";
 })
 export class HomepageManagerComponent implements OnInit{
   dipendentiConRecensioni: ShowValutazioniDipendenti[] = [];
+  accessoEffettuato: boolean = !!localStorage.getItem('token');
 
-  constructor(private appuntamentoService: AppuntamentoService, private router: Router) { }
+  constructor(private utenteService: UtenteService,private appuntamentoService: AppuntamentoService, private router: Router) { }
 
   ngOnInit(): void {
     this.getDipendentiConRecensioni();
@@ -40,5 +42,11 @@ export class HomepageManagerComponent implements OnInit{
 
   redirectGestioneAppuntamenti() {
     this.router.navigate(['gestioneAppuntamenti']);
+  }
+
+  logout(): void {
+    this.utenteService.logout();
+    this.accessoEffettuato = false;
+    this.router.navigate(['homeCliente']);
   }
 }

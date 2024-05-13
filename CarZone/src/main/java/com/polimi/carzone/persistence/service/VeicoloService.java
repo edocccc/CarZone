@@ -15,7 +15,7 @@ public interface VeicoloService {
 
     void aggiungiVeicolo(AggiuntaVeicoloRequestDTO request);
 
-    DettagliVeicoloResponseDTO recuperaDettagli(long idVeicolo);
+    DettagliVeicoloManagerResponseDTO recuperaDettagli(long idVeicolo);
 
     List<VeicoloResponseDTO> findAll();
 

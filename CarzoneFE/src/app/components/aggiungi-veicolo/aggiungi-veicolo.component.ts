@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {VeicoloService} from "../../services/veicolo.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-aggiungi-veicolo',
@@ -16,7 +17,7 @@ export class AggiungiVeicoloComponent {
   alimentazione: string = '';
   prezzo: number = 0;
 
-  constructor(private veicoloService: VeicoloService) { }
+  constructor(private veicoloService: VeicoloService, private router:Router) { }
 
   aggiungiVeicolo() {
     this.veicoloService.aggiungiVeicolo(
@@ -36,5 +37,9 @@ export class AggiungiVeicoloComponent {
       }
     });
 
+  }
+
+  redirectHomepageManager() {
+    this.router.navigate(['homeManager/' + localStorage.getItem('id')]);
   }
 }

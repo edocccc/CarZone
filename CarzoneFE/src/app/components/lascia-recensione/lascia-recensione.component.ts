@@ -20,12 +20,15 @@ export class LasciaRecensioneComponent {
   inviaRecensione() {
     this.appuntamentoService.inviaRecensione(this.idAppuntamento, this.votoRecensione, this.testoRecensione).subscribe({
       next: (response: MessageResponse) => {
-        // @ts-ignore
-        this.router.navigate(['mieiAppuntamenti/'+ localStorage.getItem('id').toString()]);
+        this.router.navigate(['mieiAppuntamenti/'+ localStorage.getItem('id')]);
       },
       error: (error: HttpErrorResponse) => {
         console.log(error);
       }
     })
+  }
+
+  redirectMieiAppuntamenti() {
+    this.router.navigate(['mieiAppuntamenti/' + localStorage.getItem('id')]);
   }
 }

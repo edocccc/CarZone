@@ -51,4 +51,8 @@ export class GestioneAppuntamentiManagerComponent implements OnInit{
   redirectAggiungiAppuntamento() {
     this.router.navigateByUrl('/aggiungiAppuntamento');
   }
+
+  redirectHomepageManager() {
+    this.router.navigate(['homeManager/' + localStorage.getItem('id')]);
+  }
 }

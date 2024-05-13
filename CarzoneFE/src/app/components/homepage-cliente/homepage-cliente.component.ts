@@ -43,4 +43,16 @@ export class HomepageClienteComponent implements OnInit{
     // @ts-ignore
     this.router.navigate(['mieiAppuntamenti/'+ localStorage.getItem('id').toString()]);
   }
+
+  redirectLogin() {
+    this.router.navigate(['login/']);
+  }
+
+  redirectRicerca() {
+    this.router.navigate(['cerca/']);
+  }
+
+  redirectDettagliVeicolo(id: number) {
+    this.router.navigate(['dettagli/'+ id.toString()]);
+  }
 }

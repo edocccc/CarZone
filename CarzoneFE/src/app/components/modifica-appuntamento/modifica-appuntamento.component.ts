@@ -82,4 +82,8 @@ export class ModificaAppuntamentoComponent implements OnInit{
       },
     });
   }
+
+  redirectGestioneAppuntamenti() {
+    this.router.navigate(['gestioneAppuntamenti' ]);
+  }
 }

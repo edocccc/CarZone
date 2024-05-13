@@ -14,7 +14,7 @@
     <p>Marca: {{ veicolo.marca }}</p>
     <p>Modello: {{ veicolo.modello }}</p>
     <p>Prezzo: {{ veicolo.prezzo }}</p>
-    <button routerLink="/dettagli/{{veicolo.id}}">
+    <button (click)="redirectDettagliVeicolo(veicolo.id)">
       Visualizza dettagli
     </button>
     <br><br>
@@ -22,13 +22,13 @@
 </div>
 <br><br>
 <p>Funzionalità:</p>
-<button *ngIf="!accessoEffettuato" routerLink="/login">
+<button *ngIf="!accessoEffettuato" (click)="redirectLogin()">
   Accedi
 </button>
-<button *ngIf="accessoEffettuato" routerLink="/cerca">
+<button *ngIf="accessoEffettuato" (click)="redirectRicerca()">
   Cerca un veicolo
 </button>
-<br>
+<br><br>
 <button *ngIf="accessoEffettuato" (click)="redirectIMieiAppuntamenti()">
   I miei appuntamenti
 </button>

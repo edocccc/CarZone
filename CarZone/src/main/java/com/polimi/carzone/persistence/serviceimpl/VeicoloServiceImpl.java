@@ -508,14 +508,14 @@ public class VeicoloServiceImpl implements VeicoloService {
     }
 
     @Override
-    public DettagliVeicoloResponseDTO recuperaDettagli(long idVeicolo) {
+    public DettagliVeicoloManagerResponseDTO recuperaDettagli(long idVeicolo) {
         Map<String,String> errori = new TreeMap<>();
         if (idVeicolo <= 0) {
             errori.put("id", "Id veicolo non valido");
             throw new CredenzialiNonValideException(errori);
         }
         Veicolo veicolo = veicoloRepo.findById(idVeicolo).orElseThrow(() -> new VeicoloNonTrovatoException("Veicolo non trovato"));
-        DettagliVeicoloResponseDTO response = new DettagliVeicoloResponseDTO();
+        DettagliVeicoloManagerResponseDTO response = new DettagliVeicoloManagerResponseDTO();
         response.setId(veicolo.getId());
         response.setTarga(veicolo.getTarga());
         response.setMarca(veicolo.getMarca());
@@ -525,6 +525,7 @@ public class VeicoloServiceImpl implements VeicoloService {
         response.setPotenzaCv(veicolo.getPotenzaCv());
         response.setAlimentazione(veicolo.getAlimentazione());
         response.setPrezzo(veicolo.getPrezzo());
+        response.setStato(checkStato(veicolo));
         return response;
     }
 

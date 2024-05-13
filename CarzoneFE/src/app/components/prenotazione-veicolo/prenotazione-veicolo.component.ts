@@ -23,10 +23,15 @@ export class PrenotazioneVeicoloComponent {
     this.appuntamentoService.prenota(this.dataPrenotazione, +this.idVeicolo, +this.idCliente).subscribe({
       next: () => {
         alert('Prenotazione effettuata con successo');
+        this.router.navigate(['homeCliente/']);
       },
       error: (error: HttpErrorResponse) => {
         alert('Errore durante la prenotazione');
       }
     })
+  }
+
+  redirectHomepageCliente() {
+    this.router.navigate(['homeCliente/']);
   }
 }

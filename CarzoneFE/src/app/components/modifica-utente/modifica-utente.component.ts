@@ -40,4 +40,8 @@ export class ModificaUtenteComponent implements OnInit{
     })
 
   }
+
+  redirectGestioneUtenti() {
+    this.router.navigate(['gestioneUtenti']);
+  }
 }
