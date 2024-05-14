@@ -112,4 +112,34 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    @ExceptionHandler(DiversiIdException.class)
+    public ResponseEntity<ExceptionResponseDTO> gestisciDiversiIdException(DiversiIdException e) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO();
+        Map<String, String> errori = new TreeMap<>();
+        errori.put("diversiId", e.getMessage());
+        response.setTimestamp(LocalDateTime.now());
+        response.setErrori(errori);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(TokenNonValidoException.class)
+    public ResponseEntity<ExceptionResponseDTO> gestisciTokenNonValidoException(TokenNonValidoException e) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO();
+        Map<String, String> errori = new TreeMap<>();
+        errori.put("token", e.getMessage());
+        response.setTimestamp(LocalDateTime.now());
+        response.setErrori(errori);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(VeicoloNonTraDisponibiliException.class)
+    public ResponseEntity<ExceptionResponseDTO> gestisciVeicoloNonTraDisponibiliException(VeicoloNonTraDisponibiliException e) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO();
+        Map<String, String> errori = new TreeMap<>();
+        errori.put("disponibilità", e.getMessage());
+        response.setTimestamp(LocalDateTime.now());
+        response.setErrori(errori);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
 }

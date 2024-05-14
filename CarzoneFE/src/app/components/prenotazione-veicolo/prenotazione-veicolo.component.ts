@@ -26,7 +26,7 @@ export class PrenotazioneVeicoloComponent {
         this.router.navigate(['homeCliente/']);
       },
       error: (error: HttpErrorResponse) => {
-        alert('Errore durante la prenotazione');
+        console.log('Errore durante la prenotazione' + error.error.message);
       }
     })
   }

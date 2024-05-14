@@ -6,6 +6,8 @@ import com.polimi.carzone.persistence.service.AppuntamentoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,8 +20,8 @@ public class AppuntamentoController {
     private final AppuntamentoService appuntamentoService;
 
     @PostMapping("/prenota")
-    public ResponseEntity<PrenotazioneResponseDTO> prenota(@RequestBody PrenotazioneRequestDTO request){
-        appuntamentoService.prenota(request);
+    public ResponseEntity<PrenotazioneResponseDTO> prenota(@RequestBody PrenotazioneRequestDTO request, @RequestHeader("Authorization") String token, UsernamePasswordAuthenticationToken auth) {
+        appuntamentoService.prenota(request, token);
         PrenotazioneResponseDTO response = new PrenotazioneResponseDTO("Prenotazione effettuata con successo!");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

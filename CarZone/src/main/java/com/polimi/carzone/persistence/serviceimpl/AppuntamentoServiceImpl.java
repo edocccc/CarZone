@@ -2,10 +2,7 @@ package com.polimi.carzone.persistence.serviceimpl;
 
 import com.polimi.carzone.dto.request.*;
 import com.polimi.carzone.dto.response.*;
-import com.polimi.carzone.exception.AppuntamentoNonTrovatoException;
-import com.polimi.carzone.exception.CredenzialiNonValideException;
-import com.polimi.carzone.exception.UtenteNonTrovatoException;
-import com.polimi.carzone.exception.VeicoloNonTrovatoException;
+import com.polimi.carzone.exception.*;
 import com.polimi.carzone.model.Appuntamento;
 import com.polimi.carzone.model.Ruolo;
 import com.polimi.carzone.model.Utente;
@@ -14,6 +11,8 @@ import com.polimi.carzone.persistence.repository.AppuntamentoRepository;
 import com.polimi.carzone.persistence.repository.UtenteRepository;
 import com.polimi.carzone.persistence.repository.VeicoloRepository;
 import com.polimi.carzone.persistence.service.AppuntamentoService;
+import com.polimi.carzone.persistence.service.VeicoloService;
+import com.polimi.carzone.security.TokenUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,9 +28,11 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
     private final AppuntamentoRepository appuntamentoRepo;
     private final UtenteRepository utenteRepo;
     private final VeicoloRepository veicoloRepo;
+    private final TokenUtil tokenUtil;
+    private final VeicoloService veicoloService;
 
     @Override
-    public void prenota(PrenotazioneRequestDTO request) {
+    public void prenota(PrenotazioneRequestDTO request, String token) {
         Map<String,String> errori = new TreeMap<>();
 
         if(request == null){
@@ -39,20 +40,34 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
             throw new CredenzialiNonValideException(errori);
         }
 
-        if(request.getDataOra().isBefore(LocalDateTime.now()) || request.getDataOra().isEqual(LocalDateTime.now())) {
+        if(request.getDataOra() == null || request.getDataOra().isBefore(LocalDateTime.now()) || request.getDataOra().isEqual(LocalDateTime.now())) {
             errori.put("dataOra", "La data e l'ora devono essere successive a quella attuale");
         }
 
-        if(request.getIdVeicolo() <= 0) {
+        if(request.getIdVeicolo() == null || request.getIdVeicolo() <= 0) {
             errori.put("idVeicolo", "L'id del veicolo non è valido");
         }
 
-        if(request.getIdCliente() <= 0) {
+        if(request.getIdCliente() == null || request.getIdCliente() <= 0) {
             errori.put("idCliente", "L'id del cliente non è valido");
         }
 
         if(!errori.isEmpty()){
             throw new CredenzialiNonValideException(errori);
+        }
+
+        if(token == null || token.isEmpty() || token.isBlank()){
+            throw new TokenNonValidoException("Token non valido");
+        }
+
+        List<DettagliVeicoloManagerResponseDTO> veicoliDisponibili = veicoloService.findAllDisponibili();
+        List<Long> veicoliDisponibiliId = veicoloService.estraiIdDaFindAllDisponibili(veicoliDisponibili);
+        if(!veicoliDisponibiliId.contains(request.getIdVeicolo())){
+            throw new VeicoloNonTraDisponibiliException("Il veicolo non è disponibile");
+        }
+
+        if(request.getIdCliente() != tokenUtil.getUtenteFromToken(token.substring(7)).getId()){
+            throw new DiversiIdException("L'id del cliente non corrisponde all'id dell'utente loggato");
         }
 
         Optional<Utente> cliente = utenteRepo.findById(request.getIdCliente());

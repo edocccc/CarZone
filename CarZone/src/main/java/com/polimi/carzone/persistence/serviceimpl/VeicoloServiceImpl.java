@@ -431,17 +431,17 @@ public class VeicoloServiceImpl implements VeicoloService {
         if (request.getModello() == null || request.getModello().isEmpty() || request.getModello().isBlank()) {
             errori.put("modello", "Devi inserire un modello valido");
         }
-        if (request.getChilometraggio() == null || request.getChilometraggio() < 0) {
+        if (request.getChilometraggio() < 0) {
             errori.put("chilometraggio", "Devi inserire un chilometraggio valido");
         }
-        if (request.getAnnoProduzione() == null || request.getAnnoProduzione() < 1900 || request.getAnnoProduzione() > LocalDateTime.now().getYear()) {
+        if (request.getAnnoProduzione() < 1900 || request.getAnnoProduzione() > LocalDateTime.now().getYear()) {
             errori.put("annoProduzione", "Devi inserire un anno di produzione valido");
         }
-        if (request.getPotenzaCv() == null || request.getPotenzaCv() < 0) {
+        if (request.getPotenzaCv() < 0) {
             errori.put("potenzaCv", "Devi inserire una potenza valida");
         }
 
-        if (request.getPrezzo() == null || request.getPrezzo() < 0.0) {
+        if (request.getPrezzo() < 0.0) {
             errori.put("prezzo", "Devi inserire un prezzo valido");
         }
 
@@ -505,6 +505,15 @@ public class VeicoloServiceImpl implements VeicoloService {
             throw new VeicoliNonDisponibiliException("Nessun veicolo disponibile");
         }
         return veicoliResponse;
+    }
+
+    @Override
+    public List<Long> estraiIdDaFindAllDisponibili(List<DettagliVeicoloManagerResponseDTO> veicoliDisponibili) {
+        List<Long> idVeicoli = new ArrayList<>();
+        for (DettagliVeicoloManagerResponseDTO veicolo : veicoliDisponibili) {
+            idVeicoli.add(veicolo.getId());
+        }
+        return idVeicoli;
     }
 
     @Override

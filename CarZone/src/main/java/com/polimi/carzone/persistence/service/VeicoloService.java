@@ -48,4 +48,6 @@ public interface VeicoloService {
     void modificaVeicolo(long idVeicolo, ModificaVeicoloRequestDTO request);
 
     List<DettagliVeicoloManagerResponseDTO> findAllDisponibili();
+
+    List<Long> estraiIdDaFindAllDisponibili(List<DettagliVeicoloManagerResponseDTO> veicoliDisponibili);
 }

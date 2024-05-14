@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface AppuntamentoService {
 
-    void prenota(PrenotazioneRequestDTO request);
+    void prenota(PrenotazioneRequestDTO request,String token);
 
     List<AppuntamentoResponseDTO> trovaAppuntamentiDipendente(long id);
 
