@@ -20,7 +20,7 @@ export class ModificaVeicoloComponent implements OnInit{
         this.veicolo = response;
         console.log(response);
       },
-      error: (error) => {
+      error: (error: HttpErrorResponse) => {
         console.log(error);
       }
     })

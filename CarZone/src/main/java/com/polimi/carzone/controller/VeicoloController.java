@@ -104,9 +104,4 @@ public class VeicoloController {
         return ResponseEntity.status(HttpStatus.OK).body(veicoliDisponobili);
     }
 
-    @GetMapping("/prova/{idVeicolo}")
-    public ResponseEntity<Optional<List<Appuntamento>>> prova(@PathVariable long idVeicolo) {
-        Optional<List<Appuntamento>> prova=appuntamentoRepo.findByVeicolo_IdAndEsitoRegistratoIsFalse(idVeicolo);
-        return ResponseEntity.status(HttpStatus.OK).body(prova);
-    }
 }
