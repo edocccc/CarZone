@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class RegistrazioneVenditaRequestDTO {
-    private long idAppuntamento;
+    private Long idAppuntamento;
     private boolean venditaConclusa;
 }

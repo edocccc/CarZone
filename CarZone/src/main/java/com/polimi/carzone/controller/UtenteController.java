@@ -74,13 +74,13 @@ public class UtenteController {
     }
 
     @PutMapping("/modifica/{idUtente}")
-    public ResponseEntity<ModificaUtenteResponseDTO> modificaUtente(@PathVariable long idUtente, @RequestBody ModificaUtenteRequestDTO request) {
+    public ResponseEntity<ModificaUtenteResponseDTO> modificaUtente(@PathVariable Long idUtente, @RequestBody ModificaUtenteRequestDTO request) {
         utenteService.modificaUtente(idUtente, request);
         return ResponseEntity.status(HttpStatus.OK).body(new ModificaUtenteResponseDTO("Utente modificato con successo"));
     }
 
     @DeleteMapping("/elimina/{idUtente}")
-    public ResponseEntity<EliminaUtenteResponseDTO> eliminaUtente(@PathVariable long idUtente) {
+    public ResponseEntity<EliminaUtenteResponseDTO> eliminaUtente(@PathVariable Long idUtente) {
         utenteService.eliminaUtente(idUtente);
         return ResponseEntity.status(HttpStatus.OK).body(new EliminaUtenteResponseDTO("Utente eliminato con successo"));
     }

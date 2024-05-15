@@ -142,4 +142,44 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    @ExceptionHandler(RecensioneGiaLasciataException.class)
+    public ResponseEntity<ExceptionResponseDTO> gestisciRecensioneGiaLasciataException(RecensioneGiaLasciataException e) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO();
+        Map<String, String> errori = new TreeMap<>();
+        errori.put("recensione", e.getMessage());
+        response.setTimestamp(LocalDateTime.now());
+        response.setErrori(errori);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(AppuntamentoNonSvoltoException.class)
+    public ResponseEntity<ExceptionResponseDTO> gestisciAppuntamentoNonSvoltoException(AppuntamentoNonSvoltoException e) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO();
+        Map<String, String> errori = new TreeMap<>();
+        errori.put("appuntamento", e.getMessage());
+        response.setTimestamp(LocalDateTime.now());
+        response.setErrori(errori);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(DipendenteNonAssegnatoException.class)
+    public ResponseEntity<ExceptionResponseDTO> gestisciDipendenteNonAssegnatoException(DipendenteNonAssegnatoException e) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO();
+        Map<String, String> errori = new TreeMap<>();
+        errori.put("dipendente", e.getMessage());
+        response.setTimestamp(LocalDateTime.now());
+        response.setErrori(errori);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(AppuntamentoRegistratoException.class)
+    public ResponseEntity<ExceptionResponseDTO> gestisciAppuntamentoRegistratoException(AppuntamentoRegistratoException e) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO();
+        Map<String, String> errori = new TreeMap<>();
+        errori.put("appuntamento", e.getMessage());
+        response.setTimestamp(LocalDateTime.now());
+        response.setErrori(errori);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
 }

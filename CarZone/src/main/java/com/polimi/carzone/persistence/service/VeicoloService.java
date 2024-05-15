@@ -43,9 +43,9 @@ public interface VeicoloService {
 
     List<DettagliVeicoloManagerResponseDTO> findAllConDettagli();
 
-    void eliminaVeicolo(long idVeicolo);
+    void eliminaVeicolo(Long idVeicolo);
 
-    void modificaVeicolo(long idVeicolo, ModificaVeicoloRequestDTO request);
+    void modificaVeicolo(Long idVeicolo, ModificaVeicoloRequestDTO request);
 
     List<DettagliVeicoloManagerResponseDTO> findAllDisponibili();
 

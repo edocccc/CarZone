@@ -400,9 +400,9 @@ public class VeicoloServiceImpl implements VeicoloService {
     }
 
     @Override
-    public void eliminaVeicolo(long idVeicolo) {
+    public void eliminaVeicolo(Long idVeicolo) {
         Map<String,String> errori = new TreeMap<>();
-        if(idVeicolo <= 0) {
+        if(idVeicolo == null || idVeicolo <= 0) {
             errori.put("id", "Id veicolo non valido");
             throw new CredenzialiNonValideException(errori);
         }
@@ -410,17 +410,22 @@ public class VeicoloServiceImpl implements VeicoloService {
         if(veicolo.isEmpty()) {
             throw new VeicoloNonTrovatoException("Veicolo non trovato");
         }
+        String stato = checkStato(veicolo.get());
+        if(stato.equals("VENDUTO")){
+            throw new VeicoloVendutoException("Non è possibile eliminare un veicolo venduto");
+        }
         veicoloRepo.delete(veicolo.get());
     }
 
     @Override
-    public void modificaVeicolo(long idVeicolo, ModificaVeicoloRequestDTO request) {
+    public void modificaVeicolo(Long idVeicolo, ModificaVeicoloRequestDTO request) {
         Map<String, String> errori = new TreeMap<>();
-        if (idVeicolo <= 0) {
+        if (idVeicolo == null || idVeicolo <= 0) {
             errori.put("id", "Id veicolo non valido");
         }
         if (request == null) {
             errori.put("request", "La request non può essere null");
+            throw new CredenzialiNonValideException(errori);
         }
         if (request.getTarga() == null || request.getTarga().isEmpty() || request.getTarga().isBlank()) {
             errori.put("targa", "Devi inserire una targa valida");
@@ -431,17 +436,17 @@ public class VeicoloServiceImpl implements VeicoloService {
         if (request.getModello() == null || request.getModello().isEmpty() || request.getModello().isBlank()) {
             errori.put("modello", "Devi inserire un modello valido");
         }
-        if (request.getChilometraggio() < 0) {
+        if (request.getChilometraggio() == null || request.getChilometraggio() < 0) {
             errori.put("chilometraggio", "Devi inserire un chilometraggio valido");
         }
-        if (request.getAnnoProduzione() < 1900 || request.getAnnoProduzione() > LocalDateTime.now().getYear()) {
+        if (request.getAnnoProduzione() == null || request.getAnnoProduzione() < 1900 || request.getAnnoProduzione() > LocalDateTime.now().getYear()) {
             errori.put("annoProduzione", "Devi inserire un anno di produzione valido");
         }
-        if (request.getPotenzaCv() < 0) {
+        if (request.getPotenzaCv() == null || request.getPotenzaCv() < 0) {
             errori.put("potenzaCv", "Devi inserire una potenza valida");
         }
 
-        if (request.getPrezzo() < 0.0) {
+        if (request.getPrezzo() == null || request.getPrezzo() < 0.0) {
             errori.put("prezzo", "Devi inserire un prezzo valido");
         }
 
@@ -467,6 +472,10 @@ public class VeicoloServiceImpl implements VeicoloService {
         Optional<Veicolo> veicolo = veicoloRepo.findById(idVeicolo);
         if (veicolo.isEmpty()) {
             throw new VeicoloNonTrovatoException("Veicolo non trovato");
+        }
+        String stato = checkStato(veicolo.get());
+        if(stato.equals("VENDUTO")){
+            throw new VeicoloVendutoException("Non è possibile modificare un veicolo venduto");
         }
         veicolo.get().setTarga(request.getTarga());
         veicolo.get().setMarca(request.getMarca());

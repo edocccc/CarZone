@@ -23,7 +23,7 @@ export class LasciaRecensioneComponent {
         this.router.navigate(['mieiAppuntamenti/'+ localStorage.getItem('id')]);
       },
       error: (error: HttpErrorResponse) => {
-        console.log(error);
+        console.log(error.error);
       }
     })
   }

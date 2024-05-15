@@ -24,9 +24,9 @@ public interface UtenteService {
 
     UtenteManagerResponseDTO trovaUtenteManager(long id);
 
-    void modificaUtente(long idUtente, ModificaUtenteRequestDTO request);
+    void modificaUtente(Long idUtente, ModificaUtenteRequestDTO request);
 
-    void eliminaUtente(long idUtente);
+    void eliminaUtente(Long idUtente);
 
     List<UtenteManagerResponseDTO> trovaClienti();
 

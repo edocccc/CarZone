@@ -63,18 +63,18 @@ public class VeicoloController {
     }
 
     @PostMapping("/registraVendita")
-    public ResponseEntity<RegistrazioneVenditaResponseDTO> registraVendita(@RequestBody RegistrazioneVenditaRequestDTO request) {
+    public ResponseEntity<RegistrazioneVenditaResponseDTO> registraVendita(@RequestBody RegistrazioneVenditaRequestDTO request, @RequestHeader("Authorization") String token) {
         RegistrazioneVenditaResponseDTO response = new RegistrazioneVenditaResponseDTO();
         if(request.isVenditaConclusa()){
-            long idVeicolo = appuntamentoService.trovaIdVeicolo(request.getIdAppuntamento());
-            long idCliente = appuntamentoService.trovaIdCliente(request.getIdAppuntamento());
+            long idVeicolo = appuntamentoService.trovaIdVeicolo(request.getIdAppuntamento(), token);
+            long idCliente = appuntamentoService.trovaIdCliente(request.getIdAppuntamento(), token);
             Utente acquirente = utenteService.findById(idCliente);
+            appuntamentoService.registraVendita(request.getIdAppuntamento(), true, token);
             veicoloService.registraVendita(idVeicolo, acquirente);
-            appuntamentoService.registraVendita(request.getIdAppuntamento(), true);
             response.setMessaggio("Registrazione esito positivo effettuata con successo");
 
         } else {
-            appuntamentoService.registraVendita(request.getIdAppuntamento(), false);
+            appuntamentoService.registraVendita(request.getIdAppuntamento(), false, token);
             response.setMessaggio("Registrazione esito negativo effettuata con successo");
         }
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -93,7 +93,7 @@ public class VeicoloController {
     }
 
     @PutMapping("/modifica/{idVeicolo}")
-    public ResponseEntity<ModificaVeicoloResponseDTO> modificaVeicolo(@PathVariable long idVeicolo, @RequestBody ModificaVeicoloRequestDTO request) {
+    public ResponseEntity<ModificaVeicoloResponseDTO> modificaVeicolo(@PathVariable Long idVeicolo, @RequestBody ModificaVeicoloRequestDTO request) {
         veicoloService.modificaVeicolo(idVeicolo, request);
         return ResponseEntity.status(HttpStatus.OK).body(new ModificaVeicoloResponseDTO("Veicolo modificato con successo"));
     }

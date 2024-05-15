@@ -28,7 +28,6 @@ export class UtenteService {
     password: string,
     passwordRipetuta: string
   ): Observable<MessageResponse> {
-    const token: HttpHeaders = this.recuperaToken();
     const request: RegisterRequest = {
       email,
       nome,
@@ -38,7 +37,7 @@ export class UtenteService {
       password,
       passwordRipetuta,
     };
-    return this.http.post<MessageResponse>(this.backEndUrl + 'signup', request, {headers: token});
+    return this.http.post<MessageResponse>(this.backEndUrl + 'signup', request);
   }
 
   login(username: string, password: string): Observable<LoginResponse> {

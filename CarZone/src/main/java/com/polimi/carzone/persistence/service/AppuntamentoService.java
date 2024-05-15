@@ -9,35 +9,39 @@ public interface AppuntamentoService {
 
     void prenota(PrenotazioneRequestDTO request,String token);
 
-    List<AppuntamentoResponseDTO> trovaAppuntamentiDipendente(long id);
+    List<AppuntamentoResponseDTO> trovaAppuntamentiDipendente(Long id, String token);
 
-    List<AppuntamentoConRecensioneResponseDTO> trovaAppuntamentiCliente(long id);
+    List<AppuntamentoConRecensioneResponseDTO> trovaAppuntamentiCliente(Long id, String token);
 
-    ValutazioneMediaResponseDTO calcolaValutazioneMediaDipendente(long idDipendente);
+    ValutazioneMediaResponseDTO calcolaValutazioneMediaDipendente(Long idDipendente, String token);
+
+    ValutazioneMediaResponseDTO calcolaValutazioneMediaDipendente(Long idDipendente);
 
     List<AppuntamentoResponseDTO> trovaAppuntamentiLiberi();
 
     void prendiInCarico(PresaInCaricoRequestDTO request);
 
-    long trovaIdVeicolo(long idAppuntamento);
+    long trovaIdVeicolo(Long idAppuntamento, String token);
 
-    long trovaIdCliente(long idAppuntamento);
+    long trovaIdCliente(Long idAppuntamento, String token);
 
-    List<RecensioneResponseDTO> trovaRecensioniDipendente(long idDipendente);
+    List<RecensioneResponseDTO> trovaRecensioniDipendente(Long idDipendente, String token);
+
+    List<RecensioneResponseDTO> trovaRecensioniDipendente(Long idDipendente);
 
     List<DipendenteConRecensioneDTO> trovaDipendentiConRecensioni();
 
-    void registraVendita(long idAppuntamento, boolean venditaConclusa);
+    void registraVendita(Long idAppuntamento, boolean venditaConclusa, String token);
 
     List<AppuntamentoManagerResponseDTO> trovaAppuntamentiPerManager();
 
     void prenotaPerManager(PrenotazioneManagerRequestDTO request);
 
-    void eliminaAppuntamento(long idAppuntamento);
+    void eliminaAppuntamento(Long idAppuntamento);
 
-    void modificaAppuntamento(long idAppuntamento, ModificaAppuntamentoRequestDTO request);
+    void modificaAppuntamento(Long idAppuntamento, ModificaAppuntamentoRequestDTO request);
 
-    void lasciaRecensione(LasciaRecensioneRequestDTO request);
+    void lasciaRecensione(LasciaRecensioneRequestDTO request, String token);
 
-    List<RecensioneClienteResponseDTO> trovaRecensioniCliente(long idCliente);
+    List<RecensioneClienteResponseDTO> trovaRecensioniCliente(Long idCliente, String token);
 }

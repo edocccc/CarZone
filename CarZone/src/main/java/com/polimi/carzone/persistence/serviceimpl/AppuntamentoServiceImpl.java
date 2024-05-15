@@ -17,6 +17,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -40,8 +41,15 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
             throw new CredenzialiNonValideException(errori);
         }
 
-        if(request.getDataOra() == null || request.getDataOra().isBefore(LocalDateTime.now()) || request.getDataOra().isEqual(LocalDateTime.now())) {
-            errori.put("dataOra", "La data e l'ora devono essere successive a quella attuale");
+        if(request.getDataOra() == null || request.getDataOra().toLocalDate().isBefore(LocalDate.now()) || request.getDataOra().toLocalDate().isEqual(LocalDate.now())) {
+            errori.put("dataOra", "La data deve essere almeno il giorno successivo a quello attuale");
+        }
+
+        int ora = request.getDataOra().getHour();
+        int minuto = request.getDataOra().getMinute();
+
+        if(ora < 9 || ora > 17 || (ora == 17 && minuto > 0)) {
+            errori.put("dataOra", "Gli appuntamenti possono essere prenotati solo dalle 9:00 alle 17:00");
         }
 
         if(request.getIdVeicolo() == null || request.getIdVeicolo() <= 0) {
@@ -87,13 +95,21 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
     }
 
     @Override
-    public List<AppuntamentoResponseDTO> trovaAppuntamentiDipendente(long idDipendente) {
+    public List<AppuntamentoResponseDTO> trovaAppuntamentiDipendente(Long idDipendente, String token) {
         Map<String,String> errori = new TreeMap<>();
         List<AppuntamentoResponseDTO> appuntamenti = new ArrayList<>();
 
-        if(idDipendente <= 0){
+        if(idDipendente == null || idDipendente <= 0){
             errori.put("idDipendente", "L'id del dipendente non è valido");
             throw new CredenzialiNonValideException(errori);
+        }
+
+        if(token == null || token.isEmpty() || token.isBlank()){
+            throw new TokenNonValidoException("Token non valido");
+        }
+
+        if(idDipendente != tokenUtil.getUtenteFromToken(token.substring(7)).getId()){
+            throw new DiversiIdException("L'id del dipendente non corrisponde all'id dell'utente loggato");
         }
 
         Optional<List<Appuntamento>> appuntamentiTrovati = appuntamentoRepo.findByDipendente_IdAndEsitoRegistratoIsFalse(idDipendente);
@@ -115,13 +131,21 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
     }
 
     @Override
-    public List<AppuntamentoConRecensioneResponseDTO> trovaAppuntamentiCliente(long idCliente) {
+    public List<AppuntamentoConRecensioneResponseDTO> trovaAppuntamentiCliente(Long idCliente, String token) {
         Map<String,String> errori = new TreeMap<>();
         List<AppuntamentoConRecensioneResponseDTO> appuntamenti = new ArrayList<>();
 
-        if(idCliente <= 0){
+        if(idCliente == null || idCliente <= 0){
             errori.put("idCliente", "L'id del cliente non è valido");
             throw new CredenzialiNonValideException(errori);
+        }
+
+        if(token == null || token.isEmpty() || token.isBlank()){
+            throw new TokenNonValidoException("Token non valido");
+        }
+
+        if(idCliente != tokenUtil.getUtenteFromToken(token.substring(7)).getId()){
+            throw new DiversiIdException("L'id del cliente non corrisponde all'id dell'utente loggato");
         }
 
         Optional<List<Appuntamento>> appuntamentiTrovati = appuntamentoRepo.findByCliente_IdAndRecensioneVotoIsNullAndRecensioneTestoIsNull(idCliente);
@@ -147,12 +171,48 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
     }
 
     @Override
-    public ValutazioneMediaResponseDTO calcolaValutazioneMediaDipendente(long idDipendente) {
+    public ValutazioneMediaResponseDTO calcolaValutazioneMediaDipendente(Long idDipendente, String token) {
         Map<String,String> errori = new TreeMap<>();
         ValutazioneMediaResponseDTO valutazioneMediaResponse = new ValutazioneMediaResponseDTO();
         double valutazioneMedia = 0.0;
 
-        if(idDipendente <= 0){
+        if(idDipendente == null || idDipendente <= 0){
+            errori.put("idDipendente", "L'id del dipendente non è valido");
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        if(token == null || token.isEmpty() || token.isBlank()){
+            throw new TokenNonValidoException("Token non valido");
+        }
+
+        Ruolo ruoloUtente = tokenUtil.getUtenteFromToken(token.substring(7)).getRuolo();
+        if(ruoloUtente != Ruolo.MANAGER && idDipendente != tokenUtil.getUtenteFromToken(token.substring(7)).getId()){
+            throw new DiversiIdException("L'id del dipendente non corrisponde all'id dell'utente loggato");
+        }
+
+        Optional<List<Appuntamento>> appuntamentiTrovati = appuntamentoRepo.findByDipendente_IdAndRecensioneVotoNotNull(idDipendente);
+        if(appuntamentiTrovati.isPresent() && !appuntamentiTrovati.get().isEmpty()){
+            double sommaValutazioni = 0.0;
+            for(Appuntamento appuntamento : appuntamentiTrovati.get()){
+                if(appuntamento.getRecensioneVoto() != null){
+                    sommaValutazioni += appuntamento.getRecensioneVoto();
+                }
+            }
+            valutazioneMedia = sommaValutazioni / appuntamentiTrovati.get().size();
+            valutazioneMediaResponse.setValutazioneMedia(valutazioneMedia);
+        } else {
+            valutazioneMediaResponse.setValutazioneMedia(0.0);
+        }
+        return valutazioneMediaResponse;
+    }
+
+    @Override
+    public ValutazioneMediaResponseDTO calcolaValutazioneMediaDipendente(Long idDipendente) {
+        Map<String,String> errori = new TreeMap<>();
+        ValutazioneMediaResponseDTO valutazioneMediaResponse = new ValutazioneMediaResponseDTO();
+        double valutazioneMedia = 0.0;
+
+        if(idDipendente == null || idDipendente <= 0){
             throw new CredenzialiNonValideException(errori);
         }
 
@@ -166,10 +226,10 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
             }
             valutazioneMedia = sommaValutazioni / appuntamentiTrovati.get().size();
             valutazioneMediaResponse.setValutazioneMedia(valutazioneMedia);
-            return valutazioneMediaResponse;
         } else {
-            throw new AppuntamentoNonTrovatoException("Nessuna valutazione rilevata");
+            valutazioneMediaResponse.setValutazioneMedia(0.0);
         }
+        return valutazioneMediaResponse;
     }
 
     @Override
@@ -227,31 +287,44 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
     }
 
     @Override
-    public long trovaIdVeicolo(long idAppuntamento) {
+    public long trovaIdVeicolo(Long idAppuntamento, String token) {
         Map<String,String> errori = new TreeMap<>();
 
-        if(idAppuntamento <= 0){
+        if(idAppuntamento == null || idAppuntamento <= 0){
             throw new CredenzialiNonValideException(errori);
         }
 
+        if(token == null || token.isEmpty() || token.isBlank()){
+            throw new TokenNonValidoException("Token non valido");
+        }
+
         Optional<Appuntamento> appuntamento = appuntamentoRepo.findById(idAppuntamento);
-        if(appuntamento.isPresent()){
-            return appuntamento.get().getVeicolo().getId();
-        } else {
+        if(appuntamento.isEmpty()){
             throw new AppuntamentoNonTrovatoException("Appuntamento non trovato");
         }
+        if(appuntamento.get().getDipendente() != null && appuntamento.get().getDipendente().getId() != tokenUtil.getUtenteFromToken(token.substring(7)).getId()){
+            throw new DiversiIdException("L'id del dipendente non corrisponde all'id dell'utente loggato");
+        }
+        return appuntamento.get().getVeicolo().getId();
     }
 
     @Override
-    public long trovaIdCliente(long idAppuntamento) {
+    public long trovaIdCliente(Long idAppuntamento, String token) {
         Map<String,String> errori = new TreeMap<>();
 
-        if(idAppuntamento <= 0){
+        if(idAppuntamento == null || idAppuntamento <= 0){
             throw new CredenzialiNonValideException(errori);
+        }
+
+        if(token == null || token.isEmpty() || token.isBlank()){
+            throw new TokenNonValidoException("Token non valido");
         }
 
         Optional<Appuntamento> appuntamento = appuntamentoRepo.findById(idAppuntamento);
         if(appuntamento.isPresent()){
+            if(appuntamento.get().getDipendente().getId() != tokenUtil.getUtenteFromToken(token.substring(7)).getId()){
+                throw new DiversiIdException("L'id del dipendente non corrisponde all'id dell'utente loggato");
+            }
             return appuntamento.get().getCliente().getId();
         } else {
             throw new AppuntamentoNonTrovatoException("Appuntamento non trovato");
@@ -259,11 +332,44 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
     }
 
     @Override
-    public List<RecensioneResponseDTO> trovaRecensioniDipendente(long idDipendente) {
+    public List<RecensioneResponseDTO> trovaRecensioniDipendente(Long idDipendente, String token) {
         Map<String,String> errori = new TreeMap<>();
         List<RecensioneResponseDTO> recensioni = new ArrayList<>();
 
-        if(idDipendente <= 0){
+        if(idDipendente == null || idDipendente <= 0){
+            errori.put("id", "L'id del dipendente non è valido");
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        if(token == null || token.isEmpty() || token.isBlank()){
+            throw new TokenNonValidoException("Token non valido");
+        }
+
+        Ruolo ruoloUtente = tokenUtil.getUtenteFromToken(token.substring(7)).getRuolo();
+        if(ruoloUtente != Ruolo.MANAGER && idDipendente != tokenUtil.getUtenteFromToken(token.substring(7)).getId()){
+            throw new DiversiIdException("L'id del dipendente non corrisponde all'id dell'utente loggato");
+        }
+
+        Optional<List<Appuntamento>> appuntamentiTrovati = appuntamentoRepo.findByDipendente_IdAndRecensioneVotoNotNullAndRecensioneTestoNotNull(idDipendente);
+        if(appuntamentiTrovati.isPresent() && !appuntamentiTrovati.get().isEmpty()){
+            for(Appuntamento appuntamento : appuntamentiTrovati.get()){
+                recensioni.add(new RecensioneResponseDTO(
+                        appuntamento.getCliente().getNome(),
+                        appuntamento.getCliente().getCognome(),
+                        appuntamento.getRecensioneVoto(),
+                        appuntamento.getRecensioneTesto()
+                ));
+            }
+        }
+        return recensioni;
+    }
+
+    @Override
+    public List<RecensioneResponseDTO> trovaRecensioniDipendente(Long idDipendente) {
+        Map<String,String> errori = new TreeMap<>();
+        List<RecensioneResponseDTO> recensioni = new ArrayList<>();
+
+        if(idDipendente == null || idDipendente <= 0){
             errori.put("id", "L'id del dipendente non è valido");
             throw new CredenzialiNonValideException(errori);
         }
@@ -301,19 +407,32 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
     }
 
     @Override
-    public void registraVendita(long idAppuntamento, boolean venditaConclusa) {
+    public void registraVendita(Long idAppuntamento, boolean venditaConclusa, String token) {
         Map<String,String> errori = new TreeMap<>();
 
-        if(idAppuntamento <= 0){
+        if(idAppuntamento == null || idAppuntamento <= 0){
             errori.put("idAppuntamento", "L'id dell'appuntamento non è valido");
             throw new CredenzialiNonValideException(errori);
         }
 
+        if(token == null || token.isEmpty() || token.isBlank()){
+            throw new TokenNonValidoException("Token non valido");
+        }
+
         Optional<Appuntamento> appuntamento = appuntamentoRepo.findById(idAppuntamento);
+        Ruolo ruoloUtente = tokenUtil.getUtenteFromToken(token.substring(7)).getRuolo();
         if(appuntamento.isEmpty()){
             throw new AppuntamentoNonTrovatoException("Appuntamento non trovato");
         }
-
+        if(ruoloUtente != Ruolo.MANAGER && appuntamento.get().getDipendente().getId() != tokenUtil.getUtenteFromToken(token.substring(7)).getId()){
+            throw new DiversiIdException("L'id del dipendente non corrisponde all'id dell'utente loggato");
+        }
+        if(appuntamento.get().getDataOra().isAfter(LocalDateTime.now())){
+            throw new AppuntamentoNonSvoltoException("L'appuntamento non è ancora stato svolto");
+        }
+        if(appuntamento.get().isEsitoRegistrato()){
+            throw new AppuntamentoRegistratoException("L'esito dell'appuntamento è già stato registrato");
+        }
 
         appuntamento.get().setEsitoRegistrato(true);
         appuntamentoRepo.save(appuntamento.get());
@@ -416,10 +535,10 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
     }
 
     @Override
-    public void eliminaAppuntamento(long idAppuntamento) {
+    public void eliminaAppuntamento(Long idAppuntamento) {
         Map<String,String> errori = new TreeMap<>();
 
-        if(idAppuntamento <= 0){
+        if(idAppuntamento == null || idAppuntamento <= 0){
             errori.put("idAppuntamento", "L'id dell'appuntamento non è valido");
             throw new CredenzialiNonValideException(errori);
         }
@@ -428,15 +547,18 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
         if(appuntamento.isEmpty()){
             throw new AppuntamentoNonTrovatoException("Appuntamento non trovato");
         }
+        if(appuntamento.get().isEsitoRegistrato()){
+            throw new AppuntamentoRegistratoException("L'esito dell'appuntamento è già stato registrato");
+        }
 
         appuntamentoRepo.delete(appuntamento.get());
     }
 
     @Override
-    public void modificaAppuntamento(long idAppuntamento, ModificaAppuntamentoRequestDTO request) {
+    public void modificaAppuntamento(Long idAppuntamento, ModificaAppuntamentoRequestDTO request) {
         Map<String,String> errori = new TreeMap<>();
 
-        if(idAppuntamento <= 0){
+        if(idAppuntamento == null || idAppuntamento <= 0){
             errori.put("idAppuntamento", "L'id dell'appuntamento non è valido");
             throw new CredenzialiNonValideException(errori);
         }
@@ -446,7 +568,7 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
             throw new CredenzialiNonValideException(errori);
         }
 
-        if(request.getDataOra().isBefore(LocalDateTime.now()) || request.getDataOra().isEqual(LocalDateTime.now())) {
+        if(request.getDataOra() == null || request.getDataOra().isBefore(LocalDateTime.now()) || request.getDataOra().isEqual(LocalDateTime.now())) {
             errori.put("dataOra", "La data e l'ora devono essere successive a quella attuale");
         }
 
@@ -479,6 +601,9 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
         if(appuntamento.isEmpty()){
             throw new AppuntamentoNonTrovatoException("Appuntamento non trovato");
         }
+        if(appuntamento.get().isEsitoRegistrato()){
+            throw new AppuntamentoRegistratoException("L'esito dell'appuntamento è già stato registrato");
+        }
         if(cliente.isEmpty()){
             throw new UtenteNonTrovatoException("Cliente non trovato");
         }
@@ -497,7 +622,7 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
     }
 
     @Override
-    public void lasciaRecensione(LasciaRecensioneRequestDTO request) {
+    public void lasciaRecensione(LasciaRecensioneRequestDTO request,String token) {
         Map<String,String> errori = new TreeMap<>();
 
         if(request == null){
@@ -521,9 +646,29 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
             throw new CredenzialiNonValideException(errori);
         }
 
+        if(token == null || token.isEmpty() || token.isBlank()){
+            throw new TokenNonValidoException("Token non valido");
+        }
+
         Optional<Appuntamento> appuntamento = appuntamentoRepo.findById(request.getIdAppuntamento());
         if(appuntamento.isEmpty()){
             throw new AppuntamentoNonTrovatoException("Appuntamento non trovato");
+        }
+
+        if(appuntamento.get().getCliente().getId() != tokenUtil.getUtenteFromToken(token.substring(7)).getId()){
+            throw new DiversiIdException("L'appuntamento non è tuo");
+        }
+
+        if(!appuntamento.get().getDataOra().isBefore(LocalDateTime.now())) {
+            throw new AppuntamentoNonSvoltoException("Appuntamento non ancora svolto");
+        }
+
+        if(appuntamento.get().getRecensioneVoto() != null || appuntamento.get().getRecensioneTesto() != null){
+            throw new RecensioneGiaLasciataException("Recensione già lasciata");
+        }
+
+        if(appuntamento.get().getDipendente() == null){
+            throw new DipendenteNonAssegnatoException("Dipendente non assegnato");
         }
 
         appuntamento.get().setRecensioneVoto(request.getVotoRecensione());
@@ -532,13 +677,21 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
     }
 
     @Override
-    public List<RecensioneClienteResponseDTO> trovaRecensioniCliente(long idCliente) {
+    public List<RecensioneClienteResponseDTO> trovaRecensioniCliente(Long idCliente, String token) {
         Map<String,String> errori = new TreeMap<>();
         List<RecensioneClienteResponseDTO> recensioni = new ArrayList<>();
 
-        if(idCliente <= 0){
+        if(idCliente == null || idCliente <= 0){
             errori.put("idCliente", "L'id del cliente non è valido");
             throw new CredenzialiNonValideException(errori);
+        }
+
+        if(token == null || token.isEmpty() || token.isBlank()){
+            throw new TokenNonValidoException("Token non valido");
+        }
+
+        if(idCliente != tokenUtil.getUtenteFromToken(token.substring(7)).getId()){
+            throw new DiversiIdException("L'id del cliente non corrisponde all'id dell'utente loggato");
         }
 
         Optional<List<Appuntamento>> appuntamentiTrovati = appuntamentoRepo.findByCliente_IdAndRecensioneVotoNotNullAndRecensioneTestoNotNull(idCliente);

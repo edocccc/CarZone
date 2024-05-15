@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {VeicoloService} from "../../services/veicolo.service";
 import {Router} from "@angular/router";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-aggiungi-veicolo',
@@ -32,8 +33,8 @@ export class AggiungiVeicoloComponent {
       next: () => {
         console.log('Veicolo aggiunto con successo');
       },
-      error: () => {
-        console.log('Errore durante l\'aggiunta del veicolo');
+      error: (error: HttpErrorResponse) => {
+        console.log('Errore durante l\'aggiunta del veicolo' + error.message);
       }
     });
 

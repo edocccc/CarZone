@@ -7,6 +7,7 @@ import {Router} from "@angular/router";
 import {AppuntamentoService} from "../../services/appuntamento.service";
 import {ShowValutazioneMediaResponse} from "../../dto/response/ShowValutazioneMediaResponse";
 import {ShowRecensioneResponse} from "../../dto/response/ShowRecensioneResponse";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-homepage-dipendente',
@@ -36,8 +37,8 @@ export class HomepageDipendenteComponent implements OnInit{
       next: (response) => {
         this.appuntamentiDipendente = response;
       },
-      error: () => {
-        alert('Errore durante il recupero degli appuntamenti');
+      error: (error: HttpErrorResponse) => {
+        console.log(error.error);
       }
     });
   }
@@ -47,8 +48,8 @@ export class HomepageDipendenteComponent implements OnInit{
       next: (response ) => {
         this.valutazioneMedia = response.valutazioneMedia;
       },
-      error: () => {
-        alert('Errore durante il recupero della valutazione media');
+      error: (error: HttpErrorResponse) => {
+        console.log('Errore durante il recupero della valutazione media' + error.error);
       }
     });
 
@@ -69,7 +70,7 @@ export class HomepageDipendenteComponent implements OnInit{
     this.appuntamentoService.prendiInCarico(this.idDipendente, idAppuntamento).subscribe({
       next: () => {
         this.getAppuntamentiDipendente(this.idDipendente);
-        alert('Appuntamento preso in carico con successo');
+        this.getAppuntamentiLiberi();
       },
       error: (error) => {
         console.log("Si è verificato un errore:", error.error);

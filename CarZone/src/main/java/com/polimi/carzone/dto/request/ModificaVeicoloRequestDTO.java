@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ModificaVeicoloRequestDTO {
-    private long id;
+    private Long id;
     private String targa;
     private String marca;
     private String modello;

@@ -30,8 +30,8 @@ export class MieiAppuntamentiComponent implements OnInit{
         this.appuntamenti = response;
         console.log(response);
       },
-      error: () => {
-        alert('Errore durante il recupero degli appuntamenti');
+      error: (error: HttpErrorResponse) => {
+        console.log(error.error);
       }
     });
   }

@@ -149,13 +149,13 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
-    public void modificaUtente(long idUtente, ModificaUtenteRequestDTO request) {
+    public void modificaUtente(Long idUtente, ModificaUtenteRequestDTO request) {
         Map<String,String> errori = new TreeMap<>();
         if(request == null){
             errori.put("request", "La request non può essere null");
             throw new CredenzialiNonValideException(errori);
         }
-        if(idUtente <= 0){
+        if(idUtente == null || idUtente <= 0){
             errori.put("idUtente", "L'id dell'utente non è valido");
         }
         if(request.getEmail()==null || request.getEmail().isEmpty()){
@@ -193,6 +193,10 @@ public class UtenteServiceImpl implements UtenteService {
         if(utente.isEmpty()){
             throw new UtenteNonTrovatoException("Utente non trovato");
         }
+        if(utente.get().getRuolo().equals(Ruolo.MANAGER)){
+            throw new RuoloNonValidoException("Non è possibile modificare un manager");
+        }
+
         utente.get().setEmail(request.getEmail());
         utente.get().setNome(request.getNome());
         utente.get().setCognome(request.getCognome());
@@ -203,15 +207,18 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
-    public void eliminaUtente(long idUtente) {
+    public void eliminaUtente(Long idUtente) {
         Map<String,String> errori = new TreeMap<>();
-        if(idUtente <= 0) {
+        if(idUtente == null || idUtente <= 0) {
             errori.put("id", "Id utente non valido");
             throw new CredenzialiNonValideException(errori);
         }
         Optional<Utente> utente = utenteRepo.findById(idUtente);
         if(utente.isEmpty()) {
             throw new VeicoloNonTrovatoException("Utente non trovato");
+        }
+        if(utente.get().getRuolo().equals(Ruolo.MANAGER)){
+            throw new RuoloNonValidoException("Non è possibile eliminare un manager");
         }
         utenteRepo.delete(utente.get());
     }

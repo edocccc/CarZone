@@ -20,21 +20,21 @@ public class AppuntamentoController {
     private final AppuntamentoService appuntamentoService;
 
     @PostMapping("/prenota")
-    public ResponseEntity<PrenotazioneResponseDTO> prenota(@RequestBody PrenotazioneRequestDTO request, @RequestHeader("Authorization") String token, UsernamePasswordAuthenticationToken auth) {
+    public ResponseEntity<PrenotazioneResponseDTO> prenota(@RequestBody PrenotazioneRequestDTO request, @RequestHeader("Authorization") String token) {
         appuntamentoService.prenota(request, token);
         PrenotazioneResponseDTO response = new PrenotazioneResponseDTO("Prenotazione effettuata con successo!");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/dipendente/{idDipendente}")
-    public ResponseEntity<List<AppuntamentoResponseDTO>> trovaAppuntamentiDipendente(@PathVariable long idDipendente){
-        List<AppuntamentoResponseDTO> response = appuntamentoService.trovaAppuntamentiDipendente(idDipendente);
+    public ResponseEntity<List<AppuntamentoResponseDTO>> trovaAppuntamentiDipendente(@PathVariable Long idDipendente, @RequestHeader("Authorization") String token){
+        List<AppuntamentoResponseDTO> response = appuntamentoService.trovaAppuntamentiDipendente(idDipendente, token);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/dipendente/{idDipendente}/valutazione")
-    public ResponseEntity<ValutazioneMediaResponseDTO> calcolaValutazioneMediaDipendente(@PathVariable long idDipendente){
-        ValutazioneMediaResponseDTO response = appuntamentoService.calcolaValutazioneMediaDipendente(idDipendente);
+    public ResponseEntity<ValutazioneMediaResponseDTO> calcolaValutazioneMediaDipendente(@PathVariable long idDipendente, @RequestHeader("Authorization") String token){
+        ValutazioneMediaResponseDTO response = appuntamentoService.calcolaValutazioneMediaDipendente(idDipendente, token);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -45,7 +45,7 @@ public class AppuntamentoController {
     }
 
     @PostMapping("/prendiInCarico")
-    public ResponseEntity<PresaInCaricoResponseDTO> prendiInCarico(@RequestBody PresaInCaricoRequestDTO request){
+    public ResponseEntity<PresaInCaricoResponseDTO> prendiInCarico(@RequestBody PresaInCaricoRequestDTO request, @RequestHeader("Authorization") String token){
         appuntamentoService.prendiInCarico(request);
         PresaInCaricoResponseDTO response = new PresaInCaricoResponseDTO();
         response.setMessage("Appuntamento preso in carico con successo");
@@ -53,8 +53,8 @@ public class AppuntamentoController {
     }
 
     @GetMapping("/recensioni/{idDipendente}")
-    public ResponseEntity<List<RecensioneResponseDTO>> trovaRecensioniDipendente(@PathVariable long idDipendente){
-        List<RecensioneResponseDTO> response = appuntamentoService.trovaRecensioniDipendente(idDipendente);
+    public ResponseEntity<List<RecensioneResponseDTO>> trovaRecensioniDipendente(@PathVariable long idDipendente, @RequestHeader("Authorization") String token){
+        List<RecensioneResponseDTO> response = appuntamentoService.trovaRecensioniDipendente(idDipendente, token);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -78,33 +78,33 @@ public class AppuntamentoController {
     }
 
     @DeleteMapping("/elimina/{idAppuntamento}")
-    public ResponseEntity<EliminaUtenteResponseDTO> eliminaUtente(@PathVariable long idAppuntamento) {
+    public ResponseEntity<EliminaUtenteResponseDTO> eliminaUtente(@PathVariable Long idAppuntamento) {
         appuntamentoService.eliminaAppuntamento(idAppuntamento);
         return ResponseEntity.status(HttpStatus.OK).body(new EliminaUtenteResponseDTO("Appuntamento eliminato con successo"));
     }
 
     @PutMapping("/modifica/{idAppuntamento}")
-    public ResponseEntity<ModificaAppuntamentoResponseDTO> modificaAppuntamento(@PathVariable long idAppuntamento, @RequestBody ModificaAppuntamentoRequestDTO request) {
+    public ResponseEntity<ModificaAppuntamentoResponseDTO> modificaAppuntamento(@PathVariable Long idAppuntamento, @RequestBody ModificaAppuntamentoRequestDTO request) {
         appuntamentoService.modificaAppuntamento(idAppuntamento, request);
         return ResponseEntity.status(HttpStatus.OK).body(new ModificaAppuntamentoResponseDTO("Appuntamento modificato con successo"));
     }
 
     @GetMapping("/appuntamentiCliente/{idCliente}")
-    public ResponseEntity<List<AppuntamentoConRecensioneResponseDTO>> trovaAppuntamentiCliente(@PathVariable long idCliente){
-        List<AppuntamentoConRecensioneResponseDTO> response = appuntamentoService.trovaAppuntamentiCliente(idCliente);
+    public ResponseEntity<List<AppuntamentoConRecensioneResponseDTO>> trovaAppuntamentiCliente(@PathVariable Long idCliente, @RequestHeader("Authorization") String token){
+        List<AppuntamentoConRecensioneResponseDTO> response = appuntamentoService.trovaAppuntamentiCliente(idCliente, token);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("/lasciaRecensione")
-    public ResponseEntity<LasciaRecensioneResponseDTO> lasciaRecensione(@RequestBody LasciaRecensioneRequestDTO request){
-        appuntamentoService.lasciaRecensione(request);
+    public ResponseEntity<LasciaRecensioneResponseDTO> lasciaRecensione(@RequestBody LasciaRecensioneRequestDTO request, @RequestHeader("Authorization") String token){
+        appuntamentoService.lasciaRecensione(request, token);
         LasciaRecensioneResponseDTO response = new LasciaRecensioneResponseDTO("Recensione lasciata con successo!");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/recensioniCliente/{idCliente}")
-    public ResponseEntity<List<RecensioneClienteResponseDTO>> trovaRecensioniCliente(@PathVariable long idCliente){
-        List<RecensioneClienteResponseDTO> response = appuntamentoService.trovaRecensioniCliente(idCliente);
+    public ResponseEntity<List<RecensioneClienteResponseDTO>> trovaRecensioniCliente(@PathVariable Long idCliente, @RequestHeader("Authorization") String token){
+        List<RecensioneClienteResponseDTO> response = appuntamentoService.trovaRecensioniCliente(idCliente, token);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
