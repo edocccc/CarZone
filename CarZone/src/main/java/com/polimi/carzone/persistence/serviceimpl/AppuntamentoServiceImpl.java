@@ -11,6 +11,7 @@ import com.polimi.carzone.persistence.repository.AppuntamentoRepository;
 import com.polimi.carzone.persistence.repository.UtenteRepository;
 import com.polimi.carzone.persistence.repository.VeicoloRepository;
 import com.polimi.carzone.persistence.service.AppuntamentoService;
+import com.polimi.carzone.persistence.service.UtenteService;
 import com.polimi.carzone.persistence.service.VeicoloService;
 import com.polimi.carzone.security.TokenUtil;
 import jakarta.transaction.Transactional;
@@ -31,6 +32,7 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
     private final VeicoloRepository veicoloRepo;
     private final TokenUtil tokenUtil;
     private final VeicoloService veicoloService;
+    private final UtenteService utenteService;
 
     @Override
     public void prenota(PrenotazioneRequestDTO request, String token) {
@@ -572,15 +574,15 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
             errori.put("dataOra", "La data e l'ora devono essere successive a quella attuale");
         }
 
-        if(request.getIdVeicolo() <= 0) {
+        if(request.getIdVeicolo() == null || request.getIdVeicolo() <= 0) {
             errori.put("idVeicolo", "L'id del veicolo non è valido");
         }
 
-        if(request.getIdCliente() <= 0) {
+        if(request.getIdCliente() == null || request.getIdCliente() <= 0) {
             errori.put("idCliente", "L'id del cliente non è valido");
         }
 
-        if(request.getIdDipendente() < 0) {
+        if(request.getIdDipendente() == null || request.getIdDipendente() < 0) {
             errori.put("idDipendente", "L'id del dipendente non è valido");
         }
 
@@ -708,5 +710,37 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
         } else {
             throw new AppuntamentoNonTrovatoException("Nessuna recensione trovata");
         }
+    }
+
+    @Override
+    public AppuntamentoModificaResponseDTO trovaPerModifica(Long idAppuntamento, String token) {
+        Map<String,String> errori = new TreeMap<>();
+        AppuntamentoModificaResponseDTO appuntamentoModifica = new AppuntamentoModificaResponseDTO();
+
+        if(idAppuntamento == null || idAppuntamento <= 0){
+            errori.put("idAppuntamento", "L'id dell'appuntamento non è valido");
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        if(token == null || token.isEmpty() || token.isBlank()){
+            throw new TokenNonValidoException("Token non valido");
+        }
+
+        Optional<Appuntamento> appuntamento = appuntamentoRepo.findById(idAppuntamento);
+        if(appuntamento.isEmpty()){
+            throw new AppuntamentoNonTrovatoException("Appuntamento non trovato");
+        }
+
+        if(appuntamento.get().isEsitoRegistrato()){
+            throw new AppuntamentoRegistratoException("L'esito dell'appuntamento è già stato registrato");
+        }
+
+        appuntamentoModifica.setDataOra(appuntamento.get().getDataOra());
+        appuntamentoModifica.setCliente(utenteService.trovaUtenteManager(appuntamento.get().getCliente().getId()));
+        appuntamentoModifica.setVeicolo(veicoloService.recuperaDettagli(appuntamento.get().getVeicolo().getId()));
+        if(appuntamento.get().getDipendente() != null){
+            appuntamentoModifica.setDipendente(utenteService.trovaUtenteManager(appuntamento.get().getDipendente().getId()));
+        }
+        return appuntamentoModifica;
     }
 }

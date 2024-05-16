@@ -23,9 +23,6 @@ export class VeicoloService {
   getVeicoli(): Observable<ShowVeicoloResponse[]> {
     return this.http.get<ShowVeicoloResponse[]>(this.backEndUrl + 'veicoli').pipe(
       map(response => {
-        console.log("inizio del service")
-        console.log(response);
-        console.log("fine del service")
         return response;
       })
     );
@@ -123,9 +120,6 @@ export class VeicoloService {
     const token: HttpHeaders = this.recuperaToken();
     return this.http.get<ShowDettagliVeicoloManagerResponse[]>(this.backEndUrl + 'veicoliDisponibili', {headers: token}).pipe(
       map(response => {
-        console.log("inizio del service")
-        console.log(response);
-        console.log("fine del service")
         return response;
       })
     );
@@ -134,5 +128,14 @@ export class VeicoloService {
   private recuperaToken(): HttpHeaders {
     const token = localStorage.getItem('token');
     return new HttpHeaders({'Authorization': 'Bearer ' + token})
+  }
+
+  getVeicoliDisponibiliESelezionato(idAppuntamento: number) {
+    const token: HttpHeaders = this.recuperaToken();
+    return this.http.get<ShowDettagliVeicoloManagerResponse[]>(this.backEndUrl + 'veicoliDisponibiliESelezionato/' + idAppuntamento, {headers: token}).pipe(
+      map(response => {
+        return response;
+      })
+    );
   }
 }

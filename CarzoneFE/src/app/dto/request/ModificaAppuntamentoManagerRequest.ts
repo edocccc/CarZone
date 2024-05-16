@@ -1,5 +1,6 @@
+import {ShowAppuntamentoModificaResponse} from "../response/ShowAppuntamentoModificaResponse";
+
 export interface ModificaAppuntamentoManagerRequest {
-    idAppuntamento: number;
     dataOra: Date;
     idVeicolo: number;
     idCliente: number;

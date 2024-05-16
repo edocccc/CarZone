@@ -517,6 +517,44 @@ public class VeicoloServiceImpl implements VeicoloService {
     }
 
     @Override
+    public List<DettagliVeicoloManagerResponseDTO> findAllDisponibiliESelezionato(Long idAppuntamento) {
+        Map<String, String> errori = new TreeMap<>();
+        if (idAppuntamento == null || idAppuntamento <= 0) {
+            errori.put("id", "Id dell'appuntamento non valido");
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        List<Veicolo> veicoli = veicoloRepo.findAll();
+        Optional<Appuntamento> appuntamento = appuntamentoRepo.findById(idAppuntamento);
+        if (appuntamento.isEmpty()) {
+            throw new AppuntamentoNonTrovatoException("Appuntamento non trovato");
+        }
+        List<DettagliVeicoloManagerResponseDTO> veicoliResponse = new ArrayList<>();
+        for (Veicolo veicolo : veicoli) {
+
+            String stato = checkStato(veicolo);
+            if(stato.equals("DISPONIBILE") || veicolo.getId() == appuntamento.get().getVeicolo().getId()){
+                DettagliVeicoloManagerResponseDTO dettagli = new DettagliVeicoloManagerResponseDTO();
+                dettagli.setId(veicolo.getId());
+                dettagli.setTarga(veicolo.getTarga());
+                dettagli.setMarca(veicolo.getMarca());
+                dettagli.setModello(veicolo.getModello());
+                dettagli.setChilometraggio(veicolo.getChilometraggio());
+                dettagli.setAnnoProduzione(veicolo.getAnnoProduzione());
+                dettagli.setPotenzaCv(veicolo.getPotenzaCv());
+                dettagli.setAlimentazione(veicolo.getAlimentazione());
+                dettagli.setPrezzo(veicolo.getPrezzo());
+                dettagli.setStato(checkStato(veicolo));
+                veicoliResponse.add(dettagli);
+            }
+        }
+        if(veicoliResponse.isEmpty()) {
+            throw new VeicoliNonDisponibiliException("Nessun veicolo disponibile");
+        }
+        return veicoliResponse;
+    }
+
+    @Override
     public List<Long> estraiIdDaFindAllDisponibili(List<DettagliVeicoloManagerResponseDTO> veicoliDisponibili) {
         List<Long> idVeicoli = new ArrayList<>();
         for (DettagliVeicoloManagerResponseDTO veicolo : veicoliDisponibili) {

@@ -8,6 +8,7 @@ import {AppuntamentoService} from "../../services/appuntamento.service";
 import {MessageResponse} from "../../dto/response/MessageResponse";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Router} from "@angular/router";
+import {ShowAppuntamentoModificaResponse} from "../../dto/response/ShowAppuntamentoModificaResponse";
 
 @Component({
   selector: 'app-modifica-appuntamento',
@@ -15,12 +16,8 @@ import {Router} from "@angular/router";
   styleUrls: ['./modifica-appuntamento.component.css']
 })
 export class ModificaAppuntamentoComponent implements OnInit{
+  appuntamento!: ShowAppuntamentoModificaResponse;
   idAppuntamento: number = +this.router.url.split('/')[2];
-
-  dataOra: Date = new Date();
-  idVeicolo: number = 0;
-  idCliente: number = 0;
-  idDipendente: number = 0;
 
   veicoli: ShowDettagliVeicoloManagerResponse[] = [];
   clienti: ShowUtenteManagerResponse[] = [];
@@ -28,13 +25,26 @@ export class ModificaAppuntamentoComponent implements OnInit{
   constructor(private utenteService: UtenteService, private veicoloService: VeicoloService, private appuntamentoService: AppuntamentoService , private router: Router) { }
 
   ngOnInit(): void {
-    this.getVeicoliDisponibili();
+    this.getAppuntamento(this.idAppuntamento);
+    this.getVeicoliDisponibiliESelezionato(this.idAppuntamento);
     this.getClienti();
     this.getDipendenti();
   }
 
+  getAppuntamento(idAppuntamento: number) {
+    this.appuntamentoService.getAppuntamento(idAppuntamento).subscribe({
+      next: (response: ShowAppuntamentoModificaResponse) => {
+        this.appuntamento = response;
+        console.log("appuntamento trovato: "+response);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log("Si è verificato un errore:", error);
+      },
+    });
+  }
+
   modificaAppuntamento() {
-    this.appuntamentoService.modificaAppuntamento(this.idAppuntamento,this.dataOra, this.idVeicolo, this.idCliente, this.idDipendente).subscribe({
+    this.appuntamentoService.modificaAppuntamento(this.idAppuntamento, this.appuntamento.dataOra, this.appuntamento.veicolo.id, this.appuntamento.cliente.id, this.appuntamento.dipendente.id).subscribe({
       next: (response:MessageResponse) => {
         console.log(response);
       },
@@ -44,11 +54,11 @@ export class ModificaAppuntamentoComponent implements OnInit{
     });
   }
 
-  getVeicoliDisponibili() {
-    this.veicoloService.getVeicoliDisponibili().subscribe({
+  getVeicoliDisponibiliESelezionato(idAppuntamento: number) {
+    this.veicoloService.getVeicoliDisponibiliESelezionato(idAppuntamento).subscribe({
       next: (response: ShowDettagliVeicoloManagerResponse[]) => {
         this.veicoli = response;
-        console.log(response);
+        console.log("veicoli disponibili e selzionato:" + response);
         console.log(this.veicoli)
       },
       error: (error: HttpErrorResponse) => {

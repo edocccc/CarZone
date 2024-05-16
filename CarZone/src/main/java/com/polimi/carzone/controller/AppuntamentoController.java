@@ -107,4 +107,10 @@ public class AppuntamentoController {
         List<RecensioneClienteResponseDTO> response = appuntamentoService.trovaRecensioniCliente(idCliente, token);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @GetMapping("/trovaPerModifica/{idAppuntamento}")
+    public ResponseEntity<AppuntamentoModificaResponseDTO> trovaPerModifica(@PathVariable Long idAppuntamento, @RequestHeader("Authorization") String token){
+        AppuntamentoModificaResponseDTO response = appuntamentoService.trovaPerModifica(idAppuntamento, token);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

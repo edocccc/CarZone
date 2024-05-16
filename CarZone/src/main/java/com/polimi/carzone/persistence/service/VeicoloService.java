@@ -49,5 +49,7 @@ public interface VeicoloService {
 
     List<DettagliVeicoloManagerResponseDTO> findAllDisponibili();
 
+    List<DettagliVeicoloManagerResponseDTO> findAllDisponibiliESelezionato(Long idVeicoloSelezionato);
+
     List<Long> estraiIdDaFindAllDisponibili(List<DettagliVeicoloManagerResponseDTO> veicoliDisponibili);
 }

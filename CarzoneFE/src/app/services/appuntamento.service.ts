@@ -18,6 +18,7 @@ import {ModificaAppuntamentoManagerRequest} from "../dto/request/ModificaAppunta
 import {LasciaRecensioneRequest} from "../dto/request/LasciaRecensioneRequest";
 import {ShowAppuntamentoConRecensioneResponse} from "../dto/response/ShowAppuntamentoConRecensioneResponse";
 import {ShowRecensioniClienteResponse} from "../dto/response/ShowRecensioniClienteResponse";
+import {ShowAppuntamentoModificaResponse} from "../dto/response/ShowAppuntamentoModificaResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -103,7 +104,6 @@ export class AppuntamentoService {
   modificaAppuntamento(idAppuntamento: number, dataOra: Date, idVeicolo: number, idCliente: number, idDipendente: number) {
     const token: HttpHeaders = this.recuperaToken();
     const request: ModificaAppuntamentoManagerRequest = {
-      idAppuntamento,
       dataOra,
       idVeicolo,
       idCliente,
@@ -132,9 +132,13 @@ export class AppuntamentoService {
     return this.http.get<ShowRecensioniClienteResponse[]>(this.backEndUrl + 'recensioniCliente/' + idCliente.toString(), {headers: token} );
   }
 
+  getAppuntamento(idAppuntamento: number): Observable<ShowAppuntamentoModificaResponse> {
+    const token: HttpHeaders = this.recuperaToken();
+    return this.http.get<ShowAppuntamentoModificaResponse>(this.backEndUrl + 'trovaPerModifica/' + idAppuntamento, {headers: token});
+  }
+
   private recuperaToken(): HttpHeaders {
     const token = localStorage.getItem('token');
     return new HttpHeaders({'Authorization': 'Bearer ' + token})
   }
-
 }

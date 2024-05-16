@@ -104,6 +104,12 @@ public class VeicoloController {
         return ResponseEntity.status(HttpStatus.OK).body(veicoliDisponobili);
     }
 
+    @GetMapping("/veicoliDisponibiliESelezionato/{idAppuntamento}")
+    public ResponseEntity<List<DettagliVeicoloManagerResponseDTO>> stampaVeicoliDiponibiliESelezionatoPerManager(@PathVariable Long idAppuntamento) {
+        List<DettagliVeicoloManagerResponseDTO> veicoliDisponobili = veicoloService.findAllDisponibiliESelezionato(idAppuntamento);
+        return ResponseEntity.status(HttpStatus.OK).body(veicoliDisponobili);
+    }
+
     @GetMapping("/prova/{idVeicolo}")
     public ResponseEntity<Optional<List<Appuntamento>>> prova(@PathVariable long idVeicolo) {
         Optional<List<Appuntamento>> prova=appuntamentoRepo.findByVeicolo_IdAndEsitoRegistratoIsFalse(idVeicolo);

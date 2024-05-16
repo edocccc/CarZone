@@ -8,9 +8,8 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 public class ModificaAppuntamentoRequestDTO {
-    private long idAppuntamento;
     private LocalDateTime dataOra;
-    private long idVeicolo;
-    private long idCliente;
-    private long idDipendente;
+    private Long idVeicolo;
+    private Long idCliente;
+    private Long idDipendente;
 }

@@ -44,4 +44,6 @@ public interface AppuntamentoService {
     void lasciaRecensione(LasciaRecensioneRequestDTO request, String token);
 
     List<RecensioneClienteResponseDTO> trovaRecensioniCliente(Long idCliente, String token);
+
+    AppuntamentoModificaResponseDTO trovaPerModifica(Long idAppuntamento, String token);
 }
