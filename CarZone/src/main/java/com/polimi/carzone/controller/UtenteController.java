@@ -68,7 +68,7 @@ public class UtenteController {
     }
 
     @GetMapping("/trova/{idUtente}")
-    public ResponseEntity<UtenteManagerResponseDTO> trovaUtente(@PathVariable long idUtente) {
+    public ResponseEntity<UtenteManagerResponseDTO> trovaUtente(@PathVariable Long idUtente) {
         UtenteManagerResponseDTO utente = utenteService.trovaUtenteManager(idUtente);
         return ResponseEntity.status(HttpStatus.OK).body(utente);
     }

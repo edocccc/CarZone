@@ -126,9 +126,9 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
-    public UtenteManagerResponseDTO trovaUtenteManager(long id) {
+    public UtenteManagerResponseDTO trovaUtenteManager(Long id) {
         Map<String,String> errori = new TreeMap<>();
-        if(id <= 0){
+        if(id == null || id <= 0){
             errori.put("id", "L'id non è valido");
             throw new CredenzialiNonValideException(errori);
         }

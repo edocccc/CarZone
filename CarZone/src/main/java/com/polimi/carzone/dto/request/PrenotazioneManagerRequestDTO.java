@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class PrenotazioneManagerRequestDTO {
     private LocalDateTime dataOra;
-    private long idVeicolo;
-    private long idCliente;
+    private Long idVeicolo;
+    private Long idCliente;
     private Long idDipendente;
 }

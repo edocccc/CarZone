@@ -46,9 +46,8 @@ public class VeicoloController {
     }
 
     @GetMapping("/dettagli/{idVeicolo}")
-    public ResponseEntity<DettagliVeicoloManagerResponseDTO> mostraDettagli(@PathVariable String idVeicolo) {
-        long id = Long.parseLong(idVeicolo);
-        DettagliVeicoloManagerResponseDTO dettagli= veicoloService.recuperaDettagli(id);
+    public ResponseEntity<DettagliVeicoloManagerResponseDTO> mostraDettagli(@PathVariable Long idVeicolo) {
+        DettagliVeicoloManagerResponseDTO dettagli= veicoloService.recuperaDettagli(idVeicolo);
         return ResponseEntity.status(HttpStatus.OK).body(dettagli);
     }
 
@@ -87,7 +86,7 @@ public class VeicoloController {
     }
 
     @DeleteMapping("/elimina/{idVeicolo}")
-    public ResponseEntity<EliminaVeicoloResponseDTO> eliminaVeicolo(@PathVariable long idVeicolo) {
+    public ResponseEntity<EliminaVeicoloResponseDTO> eliminaVeicolo(@PathVariable Long idVeicolo) {
         veicoloService.eliminaVeicolo(idVeicolo);
         return ResponseEntity.status(HttpStatus.OK).body(new EliminaVeicoloResponseDTO("Veicolo eliminato con successo"));
     }
@@ -108,11 +107,5 @@ public class VeicoloController {
     public ResponseEntity<List<DettagliVeicoloManagerResponseDTO>> stampaVeicoliDiponibiliESelezionatoPerManager(@PathVariable Long idAppuntamento) {
         List<DettagliVeicoloManagerResponseDTO> veicoliDisponobili = veicoloService.findAllDisponibiliESelezionato(idAppuntamento);
         return ResponseEntity.status(HttpStatus.OK).body(veicoliDisponobili);
-    }
-
-    @GetMapping("/prova/{idVeicolo}")
-    public ResponseEntity<Optional<List<Appuntamento>>> prova(@PathVariable long idVeicolo) {
-        Optional<List<Appuntamento>> prova=appuntamentoRepo.findByVeicolo_IdAndEsitoRegistratoIsFalse(idVeicolo);
-        return ResponseEntity.status(HttpStatus.OK).body(prova);
     }
 }

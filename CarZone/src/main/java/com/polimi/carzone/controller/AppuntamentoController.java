@@ -33,7 +33,7 @@ public class AppuntamentoController {
     }
 
     @GetMapping("/dipendente/{idDipendente}/valutazione")
-    public ResponseEntity<ValutazioneMediaResponseDTO> calcolaValutazioneMediaDipendente(@PathVariable long idDipendente, @RequestHeader("Authorization") String token){
+    public ResponseEntity<ValutazioneMediaResponseDTO> calcolaValutazioneMediaDipendente(@PathVariable Long idDipendente, @RequestHeader("Authorization") String token){
         ValutazioneMediaResponseDTO response = appuntamentoService.calcolaValutazioneMediaDipendente(idDipendente, token);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -53,7 +53,7 @@ public class AppuntamentoController {
     }
 
     @GetMapping("/recensioni/{idDipendente}")
-    public ResponseEntity<List<RecensioneResponseDTO>> trovaRecensioniDipendente(@PathVariable long idDipendente, @RequestHeader("Authorization") String token){
+    public ResponseEntity<List<RecensioneResponseDTO>> trovaRecensioniDipendente(@PathVariable Long idDipendente, @RequestHeader("Authorization") String token){
         List<RecensioneResponseDTO> response = appuntamentoService.trovaRecensioniDipendente(idDipendente, token);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class PresaInCaricoRequestDTO {
-    private long idDipendente;
-    private long idAppuntamento;
+    private Long idDipendente;
+    private Long idAppuntamento;
 }

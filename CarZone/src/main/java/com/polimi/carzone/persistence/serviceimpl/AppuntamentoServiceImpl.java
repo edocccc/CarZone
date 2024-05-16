@@ -45,6 +45,7 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
 
         if(request.getDataOra() == null || request.getDataOra().toLocalDate().isBefore(LocalDate.now()) || request.getDataOra().toLocalDate().isEqual(LocalDate.now())) {
             errori.put("dataOra", "La data deve essere almeno il giorno successivo a quello attuale");
+            throw new CredenzialiNonValideException(errori);
         }
 
         int ora = request.getDataOra().getHour();
@@ -263,11 +264,11 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
             throw new CredenzialiNonValideException(errori);
         }
 
-        if(request.getIdAppuntamento() <= 0){
+        if(request.getIdAppuntamento() == null || request.getIdAppuntamento() <= 0){
             errori.put("idAppuntamento", "L'id dell'appuntamento non è valido");
         }
 
-        if(request.getIdDipendente() <= 0){
+        if(request.getIdDipendente() == null || request.getIdDipendente() <= 0){
             errori.put("idDipendente", "L'id del dipendente non è valido");
         }
 
@@ -489,19 +490,19 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
             throw new CredenzialiNonValideException(errori);
         }
 
-        if(request.getDataOra().isBefore(LocalDateTime.now()) || request.getDataOra().isEqual(LocalDateTime.now())) {
+        if(request.getDataOra() == null || request.getDataOra().isBefore(LocalDateTime.now()) || request.getDataOra().isEqual(LocalDateTime.now())) {
             errori.put("dataOra", "La data e l'ora devono essere successive a quella attuale");
         }
 
-        if(request.getIdVeicolo() <= 0) {
+        if(request.getIdVeicolo() == null || request.getIdVeicolo() <= 0) {
             errori.put("idVeicolo", "L'id del veicolo non è valido");
         }
 
-        if(request.getIdCliente() <= 0) {
+        if(request.getIdCliente() == null || request.getIdCliente() <= 0) {
             errori.put("idCliente", "L'id del cliente non è valido");
         }
 
-        if(request.getIdDipendente() < 0) {
+        if(request.getIdDipendente() == null || request.getIdDipendente() < 0) {
             errori.put("idDipendente", "L'id del dipendente non è valido");
         }
 

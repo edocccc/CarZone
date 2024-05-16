@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class DettagliVeicoloRequestDTO {
-    private long idVeicolo;
+    private Long idVeicolo;
 }

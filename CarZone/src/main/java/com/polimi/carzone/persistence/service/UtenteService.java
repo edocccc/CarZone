@@ -22,7 +22,7 @@ public interface UtenteService {
 
     List<UtenteManagerResponseDTO> trovaUtentiManager();
 
-    UtenteManagerResponseDTO trovaUtenteManager(long id);
+    UtenteManagerResponseDTO trovaUtenteManager(Long id);
 
     void modificaUtente(Long idUtente, ModificaUtenteRequestDTO request);
 
