@@ -3,7 +3,14 @@ import {ShowDettagliVeicoloManagerResponse} from "./ShowDettagliVeicoloManagerRe
 
 export interface ShowAppuntamentoModificaResponse {
   dataOra: Date;
-  cliente: ShowUtenteManagerResponse;
-  veicolo: ShowDettagliVeicoloManagerResponse;
-  dipendente: ShowUtenteManagerResponse;
+  idCliente: number;
+  nomeCliente: string;
+  cognomeCliente: string;
+  idVeicolo: number;
+  targaVeicolo: string;
+  marcaVeicolo: string;
+  modelloVeicolo: string;
+  idDipendente: number;
+  nomeDipendente: string;
+  cognomeDipendente: string;
 }

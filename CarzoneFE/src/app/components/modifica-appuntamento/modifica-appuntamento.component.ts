@@ -26,9 +26,9 @@ export class ModificaAppuntamentoComponent implements OnInit{
 
   ngOnInit(): void {
     this.getAppuntamento(this.idAppuntamento);
-    this.getVeicoliDisponibiliESelezionato(this.idAppuntamento);
     this.getClienti();
     this.getDipendenti();
+    this.getVeicoliDisponibiliESelezionato(this.idAppuntamento);
   }
 
   getAppuntamento(idAppuntamento: number) {
@@ -38,18 +38,19 @@ export class ModificaAppuntamentoComponent implements OnInit{
         console.log("appuntamento trovato: "+response);
       },
       error: (error: HttpErrorResponse) => {
-        console.log("Si è verificato un errore:", error);
+        console.log("Si è verificato un errore:", error.error);
       },
     });
   }
 
   modificaAppuntamento() {
-    this.appuntamentoService.modificaAppuntamento(this.idAppuntamento, this.appuntamento.dataOra, this.appuntamento.veicolo.id, this.appuntamento.cliente.id, this.appuntamento.dipendente.id).subscribe({
+    this.appuntamentoService.modificaAppuntamento(this.idAppuntamento, this.appuntamento.dataOra, this.appuntamento.idVeicolo, this.appuntamento.idCliente, this.appuntamento.idDipendente).subscribe({
       next: (response:MessageResponse) => {
+        this.router.navigate(['gestioneAppuntamenti']);
         console.log(response);
       },
       error: (error: HttpErrorResponse) => {
-        console.log("Si è verificato un errore:", error);
+        console.log("Si è verificato un errore:", error.error);
       },
     });
   }
@@ -62,7 +63,7 @@ export class ModificaAppuntamentoComponent implements OnInit{
         console.log(this.veicoli)
       },
       error: (error: HttpErrorResponse) => {
-        console.log("Si è verificato un errore:", error);
+        console.log("Si è verificato un errore:", error.error);
       },
     });
   }

@@ -26,7 +26,7 @@
     <p>Dipendente: Non assegnato</p>
   </ng-container>
   <p>Veicolo: {{appuntamento.marcaVeicolo}} {{appuntamento.modelloVeicolo}}</p>
-  <ng-container *ngIf="appuntamento.dataPassata">
+  <ng-container *ngIf="appuntamento.dataPassata && appuntamento.nomeDipendente != null && appuntamento.cognomeDipendente != null">
     <button (click)="redirectLasciaRecensione(appuntamento.id)">
       Lascia una recensione
     </button>

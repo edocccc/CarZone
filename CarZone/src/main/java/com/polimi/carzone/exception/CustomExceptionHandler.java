@@ -182,4 +182,34 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    @ExceptionHandler(AppuntamentoNonAssegnatoException.class)
+    public ResponseEntity<ExceptionResponseDTO> gestisciAppuntamentoNonAssegnatoException(AppuntamentoNonAssegnatoException e) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO();
+        Map<String, String> errori = new TreeMap<>();
+        errori.put("appuntamento", e.getMessage());
+        response.setTimestamp(LocalDateTime.now());
+        response.setErrori(errori);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(AppuntamentoPresoInCaricoException.class)
+    public ResponseEntity<ExceptionResponseDTO> gestisciAppuntamentoPresoInCaricoException(AppuntamentoPresoInCaricoException e) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO();
+        Map<String, String> errori = new TreeMap<>();
+        errori.put("appuntamento", e.getMessage());
+        response.setTimestamp(LocalDateTime.now());
+        response.setErrori(errori);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(AppuntamentoPassatoException.class)
+    public ResponseEntity<ExceptionResponseDTO> gestisciAppuntamentoPassatoException(AppuntamentoPassatoException e) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO();
+        Map<String, String> errori = new TreeMap<>();
+        errori.put("appuntamento", e.getMessage());
+        response.setTimestamp(LocalDateTime.now());
+        response.setErrori(errori);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
 }

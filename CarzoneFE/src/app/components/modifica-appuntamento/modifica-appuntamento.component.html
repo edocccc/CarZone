@@ -2,17 +2,17 @@
 <input type="datetime-local" [(ngModel)]="appuntamento.dataOra">
 <br><br>
 <label>Cliente: </label>
-<select [(ngModel)]="appuntamento.cliente.id">
+<select [(ngModel)]="appuntamento.idCliente">
   <option *ngFor="let cliente of clienti" [value]="cliente.id">{{cliente.nome}} {{cliente.cognome}} username: {{cliente.username}}</option>
 </select>
 <br><br>
 <label>Veicolo: </label>
-<select [(ngModel)]="appuntamento.veicolo.id">
+<select [(ngModel)]="appuntamento.idVeicolo">
   <option *ngFor="let veicolo of veicoli" [value]="veicolo.id">{{veicolo.marca}} {{veicolo.modello}} targa: {{veicolo.targa}}</option>
 </select>
 <br><br>
 <label>Dipendente: </label>
-<select [(ngModel)]="appuntamento.dipendente.id">
+<select [(ngModel)]="appuntamento.idDipendente">
   <option *ngFor="let dipendente of dipendenti" [value]="dipendente.id">{{dipendente.nome}} {{dipendente.cognome}} username: {{dipendente.username}}</option>
 </select>
 <br>

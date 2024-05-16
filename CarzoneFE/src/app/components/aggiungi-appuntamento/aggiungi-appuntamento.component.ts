@@ -34,7 +34,7 @@ export class AggiungiAppuntamentoComponent implements OnInit{
     this.appuntamentoService.prenotaAppuntamento(this.dataOra, this.idVeicolo, this.idCliente, this.idDipendente).subscribe({
       next: (response:MessageResponse) => {
         console.log(response);
-        this.router.navigate(['gestioneUtenti' ]);
+        this.router.navigate(['gestioneAppuntamenti' ]);
       },
       error: (error: HttpErrorResponse) => {
         console.log("Si è verificato un errore:", error);

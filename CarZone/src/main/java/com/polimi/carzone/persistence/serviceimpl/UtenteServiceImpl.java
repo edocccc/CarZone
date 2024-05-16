@@ -273,7 +273,7 @@ public class UtenteServiceImpl implements UtenteService {
         if(utenteCheck.isPresent()){
             errori.put("username", "Username già in uso");
         }
-        if(request.getEmail()==null || request.getEmail().isEmpty()){
+        if(request.getEmail()==null || request.getEmail().isEmpty() || !request.getEmail().contains("@") || !request.getEmail().contains(".")){
             errori.put("email", "Devi inserire una email valida");
         }
         if(request.getNome()==null || request.getNome().isEmpty()){

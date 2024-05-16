@@ -256,7 +256,7 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
     }
 
     @Override
-    public void prendiInCarico(PresaInCaricoRequestDTO request) {
+    public void prendiInCarico(PresaInCaricoRequestDTO request, String token) {
         Map<String,String> errori = new TreeMap<>();
 
         if(request == null){
@@ -276,6 +276,14 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
             throw new CredenzialiNonValideException(errori);
         }
 
+        if(token == null || token.isEmpty() || token.isBlank()){
+            throw new TokenNonValidoException("Token non valido");
+        }
+
+        if(request.getIdDipendente() != tokenUtil.getUtenteFromToken(token.substring(7)).getId()){
+            throw new DiversiIdException("L'id del dipendente non corrisponde all'id dell'utente loggato");
+        }
+
         Optional<Appuntamento> appuntamento = appuntamentoRepo.findById(request.getIdAppuntamento());
         Optional<Utente> dipendente = utenteRepo.findById(request.getIdDipendente());
         if(appuntamento.isEmpty()){
@@ -283,6 +291,12 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
         }
         if(dipendente.isEmpty()){
             throw new UtenteNonTrovatoException("Dipendente non trovato");
+        }
+        if(appuntamento.get().getDipendente() != null){
+            throw new AppuntamentoPresoInCaricoException("L'appuntamento è già stato preso in carico");
+        }
+        if(appuntamento.get().getDataOra().isBefore(LocalDateTime.now())){
+            throw new AppuntamentoPassatoException("L'appuntamento è già passato");
         }
 
         appuntamento.get().setDipendente(dipendente.get());
@@ -436,6 +450,9 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
         if(appuntamento.get().isEsitoRegistrato()){
             throw new AppuntamentoRegistratoException("L'esito dell'appuntamento è già stato registrato");
         }
+        if(appuntamento.get().getDipendente() == null){
+            throw new AppuntamentoNonAssegnatoException("L'appuntamento non è stato preso in carico da nessun dipendente");
+        }
 
         appuntamento.get().setEsitoRegistrato(true);
         appuntamentoRepo.save(appuntamento.get());
@@ -583,7 +600,7 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
             errori.put("idCliente", "L'id del cliente non è valido");
         }
 
-        if(request.getIdDipendente() == null || request.getIdDipendente() < 0) {
+        if(request.getIdDipendente() != null && request.getIdDipendente() < 0) {
             errori.put("idDipendente", "L'id del dipendente non è valido");
         }
 
@@ -595,7 +612,7 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
         Optional<Utente> cliente = utenteRepo.findById(request.getIdCliente());
         Optional<Veicolo> veicolo = veicoloRepo.findById(request.getIdVeicolo());
         Optional<Utente> dipendente = Optional.empty();
-        if(request.getIdDipendente() != 0){
+        if(request.getIdDipendente() != null){
             dipendente = utenteRepo.findById(request.getIdDipendente());
             if(dipendente.isEmpty()){
                 throw new UtenteNonTrovatoException("Dipendente non trovato");
@@ -618,7 +635,7 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
         appuntamento.get().setDataOra(request.getDataOra());
         appuntamento.get().setCliente(cliente.get());
         appuntamento.get().setVeicolo(veicolo.get());
-        if(request.getIdDipendente() != 0){
+        if(request.getIdDipendente() != null){
             appuntamento.get().setDipendente(dipendente.get());
         }
         appuntamentoRepo.save(appuntamento.get());
@@ -737,10 +754,17 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
         }
 
         appuntamentoModifica.setDataOra(appuntamento.get().getDataOra());
-        appuntamentoModifica.setCliente(utenteService.trovaUtenteManager(appuntamento.get().getCliente().getId()));
-        appuntamentoModifica.setVeicolo(veicoloService.recuperaDettagli(appuntamento.get().getVeicolo().getId()));
+        appuntamentoModifica.setIdCliente(appuntamento.get().getCliente().getId());
+        appuntamentoModifica.setNomeCliente(appuntamento.get().getCliente().getNome());
+        appuntamentoModifica.setCognomeCliente(appuntamento.get().getCliente().getCognome());
+        appuntamentoModifica.setIdVeicolo(appuntamento.get().getVeicolo().getId());
+        appuntamentoModifica.setTargaVeicolo(appuntamento.get().getVeicolo().getTarga());
+        appuntamentoModifica.setMarcaVeicolo(appuntamento.get().getVeicolo().getMarca());
+        appuntamentoModifica.setModelloVeicolo(appuntamento.get().getVeicolo().getModello());
         if(appuntamento.get().getDipendente() != null){
-            appuntamentoModifica.setDipendente(utenteService.trovaUtenteManager(appuntamento.get().getDipendente().getId()));
+            appuntamentoModifica.setIdDipendente(appuntamento.get().getDipendente().getId());
+            appuntamentoModifica.setNomeDipendente(appuntamento.get().getDipendente().getNome());
+            appuntamentoModifica.setCognomeDipendente(appuntamento.get().getDipendente().getCognome());
         }
         return appuntamentoModifica;
     }

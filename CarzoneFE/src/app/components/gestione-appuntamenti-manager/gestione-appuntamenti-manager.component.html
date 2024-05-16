@@ -21,7 +21,7 @@
     <p>Esito registrato: NO</p>
   </ng-container>
   <ng-container *ngIf="!appuntamento.esitoRegistrato">
-    <ng-container *ngIf="appuntamento.dataPassata">
+    <ng-container *ngIf="appuntamento.dataPassata && appuntamento.nomeDipendente != null && appuntamento.cognomeDipendente != null">
     <button (click)="redirectRegistraVendita(appuntamento.id)">
       Registra vendita
     </button>

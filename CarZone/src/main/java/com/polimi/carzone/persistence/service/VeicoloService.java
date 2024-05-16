@@ -39,7 +39,7 @@ public interface VeicoloService {
 
     List<Veicolo> findByChilometraggio(Integer chilometraggioMinimo, Integer chilometraggioMassimo);
 
-    void registraVendita(long idVeicolo, Utente acquirente);
+    void registraVendita(Long idVeicolo, Utente acquirente);
 
     List<DettagliVeicoloManagerResponseDTO> findAllConDettagli();
 

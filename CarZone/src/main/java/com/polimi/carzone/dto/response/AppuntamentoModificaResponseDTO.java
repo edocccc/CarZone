@@ -12,7 +12,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class AppuntamentoModificaResponseDTO {
     LocalDateTime dataOra;
-    UtenteManagerResponseDTO cliente;
-    DettagliVeicoloManagerResponseDTO veicolo;
-    UtenteManagerResponseDTO dipendente;
+    Long idCliente;
+    String nomeCliente;
+    String cognomeCliente;
+    Long idVeicolo;
+    String targaVeicolo;
+    String marcaVeicolo;
+    String modelloVeicolo;
+    Long idDipendente;
+    String nomeDipendente;
+    String cognomeDipendente;
 }

@@ -46,7 +46,7 @@ public class AppuntamentoController {
 
     @PostMapping("/prendiInCarico")
     public ResponseEntity<PresaInCaricoResponseDTO> prendiInCarico(@RequestBody PresaInCaricoRequestDTO request, @RequestHeader("Authorization") String token){
-        appuntamentoService.prendiInCarico(request);
+        appuntamentoService.prendiInCarico(request, token);
         PresaInCaricoResponseDTO response = new PresaInCaricoResponseDTO();
         response.setMessage("Appuntamento preso in carico con successo");
         return ResponseEntity.status(HttpStatus.OK).body(response);

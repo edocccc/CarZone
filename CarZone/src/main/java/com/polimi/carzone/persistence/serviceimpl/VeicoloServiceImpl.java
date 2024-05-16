@@ -352,9 +352,9 @@ public class VeicoloServiceImpl implements VeicoloService {
     }
 
     @Override
-    public void registraVendita(long idVeicolo, Utente acquirente) {
+    public void registraVendita(Long idVeicolo, Utente acquirente) {
         Map<String,String> errori = new TreeMap<>();
-        if(idVeicolo <= 0) {
+        if(idVeicolo == null || idVeicolo <= 0) {
             errori.put("veicolo", "Id veicolo non valido");
         }
         if(acquirente == null) {

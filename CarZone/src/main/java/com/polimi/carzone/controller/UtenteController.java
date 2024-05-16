@@ -55,12 +55,6 @@ public class UtenteController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("/manager")
-    public ResponseEntity<String> manager(UsernamePasswordAuthenticationToken auth) {
-        Utente utente = (Utente) auth.getPrincipal();
-        return ResponseEntity.status(HttpStatus.OK).body(utente.getUsername() + " dice: Lazio Merda!");
-    }
-
     @GetMapping("/utentiManager")
     public ResponseEntity<List<UtenteManagerResponseDTO>> trovaUtentiManager() {
         List<UtenteManagerResponseDTO> utenti = utenteService.trovaUtentiManager();
