@@ -724,10 +724,8 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
                         appuntamento.getRecensioneTesto()
                 ));
             }
-            return recensioni;
-        } else {
-            throw new AppuntamentoNonTrovatoException("Nessuna recensione trovata");
         }
+        return recensioni;
     }
 
     @Override

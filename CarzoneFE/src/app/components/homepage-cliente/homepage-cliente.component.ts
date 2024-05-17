@@ -30,6 +30,7 @@ export class HomepageClienteComponent implements OnInit{
       },
       error: (error) => {
         console.log("Si è verificato un errore:", error);
+        this.veicoli = [];
       },
     });
   }
@@ -40,8 +41,7 @@ export class HomepageClienteComponent implements OnInit{
   }
 
   redirectIMieiAppuntamenti() {
-    // @ts-ignore
-    this.router.navigate(['mieiAppuntamenti/'+ localStorage.getItem('id').toString()]);
+    this.router.navigate(['mieiAppuntamenti/'+ localStorage.getItem('id')]);
   }
 
   redirectLogin() {

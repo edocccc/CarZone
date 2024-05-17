@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RegisterRequest } from 'src/app/dto/request/RegisterRequest';
 import { UtenteService } from 'src/app/services/utente.service';
 import { ToastrService } from 'ngx-toastr';
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-registrazione',
@@ -34,7 +35,7 @@ export class RegistrazioneComponent {
         next: (response) => {
           console.log(response);
         },
-        error: (error) => {
+        error: (error: HttpErrorResponse) => {
           console.log(error.error.message);
         },
       });

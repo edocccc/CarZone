@@ -114,7 +114,7 @@ export class AppuntamentoService {
 
   getAllAppuntamentiCliente(idCliente: number): Observable<ShowAppuntamentoConRecensioneResponse[]> {
     const token: HttpHeaders = this.recuperaToken();
-    return this.http.get<ShowAppuntamentoConRecensioneResponse[]>(this.backEndUrl + 'appuntamentiCliente/' + idCliente.toString(), {headers: token});
+    return this.http.get<ShowAppuntamentoConRecensioneResponse[]>(this.backEndUrl + 'appuntamentiCliente/' + idCliente, {headers: token});
   }
 
   inviaRecensione(idAppuntamento: number, votoRecensione: number, testoRecensione: string):Observable<MessageResponse> {

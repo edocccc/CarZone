@@ -9,6 +9,7 @@
   <option value="VENDUTO">Venduto</option>
 </select>
 <br>
+<ng-container *ngIf="veicoli.length != 0">
 <div *ngFor="let veicolo of veicoli">
   <ng-container *ngIf="statoVeicolo=='' || veicolo.stato.toUpperCase()==statoVeicolo">
     <p>Marca: {{ veicolo.marca }}</p>
@@ -20,6 +21,10 @@
     <br><br>
   </ng-container>
 </div>
+</ng-container>
+<ng-container *ngIf="veicoli.length == 0">
+  <p>Non ci sono veicoli</p>
+</ng-container>
 <br><br>
 <p>Funzionalità:</p>
 <button *ngIf="!accessoEffettuato" (click)="redirectLogin()">

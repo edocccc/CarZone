@@ -60,7 +60,7 @@ export class HomepageDipendenteComponent implements OnInit{
       next: (response) => {
         this.appuntamentiLiberi = response;
       },
-      error: (error) => {
+      error: (error: HttpErrorResponse) => {
         console.log("Si è verificato un errore:", error.error);
       }
     });
@@ -72,7 +72,7 @@ export class HomepageDipendenteComponent implements OnInit{
         this.getAppuntamentiDipendente(this.idDipendente);
         this.getAppuntamentiLiberi();
       },
-      error: (error) => {
+      error: (error: HttpErrorResponse) => {
         console.log("Si è verificato un errore:", error.error);
         alert('Errore durante il prendere in carico');
       }

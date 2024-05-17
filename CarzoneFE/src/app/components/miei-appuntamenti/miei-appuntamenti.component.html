@@ -1,5 +1,4 @@
 <p>Ecco le tue recensioni</p>
-<br><br>
 <ng-container *ngIf="!recensioni.length">
   <p>Non hai lasciato recensioni</p>
 </ng-container>
@@ -11,7 +10,6 @@
 </ng-container>
 <br><br>
 <p>Ecco i tuoi appuntamenti, scegli un'azione</p>
-<br><br>
 <ng-container *ngIf="!appuntamenti.length">
   <p>Non ci sono appuntamenti</p>
 </ng-container>
@@ -33,6 +31,7 @@
   </ng-container>
   <br><br>
 </ng-container>
+<br><br>
 <p>Funzionalità</p>
 <button (click)="redirectHomepageCliente()">
   Torna alla HomePage

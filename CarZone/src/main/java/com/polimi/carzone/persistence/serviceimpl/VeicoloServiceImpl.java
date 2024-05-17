@@ -393,9 +393,6 @@ public class VeicoloServiceImpl implements VeicoloService {
             dettagli.setStato(checkStato(veicolo));
             veicoliResponse.add(dettagli);
         }
-        if(veicoliResponse.isEmpty()) {
-            throw new VeicoliNonDisponibiliException("Nessun veicolo disponibile");
-        }
         return veicoliResponse;
     }
 
