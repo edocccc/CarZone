@@ -1,5 +1,6 @@
 package com.polimi.carzone.model;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,6 +20,7 @@ import java.util.List;
 )
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Utente implements UserDetails {
     @Id
     @SequenceGenerator(

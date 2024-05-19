@@ -32,7 +32,6 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
     private final VeicoloRepository veicoloRepo;
     private final TokenUtil tokenUtil;
     private final VeicoloService veicoloService;
-    private final UtenteService utenteService;
 
     @Override
     public void prenota(PrenotazioneRequestDTO request, String token) {
