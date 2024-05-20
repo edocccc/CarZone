@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class LasciaRecensioneRequestDTO {
-    private Integer idAppuntamento;
+    private Long idAppuntamento;
     private Integer votoRecensione;
     private String testoRecensione;
 }

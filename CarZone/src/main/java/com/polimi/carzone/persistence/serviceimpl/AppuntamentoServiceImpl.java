@@ -657,7 +657,7 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
             errori.put("voto", "Il voto deve essere compreso tra 1 e 5");
         }
 
-        if(request.getTestoRecensione().isEmpty() || request.getTestoRecensione().isBlank()){
+        if(request.getTestoRecensione() == null || request.getTestoRecensione().isEmpty() || request.getTestoRecensione().isBlank()){
             errori.put("testo", "Il testo non può essere vuoto");
         }
 

@@ -1,8 +1,8 @@
 package com.polimi.carzone.persistence.serviceimpl;
 
-import com.polimi.carzone.dto.request.PrenotazioneRequestDTO;
-import com.polimi.carzone.dto.request.PresaInCaricoRequestDTO;
+import com.polimi.carzone.dto.request.*;
 import com.polimi.carzone.dto.response.DettagliVeicoloManagerResponseDTO;
+import com.polimi.carzone.dto.response.RecensioneResponseDTO;
 import com.polimi.carzone.exception.*;
 import com.polimi.carzone.model.*;
 import com.polimi.carzone.persistence.repository.AppuntamentoRepository;
@@ -421,5 +421,482 @@ public class AppuntamentoServiceImplTest {
         assertThrows(DiversiIdException.class,
                 () -> appuntamentoService.trovaIdVeicolo(10L, "tokenaaaaaaaa"));
     }
+
+    @Test
+    void trovaIdClienteSuccessful () {
+        Utente utente = new Utente();
+        utente.setId(1L);
+        when(tokenUtil.getUtenteFromToken(any())).thenReturn(utente);
+        Optional<Appuntamento> appuntamento = Optional.of(new Appuntamento(10, LocalDateTime.of(2025, 11, 11, 16, 30), 4, "bravo", false, new Utente(), utente, new Veicolo()));
+        when(appuntamentoRepo.findById(any())).thenReturn(appuntamento);
+        assertAll(() -> appuntamentoService.trovaIdCliente(10L, "tokenaaaaaaaa"));
+    }
+
+    @Test
+    void trovaIdClienteThrowsIdAppuntamentoNonValido() {
+        assertThrows(CredenzialiNonValideException.class,
+                () -> appuntamentoService.trovaIdCliente(null, null));
+    }
+
+    @Test
+    void trovaIdClienteThrowsTokenNonValido() {
+        assertThrows(TokenNonValidoException.class,
+                () -> appuntamentoService.trovaIdCliente(10L, null));
+    }
+
+    @Test
+    void trovaIdClienteThrowsAppuntamentoNonTrovato() {
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.empty());
+        assertThrows(AppuntamentoNonTrovatoException.class,
+                () -> appuntamentoService.trovaIdCliente(10L, "tokenaaaaaaaa"));
+    }
+
+    @Test
+    void trovaIdClienteThrowsDiversiId() {
+        Utente utente = new Utente();
+        utente.setId(1L);
+        when(tokenUtil.getUtenteFromToken(any())).thenReturn(new Utente());
+        Optional<Appuntamento> appuntamento = Optional.of(new Appuntamento(10, LocalDateTime.of(2025, 11, 11, 16, 30), 4, "bravo", false, new Utente(), utente, new Veicolo()));
+        when(appuntamentoRepo.findById(any())).thenReturn(appuntamento);
+        assertThrows(DiversiIdException.class,
+                () -> appuntamentoService.trovaIdCliente(10L, "tokenaaaaaaaa"));
+    }
+
+    @Test
+    void trovaRecensioniDipendenteSuccessful() {
+        Utente utente = new Utente();
+        utente.setId(1L);
+        utente.setRuolo(Ruolo.MANAGER);
+        when(tokenUtil.getUtenteFromToken(any())).thenReturn(utente);
+        Optional<List<Appuntamento>> appuntamentiTrovati = Optional.of(new ArrayList<>());
+        appuntamentiTrovati.get().add(new Appuntamento(10L, LocalDateTime.of(2025, 11, 11, 16, 30), null, null, false, new Utente(), new Utente(), new Veicolo()));
+        when(appuntamentoRepo.findByDipendente_IdAndRecensioneVotoNotNullAndRecensioneTestoNotNull(1L)).thenReturn(appuntamentiTrovati);
+        assertAll(() -> appuntamentoService.trovaRecensioniDipendente(1L, "tokenaaaaaaaa"));
+    }
+
+    @Test
+    void trovaRecensioniDipendenteThrowsIdDipendenteNonTrovato() {
+        assertThrows(CredenzialiNonValideException.class,
+                () -> appuntamentoService.trovaRecensioniDipendente(null, null));
+    }
+
+    @Test
+    void trovaRecensioniDipendenteThrowsTokenNonValido() {
+        assertThrows(TokenNonValidoException.class,
+                () -> appuntamentoService.trovaRecensioniDipendente(1L, null));
+    }
+
+    @Test
+    void trovaRecensioniDipendenteThrowsDiversiId() {
+        when(tokenUtil.getUtenteFromToken(any())).thenReturn(new Utente());
+        assertThrows(DiversiIdException.class,
+                () -> appuntamentoService.trovaRecensioniDipendente(1L, "tokenaaaaaaaa"));
+    }
+
+    @Test
+    void trovaRecensioniDipendenteSenzaTokenSuccessful() {
+        Utente utente = new Utente();
+        utente.setId(1L);
+        Optional<List<Appuntamento>> appuntamentiTrovati = Optional.of(new ArrayList<>());
+        appuntamentiTrovati.get().add(new Appuntamento(10L, LocalDateTime.of(2025, 11, 11, 16, 30), null, null, false, new Utente(), new Utente(), new Veicolo()));
+        when(appuntamentoRepo.findByDipendente_IdAndRecensioneVotoNotNullAndRecensioneTestoNotNull(1L)).thenReturn(appuntamentiTrovati);
+        assertAll(() -> appuntamentoService.trovaRecensioniDipendente(1L));
+    }
+
+    @Test
+    void trovaRecensioniDipendenteSenzaTokenThrowsIdDipendenteNonTrovato() {
+        assertThrows(CredenzialiNonValideException.class,
+                () -> appuntamentoService.trovaRecensioniDipendente(null));
+    }
+
+    @Test
+    void trovaDipendentiConRecensioniSuccessful() {
+        List<Utente> dipendenti = new ArrayList<>();
+        Utente utente = new Utente();
+        utente.setId(1L);
+        dipendenti.add(utente);
+        when(utenteRepo.findByRuolo(Ruolo.DIPENDENTE)).thenReturn(dipendenti);
+        List<RecensioneResponseDTO> recensioni = new ArrayList<>();
+        recensioni.add(new RecensioneResponseDTO("uno", "uno", 5, "utente"));
+        assertAll(() -> appuntamentoService.trovaDipendentiConRecensioni());
+    }
+
+    @Test
+    void registraVenditaSuccessful() {
+        Utente utente = new Utente();
+        utente.setRuolo(Ruolo.MANAGER);
+        when(tokenUtil.getUtenteFromToken(any())).thenReturn(utente);
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.of(new Appuntamento(10L, LocalDateTime.of(2023, 11, 11, 16, 30), null, null, false, new Utente(), new Utente(), new Veicolo())));
+        assertAll(() -> appuntamentoService.registraVendita(10L, true,"tokenaaaaaaaa"));
+    }
+
+    @Test
+    void registraVenditaThrowsIdAppuntamentoNonValido() {
+        assertThrows(CredenzialiNonValideException.class,
+                () -> appuntamentoService.registraVendita(null, true, null));
+    }
+
+    @Test
+    void registraVenditaThrowsTokenNonValido() {
+        assertThrows(TokenNonValidoException.class,
+                () -> appuntamentoService.registraVendita(10L, true, null));
+    }
+
+    @Test
+    void registraVenditaThrowsAppuntamentoNonTrovato() {
+        Utente utente = new Utente();
+        utente.setRuolo(Ruolo.MANAGER);
+        when(tokenUtil.getUtenteFromToken(any())).thenReturn(utente);
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.empty());
+        assertThrows(AppuntamentoNonTrovatoException.class,
+                () -> appuntamentoService.registraVendita(10L, true, "tokenaaaaaaaa"));
+    }
+
+    @Test
+    void registraVenditaThrowsDiversiId() {
+        Utente utente = new Utente();
+        utente.setId(1L);
+        utente.setRuolo(Ruolo.CLIENTE);
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.of(new Appuntamento(10L, LocalDateTime.of(2023, 11, 11, 16, 30), null, null, false, new Utente(), new Utente(), new Veicolo())));
+        when(tokenUtil.getUtenteFromToken(any())).thenReturn(utente);
+        assertThrows(DiversiIdException.class,
+                () -> appuntamentoService.registraVendita(10L, true, "tokenaaaaaaaa"));
+    }
+
+    @Test
+    void registraVenditaThrowsAppuntamentoNonPassato() {
+        Utente utente = new Utente();
+        utente.setRuolo(Ruolo.MANAGER);
+        when(tokenUtil.getUtenteFromToken(any())).thenReturn(utente);
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.of(new Appuntamento(10L, LocalDateTime.of(2025, 11, 11, 16, 30), null, null, false, new Utente(), new Utente(), new Veicolo())));
+        assertThrows(AppuntamentoNonSvoltoException.class,
+                () -> appuntamentoService.registraVendita(10L, true, "tokenaaaaaaaa"));
+    }
+
+    @Test
+    void registraVenditaThrowsAppuntamentoGiaRegistrato() {
+        Utente utente = new Utente();
+        utente.setRuolo(Ruolo.MANAGER);
+        when(tokenUtil.getUtenteFromToken(any())).thenReturn(utente);
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.of(new Appuntamento(10L, LocalDateTime.of(2023, 11, 11, 16, 30), null, null, true, new Utente(), new Utente(), new Veicolo())));
+        assertThrows(AppuntamentoRegistratoException.class,
+                () -> appuntamentoService.registraVendita(10L, true, "tokenaaaaaaaa"));
+    }
+
+    @Test
+    void registraVenditaThrowsDipendenteNonAssegnato() {
+        Utente utente = new Utente();
+        utente.setRuolo(Ruolo.MANAGER);
+        when(tokenUtil.getUtenteFromToken(any())).thenReturn(utente);
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.of(new Appuntamento(10L, LocalDateTime.of(2023, 11, 11, 16, 30), null, null, false, new Utente(), null, new Veicolo())));
+        assertThrows(AppuntamentoNonAssegnatoException.class,
+                () -> appuntamentoService.registraVendita(10L, false, "tokenaaaaaaaa"));
+    }
+
+    @Test
+    void trovaAppuntamentiPerManagerSuccessfulConDipendente() {
+        List<Appuntamento> appuntamenti = new ArrayList<>();
+        appuntamenti.add(new Appuntamento(10L, LocalDateTime.of(2023, 11, 11, 16, 30), null, null, false, new Utente(), new Utente(), new Veicolo()));
+        when(appuntamentoRepo.findAll()).thenReturn(appuntamenti);
+        assertAll(() -> appuntamentoService.trovaAppuntamentiPerManager());
+    }
+
+    @Test
+    void trovaAppuntamentiPerManagerSuccessfulSenzaDipendente() {
+        List<Appuntamento> appuntamenti = new ArrayList<>();
+        appuntamenti.add(new Appuntamento(10L, LocalDateTime.of(2023, 11, 11, 16, 30), null, null, false, new Utente(), null, new Veicolo()));
+        when(appuntamentoRepo.findAll()).thenReturn(appuntamenti);
+        assertAll(() -> appuntamentoService.trovaAppuntamentiPerManager());
+    }
+
+    @Test
+    void prenotaPerManagerSuccessful() {
+        Utente utente = new Utente();
+        utente.setId(1L);
+        when(utenteRepo.findById(any())).thenReturn(Optional.of(new Utente()));
+        when(veicoloRepo.findById(any())).thenReturn(Optional.of(new Veicolo()));
+        assertAll(() -> appuntamentoService.prenotaPerManager(new PrenotazioneManagerRequestDTO(LocalDateTime.of(2025, 11, 11, 16, 30), 1L, 1L, 1L)));
+    }
+
+    @Test
+    void prenotaPerManagerThrowsRequestNull() {
+        assertThrows(CredenzialiNonValideException.class,
+                () -> appuntamentoService.prenotaPerManager(null));
+    }
+
+    @Test
+    void prenotaPerManagerThrowsErroriIsEmpty() {
+        assertThrows(CredenzialiNonValideException.class,
+                () -> appuntamentoService.prenotaPerManager(new PrenotazioneManagerRequestDTO(null, null, null, null)));
+    }
+
+    @Test
+    void prenotaPerManagerThrowsVeicoloNonTrovato() {
+        when(utenteRepo.findById(any())).thenReturn(Optional.of(new Utente()));
+        when(veicoloRepo.findById(any())).thenReturn(Optional.empty());
+        assertThrows(VeicoloNonTrovatoException.class,
+                () -> appuntamentoService.prenotaPerManager(new PrenotazioneManagerRequestDTO(LocalDateTime.of(2025, 11, 11, 16, 30), 1L, 1L, 0L)));
+    }
+
+    @Test
+    void prenotaPerManagerThrowsDipendenteNonTrovato() {
+        when(utenteRepo.findById(any())).thenReturn(Optional.empty());
+        when(veicoloRepo.findById(any())).thenReturn(Optional.of(new Veicolo()));
+        assertThrows(UtenteNonTrovatoException.class,
+                () -> appuntamentoService.prenotaPerManager(new PrenotazioneManagerRequestDTO(LocalDateTime.of(2025, 11, 11, 16, 30), 1L, 1L, 1L)));
+    }
+
+    @Test
+    void prenotaPerManagerThrowsClienteNonTrovato() {
+        PrenotazioneManagerRequestDTO request = new PrenotazioneManagerRequestDTO(LocalDateTime.of(2025, 11, 11, 16, 30), 1L, 1L, 0L);
+        when(utenteRepo.findById(request.getIdCliente())).thenReturn(Optional.empty());
+        when(veicoloRepo.findById(any())).thenReturn(Optional.of(new Veicolo()));
+        assertThrows(UtenteNonTrovatoException.class,
+                () -> appuntamentoService.prenotaPerManager(request));
+    }
+
+    @Test
+    void eliminaAppuntamentoSuccessful() {
+        Utente utente = new Utente();
+        utente.setId(1L);
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.of(new Appuntamento(10L, LocalDateTime.of(2023, 11, 11, 16, 30), null, null, false, new Utente(), new Utente(), new Veicolo())));
+        assertAll(() -> appuntamentoService.eliminaAppuntamento(10L));
+    }
+
+    @Test
+    void eliminaAppuntamentoThrowsIdAppuntamentoNonValido() {
+        assertThrows(CredenzialiNonValideException.class,
+                () -> appuntamentoService.eliminaAppuntamento(null));
+    }
+
+    @Test
+    void eliminaAppuntamentoThrowsAppuntamentoNonTrovato() {
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.empty());
+        assertThrows(AppuntamentoNonTrovatoException.class,
+                () -> appuntamentoService.eliminaAppuntamento(10L));
+    }
+
+    @Test
+    void eliminaAppuntamentoThrowsAppuntamentoRegistrato() {
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.of(new Appuntamento(10L, LocalDateTime.of(2020, 11, 11, 16, 30), null, null, true, new Utente(), new Utente(), new Veicolo())));
+        assertThrows(AppuntamentoRegistratoException.class,
+                () -> appuntamentoService.eliminaAppuntamento(10L));
+    }
+
+    @Test
+    public void modificaAppuntamentoSuccessful() {
+        Utente utente = new Utente();
+        utente.setId(1L);
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.of(new Appuntamento(10L, LocalDateTime.of(2023, 11, 11, 16, 30), null, null, false, new Utente(), new Utente(), new Veicolo())));
+        when(utenteRepo.findById(any())).thenReturn(Optional.of(new Utente()));
+        when(veicoloRepo.findById(any())).thenReturn(Optional.of(new Veicolo()));
+        assertAll(() -> appuntamentoService.modificaAppuntamento(10L, new ModificaAppuntamentoRequestDTO(LocalDateTime.of(2025, 11, 11, 16, 30), 1L, 1L,1L)));
+    }
+
+    @Test
+    public void modificaAppuntamentoThrowsIdAppuntamentoNonValido() {
+        assertThrows(CredenzialiNonValideException.class,
+                () -> appuntamentoService.modificaAppuntamento(null, new ModificaAppuntamentoRequestDTO(LocalDateTime.of(2025, 11, 11, 16, 30), 1L, 1L,null)));
+    }
+
+    @Test
+    public void modificaAppuntamentoThrowsRequestNull() {
+        assertThrows(CredenzialiNonValideException.class,
+                () -> appuntamentoService.modificaAppuntamento(10L, null));
+    }
+
+    @Test
+    public void modificaAppuntamentoThrowsErroriIsEmpty() {
+        assertThrows(CredenzialiNonValideException.class,
+                () -> appuntamentoService.modificaAppuntamento(10L, new ModificaAppuntamentoRequestDTO(null, null, null, -1L)));
+    }
+
+    @Test
+    public void modificaAppuntamentoThrowsDipendenteNonTrovato() {
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.of(new Appuntamento(10L, LocalDateTime.of(2023, 11, 11, 16, 30), null, null, false, new Utente(), new Utente(), new Veicolo())));
+        when(utenteRepo.findById(any())).thenReturn(Optional.empty());
+        when(veicoloRepo.findById(any())).thenReturn(Optional.of(new Veicolo()));
+        assertThrows(UtenteNonTrovatoException.class,
+                () -> appuntamentoService.modificaAppuntamento(10L, new ModificaAppuntamentoRequestDTO(LocalDateTime.of(2025, 11, 11, 16, 30), 1L, 1L,1L)));
+    }
+
+    @Test
+    public void modificaAppuntamentoThrowsAppuntamentoNonTrovato() {
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.empty());
+        when(utenteRepo.findById(any())).thenReturn(Optional.of(new Utente()));
+        when(veicoloRepo.findById(any())).thenReturn(Optional.of(new Veicolo()));
+        assertThrows(AppuntamentoNonTrovatoException.class,
+                () -> appuntamentoService.modificaAppuntamento(10L, new ModificaAppuntamentoRequestDTO(LocalDateTime.of(2025, 11, 11, 16, 30), 1L, 1L,1L)));
+    }
+
+    @Test
+    public void modificaAppuntamentoThrowsVeicoloNonTrovato() {
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.of(new Appuntamento(10L, LocalDateTime.of(2023, 11, 11, 16, 30), null, null, false, new Utente(), new Utente(), new Veicolo())));
+        when(utenteRepo.findById(any())).thenReturn(Optional.of(new Utente()));
+        when(veicoloRepo.findById(any())).thenReturn(Optional.empty());
+        assertThrows(VeicoloNonTrovatoException.class,
+                () -> appuntamentoService.modificaAppuntamento(10L, new ModificaAppuntamentoRequestDTO(LocalDateTime.of(2025, 11, 11, 16, 30), 1L, 1L,1L)));
+    }
+
+    @Test
+    public void modificaAppuntamentoThrowsAppuntamentoRegistrato() {
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.of(new Appuntamento(10L, LocalDateTime.of(2020, 11, 11, 16, 30), null, null, true, new Utente(), new Utente(), new Veicolo())));
+        when(utenteRepo.findById(any())).thenReturn(Optional.of(new Utente()));
+        when(veicoloRepo.findById(any())).thenReturn(Optional.of(new Veicolo()));
+        assertThrows(AppuntamentoRegistratoException.class,
+                () -> appuntamentoService.modificaAppuntamento(10L, new ModificaAppuntamentoRequestDTO(LocalDateTime.of(2025, 11, 11, 16, 30), 1L, 1L,1L)));
+    }
+
+    @Test
+    public void modificaAppuntamentoThrowsClienteNonTrovato() {
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.of(new Appuntamento(10L, LocalDateTime.of(2023, 11, 11, 16, 30), null, null, false, new Utente(), new Utente(), new Veicolo())));
+        when(utenteRepo.findById(any())).thenReturn(Optional.empty());
+        when(veicoloRepo.findById(any())).thenReturn(Optional.of(new Veicolo()));
+        assertThrows(UtenteNonTrovatoException.class,
+                () -> appuntamentoService.modificaAppuntamento(10L, new ModificaAppuntamentoRequestDTO(LocalDateTime.of(2025, 11, 11, 16, 30), 1L, 1L,null)));
+    }
+
+    @Test
+    public void lasciaRecensioneSuccessful() {
+        Utente utente = new Utente();
+        utente.setId(1L);
+        when(tokenUtil.getUtenteFromToken(any())).thenReturn(utente);
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.of(new Appuntamento(10L, LocalDateTime.of(2023, 11, 11, 16, 30), null, null, false, utente, new Utente(), new Veicolo())));
+        assertAll(() -> appuntamentoService.lasciaRecensione(new LasciaRecensioneRequestDTO(10L, 5, "bravo"), "tokenaaaaaaaa"));
+    }
+
+    @Test
+    public void lasciaRecensioneThrowsRequestNull() {
+        assertThrows(CredenzialiNonValideException.class,
+                () -> appuntamentoService.lasciaRecensione(null, null));
+    }
+
+    @Test
+    public void lasciaRecensioneThrowsErroriIsEmpty() {
+        assertThrows(CredenzialiNonValideException.class,
+                () -> appuntamentoService.lasciaRecensione(new LasciaRecensioneRequestDTO(null, null, null), null));
+    }
+
+    @Test
+    public void lasciaRecensioneThrowsTokenNonValido() {
+        assertThrows(TokenNonValidoException.class,
+                () -> appuntamentoService.lasciaRecensione(new LasciaRecensioneRequestDTO(10L, 5, "bravo"), null));
+    }
+
+    @Test
+    public void lasciaRecensioneThrowsAppuntamentoNonTrovato() {
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.empty());
+        assertThrows(AppuntamentoNonTrovatoException.class,
+                () -> appuntamentoService.lasciaRecensione(new LasciaRecensioneRequestDTO(10L, 5, "bravo"), "tokenaaaaaaaa"));
+    }
+
+    @Test
+    public void lasciaRecensioneThrowsAppuntamentoNonSvolto() {
+        Utente utente = new Utente();
+        utente.setId(1L);
+        when(tokenUtil.getUtenteFromToken(any())).thenReturn(utente);
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.of(new Appuntamento(10L, LocalDateTime.of(2025, 11, 11, 16, 30), null, null, false, utente, new Utente(), new Veicolo())));
+        assertThrows(AppuntamentoNonSvoltoException.class,
+                () -> appuntamentoService.lasciaRecensione(new LasciaRecensioneRequestDTO(10L, 5, "bravo"), "tokenaaaaaaaa"));
+    }
+
+    @Test
+    public void lasciaRecensioneThrowsAppuntamentoNonTuo() {
+        Utente utente = new Utente();
+        utente.setId(1L);
+        when(tokenUtil.getUtenteFromToken(any())).thenReturn(utente);
+        Utente utente2 = new Utente();
+        utente2.setId(2L);
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.of(new Appuntamento(10L, LocalDateTime.of(2025, 11, 11, 16, 30), null, null, false, utente2, new Utente(), new Veicolo())));
+        assertThrows(DiversiIdException.class,
+                () -> appuntamentoService.lasciaRecensione(new LasciaRecensioneRequestDTO(10L, 5, "bravo"), "tokenaaaaaaaa"));
+    }
+
+    @Test
+    public void lasciaRecensioneThrowsRecensioneGiaLasciata() {
+        Utente utente = new Utente();
+        utente.setId(1L);
+        when(tokenUtil.getUtenteFromToken(any())).thenReturn(utente);
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.of(new Appuntamento(10L, LocalDateTime.of(2023, 11, 11, 16, 30), 5, "bravo", false, utente, new Utente(), new Veicolo())));
+        assertThrows(RecensioneGiaLasciataException.class,
+                () -> appuntamentoService.lasciaRecensione(new LasciaRecensioneRequestDTO(10L, 5, "bravo"), "tokenaaaaaaaa"));
+    }
+
+    @Test
+    public void lasciaRecensioneThrowsDipendenteNonAssegnato() {
+        Utente utente = new Utente();
+        utente.setId(1L);
+        when(tokenUtil.getUtenteFromToken(any())).thenReturn(utente);
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.of(new Appuntamento(10L, LocalDateTime.of(2023, 11, 11, 16, 30), null, null, false, utente, null, new Veicolo())));
+        assertThrows(DipendenteNonAssegnatoException.class,
+                () -> appuntamentoService.lasciaRecensione(new LasciaRecensioneRequestDTO(10L, 5, "bravo"), "tokenaaaaaaaa"));
+    }
+
+    @Test
+    public void trovaRecensioniClienteSuccessful() {
+        Utente utente = new Utente();
+        utente.setId(1L);
+        when(tokenUtil.getUtenteFromToken(any())).thenReturn(utente);
+        Optional<List<Appuntamento>> appuntamentiTrovati = Optional.of(new ArrayList<>());
+        appuntamentiTrovati.get().add(new Appuntamento(10L, LocalDateTime.of(2025, 11, 11, 16, 30), 5, "bravo", false, new Utente(), new Utente(), new Veicolo()));
+        when(appuntamentoRepo.findByCliente_IdAndRecensioneVotoNotNullAndRecensioneTestoNotNull(1L)).thenReturn(appuntamentiTrovati);
+        assertAll(() -> appuntamentoService.trovaRecensioniCliente(1L, "tokenaaaaaaaa"));
+    }
+
+    @Test
+    public void trovaRecensioniClienteThrowsIdClienteNonTrovato() {
+        assertThrows(CredenzialiNonValideException.class,
+                () -> appuntamentoService.trovaRecensioniCliente(null, null));
+    }
+
+    @Test
+    public void trovaRecensioniClienteThrowsTokenNonValido() {
+        assertThrows(TokenNonValidoException.class,
+                () -> appuntamentoService.trovaRecensioniCliente(1L, null));
+    }
+
+    @Test
+    public void trovaRecensioniClienteThrowsDiversiId() {
+        when(tokenUtil.getUtenteFromToken(any())).thenReturn(new Utente());
+        assertThrows(DiversiIdException.class,
+                () -> appuntamentoService.trovaRecensioniCliente(1L, "tokenaaaaaaaa"));
+    }
+
+    @Test
+    public void trovaPerModificaSuccessful() {
+        Utente utente = new Utente();
+        utente.setId(1L);
+        Optional<Appuntamento> appuntamento = Optional.of(new Appuntamento(10L, LocalDateTime.of(2025, 11, 11, 16, 30), 4, "bravo", false, new Utente(), new Utente(), new Veicolo()));
+        when(appuntamentoRepo.findById(any())).thenReturn(appuntamento);
+        assertAll(() -> appuntamentoService.trovaPerModifica(10L, "tokenaaaaaaaa"));
+    }
+
+    @Test
+    public void trovaPerModificaThrowsIdAppuntamentoNonValido() {
+        assertThrows(CredenzialiNonValideException.class,
+                () -> appuntamentoService.trovaPerModifica(null, null));
+    }
+
+    @Test
+    public void trovaPerModificaThrowsTokenNonValido() {
+        assertThrows(TokenNonValidoException.class,
+                () -> appuntamentoService.trovaPerModifica(10L, null));
+    }
+
+    @Test
+    public void trovaPerModificaThrowsAppuntamentoNonTrovato() {
+        when(appuntamentoRepo.findById(any())).thenReturn(Optional.empty());
+        assertThrows(AppuntamentoNonTrovatoException.class,
+                () -> appuntamentoService.trovaPerModifica(10L, "tokenaaaaaaaa"));
+    }
+
+    @Test
+    public void trovaPerModificaThrowsEsitoGiaRegistrato() {
+        Optional<Appuntamento> appuntamento = Optional.of(new Appuntamento(10L, LocalDateTime.of(2025, 11, 11, 16, 30), 4, "bravo", true, new Utente(), new Utente(), new Veicolo()));
+        when(appuntamentoRepo.findById(any())).thenReturn(appuntamento);
+        assertThrows(AppuntamentoRegistratoException.class,
+                () -> appuntamentoService.trovaPerModifica(10L, "tokenaaaaaaaa"));
+    }
+
 
 }
