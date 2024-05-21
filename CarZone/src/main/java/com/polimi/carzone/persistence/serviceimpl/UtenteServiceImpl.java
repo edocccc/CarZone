@@ -215,7 +215,7 @@ public class UtenteServiceImpl implements UtenteService {
         }
         Optional<Utente> utente = utenteRepo.findById(idUtente);
         if(utente.isEmpty()) {
-            throw new VeicoloNonTrovatoException("Utente non trovato");
+            throw new UtenteNonTrovatoException("Utente non trovato");
         }
         if(utente.get().getRuolo().equals(Ruolo.MANAGER)){
             throw new RuoloNonValidoException("Non è possibile eliminare un manager");
