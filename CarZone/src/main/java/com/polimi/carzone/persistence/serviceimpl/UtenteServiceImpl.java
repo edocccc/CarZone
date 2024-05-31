@@ -15,6 +15,7 @@ import com.polimi.carzone.persistence.repository.UtenteRepository;
 import com.polimi.carzone.persistence.service.UtenteService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,6 +27,7 @@ import java.util.*;
 public class UtenteServiceImpl implements UtenteService {
 
     private final UtenteRepository utenteRepo;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Utente findByUsername(String username) {
@@ -54,12 +56,14 @@ public class UtenteServiceImpl implements UtenteService {
         if(!errori.isEmpty()) {
             throw new CredenzialiNonValideException(errori);
         }
-        Optional<Utente> utente = utenteRepo.findByUsernameAndPassword(request.getUsername(), request.getPassword());
-        if(utente.isPresent()) {
-            return utente.get();
-        } else {
+        Optional<Utente> utente = utenteRepo.findByUsername(request.getUsername());
+        if(utente.isEmpty()) {
             throw new UtenteNonTrovatoException("Non ci sono utenti con queste credenziali");
         }
+        if(!passwordEncoder.matches(request.getPassword(), utente.get().getPassword())) {
+            throw new UtenteNonTrovatoException("Non ci sono utenti con queste credenziali");
+        }
+        return utente.get();
     }
 
     @Override
@@ -72,7 +76,7 @@ public class UtenteServiceImpl implements UtenteService {
         utente.setCognome(request.getCognome());
         utente.setDataNascita(request.getDataNascita());
         utente.setUsername(request.getUsername());
-        utente.setPassword(request.getPassword());
+        utente.setPassword(passwordEncoder.encode(request.getPassword()));
         utente.setRuolo(Ruolo.CLIENTE);
         utenteRepo.save(utente);
     }
