@@ -35,6 +35,7 @@ export class AggiungiVeicoloComponent {
     ).subscribe({
       next: () => {
         console.log('Veicolo aggiunto con successo');
+        this.redirectHomepageManager();
       },
       error: (error: HttpErrorResponse) => {
         console.log('Errore durante l\'aggiunta del veicolo' + error.message);

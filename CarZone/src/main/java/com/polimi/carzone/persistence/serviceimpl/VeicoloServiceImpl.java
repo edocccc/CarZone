@@ -135,9 +135,6 @@ public class VeicoloServiceImpl implements VeicoloService {
                     immagine
             ));
         }
-        if(veicoliResponse.isEmpty()) {
-            throw new VeicoliNonDisponibiliException("Nessun veicolo disponibile");
-        }
         return veicoliResponse;
     }
 

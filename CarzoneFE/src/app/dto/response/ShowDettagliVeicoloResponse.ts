@@ -8,4 +8,5 @@ export interface ShowDettagliVeicoloResponse {
   potenzaCv: number;
   alimentazione: string;
   prezzo: number;
+  immagine: Blob;
 }

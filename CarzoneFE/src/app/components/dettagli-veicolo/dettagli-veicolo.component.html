@@ -1,4 +1,6 @@
-
+<ng-container *ngIf="veicolo?.immagine">
+  <img src="data:image/png;base64,{{ veicolo?.immagine }}" width="100" height="100">
+</ng-container>
 <p>Targa: {{veicolo?.targa}}</p>
 <p>Marca: {{veicolo?.marca}}</p>
 <p>Modello: {{veicolo?.modello}}</p>

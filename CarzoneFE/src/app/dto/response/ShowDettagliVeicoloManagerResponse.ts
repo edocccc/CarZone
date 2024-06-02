@@ -9,4 +9,5 @@ export interface ShowDettagliVeicoloManagerResponse {
   alimentazione: string;
   prezzo: number;
   stato: string;
+  immagine: Blob;
 }

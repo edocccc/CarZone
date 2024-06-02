@@ -12,6 +12,9 @@
 <ng-container *ngIf="veicoli.length != 0">
 <div *ngFor="let veicolo of veicoli">
   <ng-container *ngIf="statoVeicolo=='' || veicolo.stato.toUpperCase()==statoVeicolo">
+    <ng-container *ngIf="veicolo.immagine">
+      <img src="data:image/png;base64,{{ veicolo.immagine }}" width="100" height="100">
+    </ng-container>
     <p>Marca: {{ veicolo.marca }}</p>
     <p>Modello: {{ veicolo.modello }}</p>
     <p>Prezzo: {{ veicolo.prezzo }}</p>
