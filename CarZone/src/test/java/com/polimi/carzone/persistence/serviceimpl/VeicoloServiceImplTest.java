@@ -17,7 +17,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +27,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,8 +53,26 @@ public class VeicoloServiceImplTest {
         request.setPotenzaCv(70);
         request.setAlimentazione("BENZINA");
         request.setPrezzo(10000.0);
+        MultipartFile multipartFile = mock(MultipartFile.class);
+        when(multipartFile.getOriginalFilename()).thenReturn("test.jpg");
+        when(multipartFile.getContentType()).thenReturn("image/jpeg");
         when(veicoloRepo.findByTarga(any())).thenReturn(Optional.empty());
-        assertAll(() -> veicoloService.aggiungiVeicolo(request));
+        assertAll(() -> veicoloService.aggiungiVeicolo(request, multipartFile));
+    }
+
+    @Test
+    void aggiungiVeicoloThrowsImmagineNull() throws IOException {
+        AggiuntaVeicoloRequestDTO request = new AggiuntaVeicoloRequestDTO();
+        request.setTarga("AA123BB");
+        request.setMarca("Fiat");
+        request.setModello("Panda");
+        request.setChilometraggio(10000);
+        request.setAnnoProduzione(2020);
+        request.setPotenzaCv(70);
+        request.setAlimentazione("DIESEL");
+        request.setPrezzo(10000.0);
+        assertThrows(CredenzialiNonValideException.class,
+                () -> veicoloService.aggiungiVeicolo(request, null));
     }
 
     @Test
@@ -65,8 +86,11 @@ public class VeicoloServiceImplTest {
         request.setPotenzaCv(70);
         request.setAlimentazione("DIESEL");
         request.setPrezzo(10000.0);
+        MultipartFile multipartFile = mock(MultipartFile.class);
+        when(multipartFile.getOriginalFilename()).thenReturn("test.jpg");
+        when(multipartFile.getContentType()).thenReturn("image/jpeg");
         when(veicoloRepo.findByTarga(any())).thenReturn(Optional.empty());
-        assertAll(() -> veicoloService.aggiungiVeicolo(request));
+        assertAll(() -> veicoloService.aggiungiVeicolo(request, multipartFile));
     }
 
     @Test
@@ -80,8 +104,11 @@ public class VeicoloServiceImplTest {
         request.setPotenzaCv(70);
         request.setAlimentazione("IBRIDA");
         request.setPrezzo(10000.0);
+        MultipartFile multipartFile = mock(MultipartFile.class);
+        when(multipartFile.getOriginalFilename()).thenReturn("test.jpg");
+        when(multipartFile.getContentType()).thenReturn("image/jpeg");
         when(veicoloRepo.findByTarga(any())).thenReturn(Optional.empty());
-        assertAll(() -> veicoloService.aggiungiVeicolo(request));
+        assertAll(() -> veicoloService.aggiungiVeicolo(request, multipartFile));
     }
 
     @Test
@@ -95,8 +122,11 @@ public class VeicoloServiceImplTest {
         request.setPotenzaCv(70);
         request.setAlimentazione("GPL");
         request.setPrezzo(10000.0);
+        MultipartFile multipartFile = mock(MultipartFile.class);
+        when(multipartFile.getOriginalFilename()).thenReturn("test.jpg");
+        when(multipartFile.getContentType()).thenReturn("image/jpeg");
         when(veicoloRepo.findByTarga(any())).thenReturn(Optional.empty());
-        assertAll(() -> veicoloService.aggiungiVeicolo(request));
+        assertAll(() -> veicoloService.aggiungiVeicolo(request, multipartFile));
     }
 
     @Test
@@ -110,14 +140,17 @@ public class VeicoloServiceImplTest {
         request.setPotenzaCv(70);
         request.setAlimentazione("ELETTRICA");
         request.setPrezzo(10000.0);
+        MultipartFile multipartFile = mock(MultipartFile.class);
+        when(multipartFile.getOriginalFilename()).thenReturn("test.jpg");
+        when(multipartFile.getContentType()).thenReturn("image/jpeg");
         when(veicoloRepo.findByTarga(any())).thenReturn(Optional.empty());
-        assertAll(() -> veicoloService.aggiungiVeicolo(request));
+        assertAll(() -> veicoloService.aggiungiVeicolo(request, multipartFile));
     }
 
     @Test
     void aggiungiVeicoloThrowsRequestNullException() {
         assertThrows(CredenzialiNonValideException.class,
-                () -> veicoloService.aggiungiVeicolo(null));
+                () -> veicoloService.aggiungiVeicolo(null, null));
     }
 
     @Test
@@ -131,9 +164,10 @@ public class VeicoloServiceImplTest {
         request.setPotenzaCv(70);
         request.setAlimentazione("BENZINA");
         request.setPrezzo(10000.0);
+        MultipartFile multipartFile = mock(MultipartFile.class);
         when(veicoloRepo.findByTarga(any())).thenReturn(Optional.of(new Veicolo()));
         assertThrows(CredenzialiNonValideException.class,
-                () -> veicoloService.aggiungiVeicolo(request));
+                () -> veicoloService.aggiungiVeicolo(request, multipartFile));
     }
 
     @Test
@@ -147,9 +181,10 @@ public class VeicoloServiceImplTest {
         request.setPotenzaCv(null);
         request.setAlimentazione(null);
         request.setPrezzo(null);
+        MultipartFile multipartFile = mock(MultipartFile.class);
         when(veicoloRepo.findByTarga(any())).thenReturn(Optional.empty());
         assertThrows(CredenzialiNonValideException.class,
-                () -> veicoloService.aggiungiVeicolo(request));
+                () -> veicoloService.aggiungiVeicolo(request, multipartFile));
     }
 
     @Test
@@ -163,25 +198,20 @@ public class VeicoloServiceImplTest {
         request.setPotenzaCv(70);
         request.setAlimentazione("CIAO");
         request.setPrezzo(10000.0);
+        MultipartFile multipartFile = mock(MultipartFile.class);
         when(veicoloRepo.findByTarga(any())).thenReturn(Optional.empty());
         assertThrows(AlimentazioneNonValidaException.class,
-                () -> veicoloService.aggiungiVeicolo(request));
+                () -> veicoloService.aggiungiVeicolo(request, multipartFile));
     }
 
     @Test
     void findAllSuccessful() {
         List<Veicolo> veicoli = new ArrayList<>();
-        veicoli.add(new Veicolo());
+        Veicolo veicolo = new Veicolo();
+        veicolo.setFilePath("C:/Users/Edoardo/Desktop/unigenerale/IngegneriaDS/progettofinale/Progetto/CarZone/src/main/resources/immagini/risultatotol.jpg");
+        veicoli.add(veicolo);
         when(veicoloRepo.findAll()).thenReturn(veicoli);
         assertAll(() -> veicoloService.findAll());
-    }
-
-    @Test
-    void findAllThrowsVeicoliNotDisponibili() {
-        List<Veicolo> veicoli = new ArrayList<>();
-        when(veicoloRepo.findAll()).thenReturn(veicoli);
-        assertThrows(VeicoliNonDisponibiliException.class,
-                () -> veicoloService.findAll());
     }
 
     @Test
@@ -705,7 +735,7 @@ public class VeicoloServiceImplTest {
     @Test
     void estraiIdDaFindAllDisponibili() {
         List<DettagliVeicoloManagerResponseDTO> veicoli = new ArrayList<>();
-        veicoli.add(new DettagliVeicoloManagerResponseDTO(1L, "AA123BB", "Fiat", "Panda", 10000, 2020, 70, Alimentazione.BENZINA, 10000.0, "DISPONIBILE"));
+        veicoli.add(new DettagliVeicoloManagerResponseDTO(1L, "AA123BB", "Fiat", "Panda", 10000, 2020, 70, Alimentazione.BENZINA, 10000.0, "DISPONIBILE", new byte[1]));
         assertAll(() -> veicoloService.estraiIdDaFindAllDisponibili(veicoli));
     }
 

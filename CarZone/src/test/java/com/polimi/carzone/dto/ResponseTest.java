@@ -1,16 +1,22 @@
 package com.polimi.carzone.dto;
 
 import com.polimi.carzone.dto.response.*;
-import com.polimi.carzone.model.Alimentazione;
-import com.polimi.carzone.model.Appuntamento;
-import com.polimi.carzone.model.Ruolo;
+import com.polimi.carzone.model.*;
+import com.polimi.carzone.state.State;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+
+import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 public class ResponseTest {
@@ -87,7 +93,7 @@ public class ResponseTest {
 
     @Test
     void dettagliVeicoloManagertest() {
-        DettagliVeicoloManagerResponseDTO dettagliVeicoloManagerResponseDTO = new DettagliVeicoloManagerResponseDTO(1L, "targa", "marca", "modello", 1, 1, 1, Alimentazione.BENZINA, 1.0, "stato");
+        DettagliVeicoloManagerResponseDTO dettagliVeicoloManagerResponseDTO = new DettagliVeicoloManagerResponseDTO(1L, "targa", "marca", "modello", 1, 1, 1, Alimentazione.BENZINA, 1.0, "stato", new byte[1]);
         long id = dettagliVeicoloManagerResponseDTO.getId();
         String targa = dettagliVeicoloManagerResponseDTO.getTarga();
         String marca = dettagliVeicoloManagerResponseDTO.getMarca();
@@ -98,6 +104,7 @@ public class ResponseTest {
         Alimentazione alimentazione = dettagliVeicoloManagerResponseDTO.getAlimentazione();
         double prezzo = dettagliVeicoloManagerResponseDTO.getPrezzo();
         String stato = dettagliVeicoloManagerResponseDTO.getStato();
+        byte[] immagine = dettagliVeicoloManagerResponseDTO.getImmagine();
     }
 
     @Test
@@ -113,6 +120,7 @@ public class ResponseTest {
         int potenzaCv = dettagli.getPotenzaCv();
         Alimentazione alimentazione = dettagli.getAlimentazione();
         double prezzo = dettagli.getPrezzo();
+
     }
 
     @Test
@@ -178,12 +186,18 @@ public class ResponseTest {
 
     @Test
     void veicoloTest() {
-        VeicoloResponseDTO veicoloResponseDTO = new VeicoloResponseDTO(1L, "marca", "modello", 1.0, "stato");
+        Veicolo veicolo = new Veicolo();
+        String nomeImmagine = veicolo.getNomeImmagine();
+        String tipoImmagine = veicolo.getTipoImmagine();
+        List<Appuntamento> appuntamentiVeicolo = veicolo.getAppuntamentiVeicolo();
+        State statoVeicolo = veicolo.getStato();
+        VeicoloResponseDTO veicoloResponseDTO = new VeicoloResponseDTO(1L, "marca", "modello", 1.0, "stato", new byte[1]);
         long id = veicoloResponseDTO.getId();
         String marca = veicoloResponseDTO.getMarca();
         String modello = veicoloResponseDTO.getModello();
         double prezzo = veicoloResponseDTO.getPrezzo();
         String stato = veicoloResponseDTO.getStato();
+        byte[] immagine = veicoloResponseDTO.getImmagine();
     }
 
     @Test
@@ -195,6 +209,73 @@ public class ResponseTest {
         List<RecensioneResponseDTO> recensioni = dipendenteConRecensioneDTO.getRecensioni();
     }
 
+    @Test
+    void eliminaUtenteTest() {
+        EliminaUtenteResponseDTO eliminaUtenteResponseDTO = new EliminaUtenteResponseDTO("Utente eliminato con successo");
+        String messaggio = eliminaUtenteResponseDTO.getMessaggio();
+    }
 
+    @Test
+    void eliminaVeicoloTest() {
+        EliminaVeicoloResponseDTO eliminaVeicoloResponseDTO = new EliminaVeicoloResponseDTO("Veicolo eliminato con successo");
+        String messaggio = eliminaVeicoloResponseDTO.getMessaggio();
+    }
+
+    @Test
+    void exceptionResponse() {
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO();
+        LocalDateTime timestamp = exceptionResponseDTO.getTimestamp();
+        Map<String,String> errori = exceptionResponseDTO.getErrori();
+    }
+
+    @Test
+    void lasciaRecensioneTest() {
+        LasciaRecensioneResponseDTO lasciaRecensioneNoArgs = new LasciaRecensioneResponseDTO();
+        LasciaRecensioneResponseDTO lasciaRecensioneResponseDTO = new LasciaRecensioneResponseDTO("Recensione lasciata con successo");
+        String messaggio = lasciaRecensioneNoArgs.getMessaggio();
+    }
+
+    @Test
+    void loginTest() {
+        Utente utente = new Utente( 1L, "email", "nome", "cognome", "username", "password", LocalDate.MAX, Ruolo.CLIENTE, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        LoginResponseDTO loginResponseDTO = new LoginResponseDTO(1L, "email", "nome", "cognome", "username", LocalDate.MAX, Ruolo.CLIENTE, "token");
+        long id = loginResponseDTO.getId();
+        String email = loginResponseDTO.getEmail();
+        String nome = loginResponseDTO.getNome();
+        String cognome = loginResponseDTO.getCognome();
+        String username = loginResponseDTO.getUsername();
+        LocalDate dataNascita = loginResponseDTO.getDataNascita();
+        Ruolo ruolo = loginResponseDTO.getRuolo();
+        String token = loginResponseDTO.getToken();
+    }
+
+    @Test
+    void modificaAppuntamentoTest() {
+        ModificaAppuntamentoResponseDTO modificaAppuntamentoResponseDTO = new ModificaAppuntamentoResponseDTO("Appuntamento modificato con successo");
+        String messaggio = modificaAppuntamentoResponseDTO.getMessage();
+    }
+
+    @Test
+    void modificaUtenteTest() {
+        ModificaUtenteResponseDTO modificaUtenteResponseDTO = new ModificaUtenteResponseDTO("Utente modificato con successo");
+        String messaggio = modificaUtenteResponseDTO.getMessage();
+
+        Utente utente = new Utente();
+        List<Veicolo> veicoli = utente.getVeicoliAcquistati();
+        List<Appuntamento> appuntamentiCliente = utente.getAppuntamentiCliente();
+        List<Appuntamento> appuntamentiDipendente = utente.getAppuntamentiDipendente();
+        Collection<? extends GrantedAuthority> authorities = utente.getAuthorities();
+        boolean accountNonExpired = utente.isAccountNonExpired();
+        boolean accountNonLocked = utente.isAccountNonLocked();
+        boolean credentialsNonExpired = utente.isCredentialsNonExpired();
+        boolean enabled = utente.isEnabled();
+
+    }
+
+    @Test
+    void modificaVeicoloTest() {
+        ModificaVeicoloResponseDTO modificaVeicoloResponseDTO = new ModificaVeicoloResponseDTO("Veicolo modificato con successo");
+        String messaggio = modificaVeicoloResponseDTO.getMessaggio();
+    }
 
 }

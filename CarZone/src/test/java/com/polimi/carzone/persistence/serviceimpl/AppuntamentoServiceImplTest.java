@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.swing.text.html.Option;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -71,9 +72,9 @@ public class AppuntamentoServiceImplTest {
     }
 
     @Test
-    void prenotaThrowsVeicoloNonDisponibile() {
+    void prenotaThrowsVeicoloNonDisponibile() throws IOException {
         List<DettagliVeicoloManagerResponseDTO> veicoliDisponibili = List.of(
-                new DettagliVeicoloManagerResponseDTO(1L, "targa", "marca", "modello", 123, 123, 123, Alimentazione.BENZINA, 1.0, "DISPONIBILE"));
+                new DettagliVeicoloManagerResponseDTO(1L, "targa", "marca", "modello", 123, 123, 123, Alimentazione.BENZINA, 1.0, "DISPONIBILE", new byte[1]));
         List<Long> veicoliDisponibiliId = List.of(2L);
         when(veicoloService.findAllDisponibili()).thenReturn(veicoliDisponibili);
         when(veicoloService.estraiIdDaFindAllDisponibili(veicoliDisponibili)).thenReturn(veicoliDisponibiliId);
@@ -82,9 +83,9 @@ public class AppuntamentoServiceImplTest {
     }
 
     @Test
-    void prenotaThrowsDiversiId() {
+    void prenotaThrowsDiversiId() throws IOException {
         List<DettagliVeicoloManagerResponseDTO> veicoliDisponibili = List.of(
-                new DettagliVeicoloManagerResponseDTO(1L, "targa", "marca", "modello", 123, 123, 123, Alimentazione.BENZINA, 1.0, "DISPONIBILE"));
+                new DettagliVeicoloManagerResponseDTO(1L, "targa", "marca", "modello", 123, 123, 123, Alimentazione.BENZINA, 1.0, "DISPONIBILE", new byte[1]));
         List<Long> veicoliDisponibiliId = List.of(1L);
         when(veicoloService.findAllDisponibili()).thenReturn(veicoliDisponibili);
         when(veicoloService.estraiIdDaFindAllDisponibili(veicoliDisponibili)).thenReturn(veicoliDisponibiliId);
@@ -96,12 +97,12 @@ public class AppuntamentoServiceImplTest {
     }
 
     @Test
-    void prenotaThrowsUtenteNonTrovato() {
+    void prenotaThrowsUtenteNonTrovato() throws IOException {
         when(utenteRepo.findById(any())).thenReturn(Optional.empty());
         Utente utente = new Utente();
         utente.setId(1L);
         List<DettagliVeicoloManagerResponseDTO> veicoliDisponibili = List.of(
-                new DettagliVeicoloManagerResponseDTO(1L, "targa", "marca", "modello", 123, 123, 123, Alimentazione.BENZINA, 1.0, "DISPONIBILE"));
+                new DettagliVeicoloManagerResponseDTO(1L, "targa", "marca", "modello", 123, 123, 123, Alimentazione.BENZINA, 1.0, "DISPONIBILE", new byte[1]));
         List<Long> veicoliDisponibiliId = List.of(1L);
         when(veicoloService.findAllDisponibili()).thenReturn(veicoliDisponibili);
         when(veicoloService.estraiIdDaFindAllDisponibili(veicoliDisponibili)).thenReturn(veicoliDisponibiliId);
@@ -111,12 +112,12 @@ public class AppuntamentoServiceImplTest {
     }
 
     @Test
-    void prenotaThrowsVeicoloNonTrovato() {
+    void prenotaThrowsVeicoloNonTrovato() throws IOException {
         when(utenteRepo.findById(any())).thenReturn(Optional.of(new Utente()));
         Utente utente = new Utente();
         utente.setId(1L);
         List<DettagliVeicoloManagerResponseDTO> veicoliDisponibili = List.of(
-                new DettagliVeicoloManagerResponseDTO(1L, "targa", "marca", "modello", 123, 123, 123, Alimentazione.BENZINA, 1.0, "DISPONIBILE"));
+                new DettagliVeicoloManagerResponseDTO(1L, "targa", "marca", "modello", 123, 123, 123, Alimentazione.BENZINA, 1.0, "DISPONIBILE", new byte[1]));
         List<Long> veicoliDisponibiliId = List.of(1L);
         when(veicoloService.findAllDisponibili()).thenReturn(veicoliDisponibili);
         when(veicoloService.estraiIdDaFindAllDisponibili(veicoliDisponibili)).thenReturn(veicoliDisponibiliId);
@@ -127,9 +128,9 @@ public class AppuntamentoServiceImplTest {
     }
 
     @Test
-    void prenotaSuccessful() {
+    void prenotaSuccessful() throws IOException {
         List<DettagliVeicoloManagerResponseDTO> veicoliDisponibili = List.of(
-                new DettagliVeicoloManagerResponseDTO(1L, "targa", "marca", "modello", 123, 123, 123, Alimentazione.BENZINA, 1.0, "DISPONIBILE"));
+                new DettagliVeicoloManagerResponseDTO(1L, "targa", "marca", "modello", 123, 123, 123, Alimentazione.BENZINA, 1.0, "DISPONIBILE", new byte[1]));
         List<Long> veicoliDisponibiliId = List.of(1L);
         when(veicoloService.findAllDisponibili()).thenReturn(veicoliDisponibili);
         when(veicoloService.estraiIdDaFindAllDisponibili(veicoliDisponibili)).thenReturn(veicoliDisponibiliId);

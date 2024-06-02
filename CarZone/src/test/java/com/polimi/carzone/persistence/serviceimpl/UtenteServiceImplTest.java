@@ -14,6 +14,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -49,10 +52,13 @@ public class UtenteServiceImplTest {
 
     @Test
     void loginSuccessful() {
-        when(utenteRepo.findByUsernameAndPassword(any(),any())).thenReturn(Optional.of(new Utente()));
+        when(utenteRepo.findByUsername(any())).thenReturn(Optional.of(new Utente()));
         LoginRequestDTO request = new LoginRequestDTO();
         request.setUsername("username");
         request.setPassword("password");
+        PasswordEncoder passwordEncoderMock = mock(PasswordEncoder.class);
+        ReflectionTestUtils.setField(utenteService, "passwordEncoder", passwordEncoderMock);
+        when(passwordEncoderMock.matches(any(),any())).thenReturn(true);
         assertAll(() -> utenteService.login(request));
     }
 
@@ -64,10 +70,25 @@ public class UtenteServiceImplTest {
 
     @Test
     void loginThrowsUtenteNonTrovato() {
-        when(utenteRepo.findByUsernameAndPassword(any(),any())).thenReturn(Optional.empty());
+        when(utenteRepo.findByUsername(any())).thenReturn(Optional.empty());
         LoginRequestDTO request = new LoginRequestDTO();
         request.setUsername("username");
         request.setPassword("password");
+        assertThrows(UtenteNonTrovatoException.class,
+                () -> utenteService.login(request));
+    }
+
+    @Test
+    void loginThrowsUtenteNonTrovatoDaPassword() {
+        Utente utente = new Utente();
+        utente.setPassword("password");
+        when(utenteRepo.findByUsername(any())).thenReturn(Optional.of(utente));
+        LoginRequestDTO request = new LoginRequestDTO();
+        request.setUsername("username");
+        request.setPassword("ciao");
+        PasswordEncoder passwordEncoderMock = mock(PasswordEncoder.class);
+        ReflectionTestUtils.setField(utenteService, "passwordEncoder", passwordEncoderMock);
+        when(passwordEncoderMock.matches(any(),any())).thenReturn(false);
         assertThrows(UtenteNonTrovatoException.class,
                 () -> utenteService.login(request));
     }
@@ -81,7 +102,10 @@ public class UtenteServiceImplTest {
 
     @Test
     void registrazioneClienteSuccessful() {
+        PasswordEncoder passwordEncoderMock = mock(PasswordEncoder.class);
+        when(passwordEncoderMock.encode(any())).thenReturn("passwordEncoded");
         when(utenteRepo.save(any())).thenReturn(new Utente());
+        ReflectionTestUtils.setField(utenteService, "passwordEncoder", passwordEncoderMock);
         SignupRequestDTO request = new SignupRequestDTO();
         request.setUsername("username");
         request.setPassword("password");

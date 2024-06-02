@@ -35,7 +35,7 @@ public class VeicoloControllerTest {
 
     @Test
     void aggiungiVeicoloSuccessful() {
-        assertAll(() -> veicoloController.aggiungiVeicolo(new AggiuntaVeicoloRequestDTO()));
+        assertAll(() -> veicoloController.aggiungiVeicolo(null, null, null, null, null, null, null, null, null));
     }
 
     @Test
