@@ -4,4 +4,5 @@ export interface ShowVeicoloResponse {
   modello: string;
   prezzo: number;
   stato: string;
+  immagine: Blob;
 }

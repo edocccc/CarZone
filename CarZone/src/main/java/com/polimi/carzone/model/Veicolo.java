@@ -6,6 +6,7 @@ import com.polimi.carzone.state.implementation.Venduto;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -55,6 +56,15 @@ public class Veicolo {
 
     @Column(nullable = false)
     private double prezzo;
+
+    @Column
+    private String nomeImmagine;
+
+    @Column
+    private String tipoImmagine;
+
+    @Column
+    private String filePath;
 
     @Transient
     private State stato;

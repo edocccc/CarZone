@@ -3,11 +3,12 @@ package com.polimi.carzone.persistence.service;
 import com.polimi.carzone.dto.request.*;
 import com.polimi.carzone.dto.response.*;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface AppuntamentoService {
 
-    void prenota(PrenotazioneRequestDTO request,String token);
+    void prenota(PrenotazioneRequestDTO request,String token) throws IOException;
 
     List<AppuntamentoResponseDTO> trovaAppuntamentiDipendente(Long id, String token);
 

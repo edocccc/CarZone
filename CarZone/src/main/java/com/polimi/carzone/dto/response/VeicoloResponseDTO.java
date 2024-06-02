@@ -12,4 +12,5 @@ public class VeicoloResponseDTO {
     private String modello;
     private double prezzo;
     private String stato;
+    private byte[] immagine;
 }

@@ -18,7 +18,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,25 +36,36 @@ public class VeicoloController {
     private final AppuntamentoRepository appuntamentoRepo;
 
     @PostMapping("/aggiungiVeicolo")
-    public ResponseEntity<AggiuntaVeicoloResponseDTO> aggiungiVeicolo(@RequestBody AggiuntaVeicoloRequestDTO request) {
-        veicoloService.aggiungiVeicolo(request);
+    public ResponseEntity<AggiuntaVeicoloResponseDTO> aggiungiVeicolo(
+            @RequestParam("targa") String targa,
+            @RequestParam("marca") String marca,
+            @RequestParam("modello") String modello,
+            @RequestParam("chilometraggio") Integer chilometraggio,
+            @RequestParam("annoProduzione") Integer annoProduzione,
+            @RequestParam("potenzaCv") Integer potenzaCv,
+            @RequestParam("alimentazione") String alimentazione,
+            @RequestParam("prezzo") Double prezzo,
+            @RequestParam("immagine") MultipartFile immagine
+            ) throws IOException {
+        AggiuntaVeicoloRequestDTO request = new AggiuntaVeicoloRequestDTO(targa, marca, modello, chilometraggio, annoProduzione, potenzaCv, alimentazione, prezzo);
+        veicoloService.aggiungiVeicolo(request, immagine);
         return ResponseEntity.status(HttpStatus.OK).body(new AggiuntaVeicoloResponseDTO("Veicolo aggiunto con successo"));
     }
 
     @GetMapping("/veicoli")
-    public ResponseEntity<List<VeicoloResponseDTO>> stampaVeicoli() {
+    public ResponseEntity<List<VeicoloResponseDTO>> stampaVeicoli() throws IOException {
         List<VeicoloResponseDTO> veicoli = veicoloService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(veicoli);
     }
 
     @GetMapping("/dettagli/{idVeicolo}")
-    public ResponseEntity<DettagliVeicoloManagerResponseDTO> mostraDettagli(@PathVariable Long idVeicolo) {
+    public ResponseEntity<DettagliVeicoloManagerResponseDTO> mostraDettagli(@PathVariable Long idVeicolo) throws IOException {
         DettagliVeicoloManagerResponseDTO dettagli= veicoloService.recuperaDettagli(idVeicolo);
         return ResponseEntity.status(HttpStatus.OK).body(dettagli);
     }
 
     @PostMapping("/cerca")
-    public ResponseEntity<List<VeicoloResponseDTO>> cercaVeicoli(@RequestBody RicercaRequestDTO request) {
+    public ResponseEntity<List<VeicoloResponseDTO>> cercaVeicoli(@RequestBody RicercaRequestDTO request) throws IOException {
         List<Veicolo> veicoliTrovati;
         List<VeicoloResponseDTO> veicoliResponse;
         RicercaStrategy ricercaStrategy = ricercaManager.scegliRicerca(request.getCriterio());
@@ -80,7 +93,7 @@ public class VeicoloController {
     }
 
     @GetMapping("/veicoliConDettagli")
-    public ResponseEntity<List<DettagliVeicoloManagerResponseDTO>> stampaVeicoliConDettagli() {
+    public ResponseEntity<List<DettagliVeicoloManagerResponseDTO>> stampaVeicoliConDettagli() throws IOException {
         List<DettagliVeicoloManagerResponseDTO> veicoliConDettagli = veicoloService.findAllConDettagli();
         return ResponseEntity.status(HttpStatus.OK).body(veicoliConDettagli);
     }
@@ -98,13 +111,13 @@ public class VeicoloController {
     }
 
     @GetMapping("/veicoliDisponibili")
-    public ResponseEntity<List<DettagliVeicoloManagerResponseDTO>> stampaVeicoliDiponibiliPerManager() {
+    public ResponseEntity<List<DettagliVeicoloManagerResponseDTO>> stampaVeicoliDiponibiliPerManager() throws IOException {
         List<DettagliVeicoloManagerResponseDTO> veicoliDisponobili = veicoloService.findAllDisponibili();
         return ResponseEntity.status(HttpStatus.OK).body(veicoliDisponobili);
     }
 
     @GetMapping("/veicoliDisponibiliESelezionato/{idAppuntamento}")
-    public ResponseEntity<List<DettagliVeicoloManagerResponseDTO>> stampaVeicoliDiponibiliESelezionatoPerManager(@PathVariable Long idAppuntamento) {
+    public ResponseEntity<List<DettagliVeicoloManagerResponseDTO>> stampaVeicoliDiponibiliESelezionatoPerManager(@PathVariable Long idAppuntamento) throws IOException {
         List<DettagliVeicoloManagerResponseDTO> veicoliDisponobili = veicoloService.findAllDisponibiliESelezionato(idAppuntamento);
         return ResponseEntity.status(HttpStatus.OK).body(veicoliDisponobili);
     }

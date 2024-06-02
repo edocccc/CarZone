@@ -29,6 +29,9 @@
 <label>Prezzo: </label>
 <input type="number" [(ngModel)]="prezzo">
 <br><br>
+<label>Immagine: </label>
+<input type="file" (change)="onFileSelected($event)" #fileInput multiple>
+<br><br>
 <button (click)="aggiungiVeicolo()">Aggiungi veicolo</button>
 <br><br>
 <button (click)="redirectHomepageManager()">

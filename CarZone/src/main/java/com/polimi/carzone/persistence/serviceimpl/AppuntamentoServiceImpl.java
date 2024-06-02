@@ -18,6 +18,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -34,7 +35,7 @@ public class AppuntamentoServiceImpl implements AppuntamentoService {
     private final VeicoloService veicoloService;
 
     @Override
-    public void prenota(PrenotazioneRequestDTO request, String token) {
+    public void prenota(PrenotazioneRequestDTO request, String token) throws IOException {
         Map<String,String> errori = new TreeMap<>();
 
         if(request == null){

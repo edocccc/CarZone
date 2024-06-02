@@ -21,7 +21,11 @@ import com.polimi.carzone.strategy.implementation.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -32,13 +36,19 @@ public class VeicoloServiceImpl implements VeicoloService {
 
     private final VeicoloRepository veicoloRepo;
     private final AppuntamentoRepository appuntamentoRepo;
+    private static final String FOLDER_PATH = "C:/Users/Edoardo/Desktop/unigenerale/IngegneriaDS/progettofinale/Progetto/CarZone/src/main/resources/immagini/";
 
 
     @Override
-    public void aggiungiVeicolo(AggiuntaVeicoloRequestDTO request) {
+    public void aggiungiVeicolo(AggiuntaVeicoloRequestDTO request, MultipartFile immagine) throws IOException {
         Map<String,String> errori = new TreeMap<>();
         if(request == null) {
             errori.put("request", "La request non può essere null");
+            throw new CredenzialiNonValideException(errori);
+        }
+
+        if(immagine == null) {
+            errori.put("immagine", "Devi inserire un'immagine");
             throw new CredenzialiNonValideException(errori);
         }
 
@@ -98,21 +108,31 @@ public class VeicoloServiceImpl implements VeicoloService {
         veicolo.setPotenzaCv(request.getPotenzaCv());
         veicolo.setAlimentazione(alimentazione);
         veicolo.setPrezzo(request.getPrezzo());
+        veicolo.setNomeImmagine(immagine.getOriginalFilename());
+        veicolo.setTipoImmagine(immagine.getContentType());
+        veicolo.setFilePath(FOLDER_PATH + immagine.getOriginalFilename());
 
         veicoloRepo.save(veicolo);
+        File file = new File(FOLDER_PATH + immagine.getOriginalFilename());
+        immagine.transferTo(file);
     }
 
     @Override
-    public List<VeicoloResponseDTO> findAll() {
+    public List<VeicoloResponseDTO> findAll() throws IOException {
         List<Veicolo> veicoli = veicoloRepo.findAll();
         List<VeicoloResponseDTO> veicoliResponse = new ArrayList<>();
         for (Veicolo veicolo : veicoli) {
+            byte[] immagine = null;
+            if(veicolo.getFilePath() != null) {
+                immagine = Files.readAllBytes(new File(veicolo.getFilePath()).toPath());
+            }
             veicoliResponse.add(new VeicoloResponseDTO(
                     veicolo.getId(),
                     veicolo.getMarca(),
                     veicolo.getModello(),
                     veicolo.getPrezzo(),
-                    checkStato(veicolo)
+                    checkStato(veicolo),
+                    immagine
             ));
         }
         if(veicoliResponse.isEmpty()) {
@@ -153,15 +173,20 @@ public class VeicoloServiceImpl implements VeicoloService {
     }
 
     @Override
-    public List<VeicoloResponseDTO> convertiVeicoliInVeicoliResponse(List<Veicolo> veicoliTrovati) {
+    public List<VeicoloResponseDTO> convertiVeicoliInVeicoliResponse(List<Veicolo> veicoliTrovati) throws IOException {
         List<VeicoloResponseDTO> veicoliResponse = new ArrayList<>();
         for (Veicolo veicolo : veicoliTrovati) {
+            byte[] immagine = null;
+            if(veicolo.getFilePath() != null) {
+                immagine = Files.readAllBytes(new File(veicolo.getFilePath()).toPath());
+            }
             veicoliResponse.add(new VeicoloResponseDTO(
                     veicolo.getId(),
                     veicolo.getMarca(),
                     veicolo.getModello(),
                     veicolo.getPrezzo(),
-                    checkStato(veicolo)
+                    checkStato(veicolo),
+                    immagine
             ));
         }
         if(veicoliResponse.isEmpty()) {
@@ -376,10 +401,14 @@ public class VeicoloServiceImpl implements VeicoloService {
     }
 
     @Override
-    public List<DettagliVeicoloManagerResponseDTO> findAllConDettagli() {
+    public List<DettagliVeicoloManagerResponseDTO> findAllConDettagli() throws IOException {
         List<Veicolo> veicoli = veicoloRepo.findAll();
         List<DettagliVeicoloManagerResponseDTO> veicoliResponse = new ArrayList<>();
         for (Veicolo veicolo : veicoli) {
+            byte[] immagine = null;
+            if(veicolo.getFilePath() != null) {
+                immagine = Files.readAllBytes(new File(veicolo.getFilePath()).toPath());
+            }
             DettagliVeicoloManagerResponseDTO dettagli = new DettagliVeicoloManagerResponseDTO();
             dettagli.setId(veicolo.getId());
             dettagli.setTarga(veicolo.getTarga());
@@ -391,6 +420,7 @@ public class VeicoloServiceImpl implements VeicoloService {
             dettagli.setAlimentazione(veicolo.getAlimentazione());
             dettagli.setPrezzo(veicolo.getPrezzo());
             dettagli.setStato(checkStato(veicolo));
+            dettagli.setImmagine(immagine);
             veicoliResponse.add(dettagli);
         }
         return veicoliResponse;
@@ -486,13 +516,17 @@ public class VeicoloServiceImpl implements VeicoloService {
     }
 
     @Override
-    public List<DettagliVeicoloManagerResponseDTO> findAllDisponibili() {
+    public List<DettagliVeicoloManagerResponseDTO> findAllDisponibili() throws IOException{
         List<Veicolo> veicoli = veicoloRepo.findAll();
         List<DettagliVeicoloManagerResponseDTO> veicoliResponse = new ArrayList<>();
         for (Veicolo veicolo : veicoli) {
 
             String stato = checkStato(veicolo);
             if(stato.equals("DISPONIBILE")){
+                byte[] immagine = null;
+                if(veicolo.getFilePath() != null) {
+                    immagine = Files.readAllBytes(new File(veicolo.getFilePath()).toPath());
+                }
                 DettagliVeicoloManagerResponseDTO dettagli = new DettagliVeicoloManagerResponseDTO();
                 dettagli.setId(veicolo.getId());
                 dettagli.setTarga(veicolo.getTarga());
@@ -504,6 +538,7 @@ public class VeicoloServiceImpl implements VeicoloService {
                 dettagli.setAlimentazione(veicolo.getAlimentazione());
                 dettagli.setPrezzo(veicolo.getPrezzo());
                 dettagli.setStato(checkStato(veicolo));
+                dettagli.setImmagine(immagine);
                 veicoliResponse.add(dettagli);
             }
         }
@@ -514,7 +549,7 @@ public class VeicoloServiceImpl implements VeicoloService {
     }
 
     @Override
-    public List<DettagliVeicoloManagerResponseDTO> findAllDisponibiliESelezionato(Long idAppuntamento) {
+    public List<DettagliVeicoloManagerResponseDTO> findAllDisponibiliESelezionato(Long idAppuntamento) throws IOException {
         Map<String, String> errori = new TreeMap<>();
         if (idAppuntamento == null || idAppuntamento <= 0) {
             errori.put("id", "Id dell'appuntamento non valido");
@@ -531,6 +566,10 @@ public class VeicoloServiceImpl implements VeicoloService {
 
             String stato = checkStato(veicolo);
             if(stato.equals("DISPONIBILE") || veicolo.getId() == appuntamento.get().getVeicolo().getId()){
+                byte[] immagine = null;
+                if(veicolo.getFilePath() != null) {
+                    immagine = Files.readAllBytes(new File(veicolo.getFilePath()).toPath());
+                }
                 DettagliVeicoloManagerResponseDTO dettagli = new DettagliVeicoloManagerResponseDTO();
                 dettagli.setId(veicolo.getId());
                 dettagli.setTarga(veicolo.getTarga());
@@ -542,6 +581,7 @@ public class VeicoloServiceImpl implements VeicoloService {
                 dettagli.setAlimentazione(veicolo.getAlimentazione());
                 dettagli.setPrezzo(veicolo.getPrezzo());
                 dettagli.setStato(checkStato(veicolo));
+                dettagli.setImmagine(immagine);
                 veicoliResponse.add(dettagli);
             }
         }
@@ -561,13 +601,17 @@ public class VeicoloServiceImpl implements VeicoloService {
     }
 
     @Override
-    public DettagliVeicoloManagerResponseDTO recuperaDettagli(Long idVeicolo) {
+    public DettagliVeicoloManagerResponseDTO recuperaDettagli(Long idVeicolo) throws IOException {
         Map<String,String> errori = new TreeMap<>();
         if (idVeicolo == null || idVeicolo <= 0) {
             errori.put("id", "Id veicolo non valido");
             throw new CredenzialiNonValideException(errori);
         }
         Veicolo veicolo = veicoloRepo.findById(idVeicolo).orElseThrow(() -> new VeicoloNonTrovatoException("Veicolo non trovato"));
+        byte[] immagine = null;
+        if(veicolo.getFilePath() != null) {
+            immagine = Files.readAllBytes(new File(veicolo.getFilePath()).toPath());
+        }
         DettagliVeicoloManagerResponseDTO response = new DettagliVeicoloManagerResponseDTO();
         response.setId(veicolo.getId());
         response.setTarga(veicolo.getTarga());
@@ -579,6 +623,7 @@ public class VeicoloServiceImpl implements VeicoloService {
         response.setAlimentazione(veicolo.getAlimentazione());
         response.setPrezzo(veicolo.getPrezzo());
         response.setStato(checkStato(veicolo));
+        response.setImmagine(immagine);
         return response;
     }
 

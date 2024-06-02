@@ -1,8 +1,10 @@
 package com.polimi.carzone.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class AggiuntaVeicoloRequestDTO {
 
     private String targa;

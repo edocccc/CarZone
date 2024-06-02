@@ -8,22 +8,24 @@ import com.polimi.carzone.dto.response.VeicoloResponseDTO;
 import com.polimi.carzone.model.Utente;
 import com.polimi.carzone.model.Veicolo;
 import com.polimi.carzone.strategy.RicercaStrategy;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface VeicoloService {
 
-    void aggiungiVeicolo(AggiuntaVeicoloRequestDTO request);
+    void aggiungiVeicolo(AggiuntaVeicoloRequestDTO request, MultipartFile immagine) throws IOException;
 
-    DettagliVeicoloManagerResponseDTO recuperaDettagli(Long idVeicolo);
+    DettagliVeicoloManagerResponseDTO recuperaDettagli(Long idVeicolo) throws IOException;
 
-    List<VeicoloResponseDTO> findAll();
+    List<VeicoloResponseDTO> findAll() throws IOException;
 
     Veicolo findByTarga(String targa);
 
     Veicolo findById(long id);
 
-    List<VeicoloResponseDTO> convertiVeicoliInVeicoliResponse(List<Veicolo> veicoliTrovati);
+List<VeicoloResponseDTO> convertiVeicoliInVeicoliResponse(List<Veicolo> veicoliTrovati) throws IOException;
 
     List<Veicolo> findByMarca(String marca);
 
@@ -41,15 +43,15 @@ public interface VeicoloService {
 
     void registraVendita(Long idVeicolo, Utente acquirente);
 
-    List<DettagliVeicoloManagerResponseDTO> findAllConDettagli();
+    List<DettagliVeicoloManagerResponseDTO> findAllConDettagli() throws IOException;
 
     void eliminaVeicolo(Long idVeicolo);
 
     void modificaVeicolo(Long idVeicolo, ModificaVeicoloRequestDTO request);
 
-    List<DettagliVeicoloManagerResponseDTO> findAllDisponibili();
+    List<DettagliVeicoloManagerResponseDTO> findAllDisponibili() throws IOException;
 
-    List<DettagliVeicoloManagerResponseDTO> findAllDisponibiliESelezionato(Long idVeicoloSelezionato);
+    List<DettagliVeicoloManagerResponseDTO> findAllDisponibiliESelezionato(Long idVeicoloSelezionato) throws IOException;
 
     List<Long> estraiIdDaFindAllDisponibili(List<DettagliVeicoloManagerResponseDTO> veicoliDisponibili);
 }

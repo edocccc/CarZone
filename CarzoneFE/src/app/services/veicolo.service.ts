@@ -101,19 +101,21 @@ export class VeicoloService {
     annoProduzione: number,
     potenzaCv: number,
     alimentazione: string,
-    prezzo: number) : Observable<MessageResponse> {
+    prezzo: number,
+    fileSelezionato: any) : Observable<MessageResponse> {
     const token: HttpHeaders = this.recuperaToken();
-    const request: AggiungiVeicoloRequest = {
-      targa,
-      marca,
-      modello,
-      chilometraggio,
-      annoProduzione,
-      potenzaCv,
-      alimentazione,
-      prezzo
-    };
-    return this.http.post<MessageResponse>(this.backEndUrl + 'aggiungiVeicolo', request, {headers: token});
+    const formData = new FormData();
+    formData.append("targa", targa);
+    formData.append("marca", marca);
+    formData.append("modello", modello);
+    formData.append("chilometraggio", chilometraggio.toString());
+    formData.append("annoProduzione", annoProduzione.toString());
+    formData.append("potenzaCv", potenzaCv.toString());
+    formData.append("alimentazione", alimentazione);
+    formData.append("prezzo", prezzo.toString());
+    formData.append("immagine", fileSelezionato);
+
+    return this.http.post<MessageResponse>(this.backEndUrl + 'aggiungiVeicolo', formData, {headers: token});
   }
 
   getVeicoliDisponibili() {

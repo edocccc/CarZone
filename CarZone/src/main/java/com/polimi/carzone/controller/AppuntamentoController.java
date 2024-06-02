@@ -10,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -20,7 +21,7 @@ public class AppuntamentoController {
     private final AppuntamentoService appuntamentoService;
 
     @PostMapping("/prenota")
-    public ResponseEntity<PrenotazioneResponseDTO> prenota(@RequestBody PrenotazioneRequestDTO request, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<PrenotazioneResponseDTO> prenota(@RequestBody PrenotazioneRequestDTO request, @RequestHeader("Authorization") String token) throws IOException {
         appuntamentoService.prenota(request, token);
         PrenotazioneResponseDTO response = new PrenotazioneResponseDTO("Prenotazione effettuata con successo!");
         return ResponseEntity.status(HttpStatus.OK).body(response);

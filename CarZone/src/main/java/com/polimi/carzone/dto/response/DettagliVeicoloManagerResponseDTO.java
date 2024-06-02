@@ -19,4 +19,5 @@ public class DettagliVeicoloManagerResponseDTO {
     private Alimentazione alimentazione;
     private double prezzo;
     private String stato;
+    private byte[] immagine;
 }

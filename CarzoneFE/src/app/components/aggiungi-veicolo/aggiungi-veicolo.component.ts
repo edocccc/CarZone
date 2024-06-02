@@ -17,6 +17,7 @@ export class AggiungiVeicoloComponent {
   potenzaCv: number = 0;
   alimentazione: string = '';
   prezzo: number = 0;
+  fileSelezionato = null;
 
   constructor(private veicoloService: VeicoloService, private router:Router) { }
 
@@ -29,7 +30,9 @@ export class AggiungiVeicoloComponent {
       this.annoProduzione,
       this.potenzaCv,
       this.alimentazione,
-      this.prezzo).subscribe({
+      this.prezzo,
+      this.fileSelezionato
+    ).subscribe({
       next: () => {
         console.log('Veicolo aggiunto con successo');
       },
@@ -38,6 +41,10 @@ export class AggiungiVeicoloComponent {
       }
     });
 
+  }
+
+  onFileSelected(event: any) {
+    this.fileSelezionato = event.target.files[0];
   }
 
   redirectHomepageManager() {
