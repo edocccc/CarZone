@@ -36,7 +36,7 @@ public class VeicoloServiceImpl implements VeicoloService {
 
     private final VeicoloRepository veicoloRepo;
     private final AppuntamentoRepository appuntamentoRepo;
-    private static final String FOLDER_PATH = "C:/Users/Edoardo/Desktop/unigenerale/IngegneriaDS/progettofinale/Progetto/CarZone/src/main/resources/immagini/";
+    private static final String FOLDER_PATH = "C:/Users/casca/Desktop/unigenerale/IngegneriaDS/progettofinale/Progetto/CarZone/src/main/resources/immagini/";
 
 
     @Override

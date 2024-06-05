@@ -32,6 +32,7 @@ export class AggiungiDipendenteComponent {
       .subscribe({
         next: (response) => {
           console.log(response);
+          this.redirectGestioneUtenti();
         },
         error: (error) => {
           console.log(error.error.message);

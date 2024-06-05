@@ -91,7 +91,7 @@ public class UtenteServiceImpl implements UtenteService {
         utente.setCognome(request.getCognome());
         utente.setDataNascita(request.getDataNascita());
         utente.setUsername(request.getUsername());
-        utente.setPassword(request.getPassword());
+        utente.setPassword(passwordEncoder.encode(request.getPassword()));
         utente.setRuolo(Ruolo.DIPENDENTE);
         utenteRepo.save(utente);
     }
