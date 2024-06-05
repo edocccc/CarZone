@@ -2,11 +2,8 @@ package com.polimi.carzone.model;
 
 import com.polimi.carzone.state.State;
 import com.polimi.carzone.state.implementation.Disponibile;
-import com.polimi.carzone.state.implementation.Venduto;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -35,10 +32,10 @@ public class Veicolo {
     @Column(unique = true,nullable = false)
     private String targa;
 
-    @Column(unique = true,nullable = false)
+    @Column(nullable = false)
     private String marca;
 
-    @Column(unique = true,nullable = false)
+    @Column(nullable = false)
     private String modello;
 
     @Column(nullable = false)

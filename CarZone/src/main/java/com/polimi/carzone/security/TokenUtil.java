@@ -64,13 +64,4 @@ public class TokenUtil {
         return utenteService.findByUsername(username);
     }
 
-    public String getEmail(String token){
-        return estraiClaims(token).get("email", String.class);
-    }
-
-    public Ruolo getRuolo(String token){
-        return estraiClaims(token).get("ruolo", Ruolo.class);
-    }
-
-
 }
