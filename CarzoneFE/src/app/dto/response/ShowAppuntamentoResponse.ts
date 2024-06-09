@@ -1,4 +1,5 @@
 export interface ShowAppuntamentoResponse {
+  //definizione dello standard tramite la dichiarazione delle variabili
   id: number;
   dataOra: Date;
   nomeCliente: string;

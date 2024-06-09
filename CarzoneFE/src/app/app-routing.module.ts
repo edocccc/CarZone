@@ -7,7 +7,6 @@ import {DettagliVeicoloComponent} from "./components/dettagli-veicolo/dettagli-v
 import {HomepageManagerComponent} from "./components/homepage-manager/homepage-manager.component";
 import {HomepageDipendenteComponent} from "./components/homepage-dipendente/homepage-dipendente.component";
 import {PrenotazioneVeicoloComponent} from "./components/prenotazione-veicolo/prenotazione-veicolo.component";
-import {AutenticazioneGuard} from "./guards/autenticazione.guard";
 import {RicercaComponent} from "./components/ricerca/ricerca.component";
 import {RegistraVenditaComponent} from "./components/registra-vendita/registra-vendita.component";
 import {
@@ -27,14 +26,14 @@ import {MieiAppuntamentiComponent} from "./components/miei-appuntamenti/miei-app
 import {LasciaRecensioneComponent} from "./components/lascia-recensione/lascia-recensione.component";
 
 const routes: Routes = [
-  { path: '', redirectTo: '/homeCliente', pathMatch: 'full' },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegistrazioneComponent },
   { path: 'homeCliente', component: HomepageClienteComponent },
   { path: 'homeManager/:id', component: HomepageManagerComponent },
   { path: 'homeDipendente/:id', component: HomepageDipendenteComponent },
   { path: 'dettagli/:id', component: DettagliVeicoloComponent },
-  { path: 'prenota/:id', component: PrenotazioneVeicoloComponent , canActivate: [AutenticazioneGuard]},
+  { path: 'prenota/:id', component: PrenotazioneVeicoloComponent },
   { path: 'cerca', component: RicercaComponent },
   { path: 'registraVendita/:id', component: RegistraVenditaComponent },
   { path: 'gestioneVeicoli', component: GestioneVeicoliManagerComponent },

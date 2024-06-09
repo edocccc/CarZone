@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { RegisterRequest } from 'src/app/dto/request/RegisterRequest';
 import { UtenteService } from 'src/app/services/utente.service';
-import { ToastrService } from 'ngx-toastr';
 import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
@@ -9,7 +7,9 @@ import {HttpErrorResponse} from "@angular/common/http";
   templateUrl: './registrazione.component.html',
   styleUrls: ['./registrazione.component.css'],
 })
+//classe che permette di registrare un utente
 export class RegistrazioneComponent {
+  //dichiarazione delle variabili email, nome, cognome, data di nascita, username, password e password ripetuta
   protected email: string = '';
   protected nome: string = '';
   protected cognome: string = '';
@@ -18,8 +18,11 @@ export class RegistrazioneComponent {
   protected password: string = '';
   protected passwordRipetuta: string = '';
 
+  //costruttore che inizializza il service necessario
   constructor(private utenteService: UtenteService) {}
 
+  //metodo che permette di registrare un utente
+  //richiama il metodo registra del servizio utenteService passandogli i dati dell'utente da registrare
   registra(): void {
     this.utenteService
       .registra(
@@ -33,9 +36,11 @@ export class RegistrazioneComponent {
       )
       .subscribe({
         next: (response) => {
+          //se la registrazione va a buon fine, stampa la risposta in console
           console.log(response);
         },
         error: (error: HttpErrorResponse) => {
+          //se si verifica un errore, lo stampa in console
           console.log(error.error.message);
         },
       });

@@ -1,4 +1,5 @@
 export interface RicercaRequest {
+  //definizione dello standard tramite la dichiarazione delle variabili
   criterio: string;
   targa: string;
   marca: string;

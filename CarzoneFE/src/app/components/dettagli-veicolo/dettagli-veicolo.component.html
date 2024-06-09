@@ -11,7 +11,7 @@
 <p>Prezzo: {{veicolo?.prezzo}}</p>
 <br><br>
 <p>Funzionalità</p>
-<ng-container *ngIf="veicolo?.stato == 'DISPONIBILE'">
+<ng-container *ngIf="veicolo?.stato == 'DISPONIBILE' && accessoEffettuato">
   <button (click)="redirectPrenotazioneVeicolo()">
     Prenota un appuntamento
   </button>

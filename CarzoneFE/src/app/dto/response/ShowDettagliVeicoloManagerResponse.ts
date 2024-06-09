@@ -1,4 +1,5 @@
 export interface ShowDettagliVeicoloManagerResponse {
+  //definizione dello standard tramite la dichiarazione delle variabili
   id: number;
   targa: string;
   marca: string;

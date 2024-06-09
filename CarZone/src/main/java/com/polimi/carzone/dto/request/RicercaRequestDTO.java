@@ -2,8 +2,10 @@ package com.polimi.carzone.dto.request;
 
 import lombok.Data;
 
+//annotazione di Lombok per generare i metodi getter e setter
 @Data
 public class RicercaRequestDTO {
+    // definizione dello standard dato dal dto in base agli attributi
     private String criterio;
     private String targa;
     private String marca;

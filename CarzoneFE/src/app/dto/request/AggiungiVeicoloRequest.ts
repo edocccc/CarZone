@@ -1,4 +1,5 @@
 export interface AggiungiVeicoloRequest {
+    //definizione dello standard tramite la dichiarazione delle variabili
     targa: string;
     marca: string;
     modello: string;

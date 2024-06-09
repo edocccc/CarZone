@@ -163,7 +163,10 @@ public class UtenteServiceImplTest {
 
     @Test
     void registrazioneDipendenteSuccessful() {
+        PasswordEncoder passwordEncoderMock = mock(PasswordEncoder.class);
+        when(passwordEncoderMock.encode(any())).thenReturn("passwordEncoded");
         when(utenteRepo.save(any())).thenReturn(new Utente());
+        ReflectionTestUtils.setField(utenteService, "passwordEncoder", passwordEncoderMock);
         SignupRequestDTO request = new SignupRequestDTO();
         request.setUsername("username");
         request.setPassword("password");

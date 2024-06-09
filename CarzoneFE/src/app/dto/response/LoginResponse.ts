@@ -1,4 +1,5 @@
 export interface LoginResponse {
+  //definizione dello standard tramite la dichiarazione delle variabili
   id: number;
   email: string;
   nome: string;

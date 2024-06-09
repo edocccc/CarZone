@@ -9,10 +9,13 @@ import {Router} from "@angular/router";
   templateUrl: './ricerca.component.html',
   styleUrls: ['./ricerca.component.css']
 })
+//classe che permette di ricercare un veicolo
 export class RicercaComponent {
+  //dichiarazione della lista di veicoli da visualizzare e della variabile ricercaEffettuata
   veicoli: ShowVeicoloResponse[] = [];
   ricercaEffettuata: boolean = false;
 
+  //dichiarazione delle variabili per la ricerca
   criterio: string = "";
   targa: string = "";
   marca: string = "";
@@ -27,8 +30,11 @@ export class RicercaComponent {
   chilometraggioMinimo: number = 0;
   chilometraggioMassimo: number = 0;
 
+  //costruttore che inizializza il service necessario e il router per la navigazione
   constructor(private veicoloService: VeicoloService, private router: Router) { }
 
+  //metodo che permette di ricercare un veicolo
+  //richiama il metodo ricerca del servizio veicoloService passandogli i dati della ricerca
   ricerca() {
     this.veicoloService.ricerca(
       this.criterio,
@@ -46,17 +52,21 @@ export class RicercaComponent {
       this.chilometraggioMassimo
     ).subscribe({
       next: (response) => {
+        //se la ricerca va a buon fine, salva i veicoli nella variabile veicoli e la variabile ricercaEffettuata a true
         this.veicoli = response;
         this.ricercaEffettuata = true;
+        //stampa i veicoli in console
         console.log(response);
       },
       error: (error: HttpErrorResponse) => {
+        //se si verifica un errore, lo stampa in console e imposta la variabile veicoli ad array vuoto
         console.log(error.error.message);
         this.veicoli = [];
       },
     });
-    }
+  }
 
+  //metodo che permette di reindirizzare alla homepage del cliente
   redirectHomepageCliente() {
     this.router.navigate(['homeCliente/']);
   }

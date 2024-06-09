@@ -6,10 +6,14 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+//annotazione di lombok per generare automaticamente i getter
 @Getter
+//annotazione di lombok per generare automaticamente un costruttore con tutti i parametri
 @AllArgsConstructor
+//annotazione di lombok per generare automaticamente un costruttore senza parametri
 @NoArgsConstructor
 public class PrenotazioneManagerRequestDTO {
+    // definizione dello standard dato dal dto in base agli attributi
     private LocalDateTime dataOra;
     private Long idVeicolo;
     private Long idCliente;

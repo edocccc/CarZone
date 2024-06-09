@@ -7,10 +7,14 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 
+//annotazione di lombok per generare i metodi getter e setter
 @Data
+//annotazione di lombok per generare un costruttore per tutti i campi
 @RequiredArgsConstructor
+//annotazione di lombok per generare un costruttore con tutti i campi
 @AllArgsConstructor
 public class UtenteManagerResponseDTO {
+    // definizione dello standard dato dal dto in base agli attributi
     private long id;
     private String email;
     private String nome;
