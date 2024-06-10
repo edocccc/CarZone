@@ -52,4 +52,7 @@ export class LoginComponent {
       });
   }
 
+  redirectRegistrazione() {
+    this.router.navigate(['/register']);
+  }
 }

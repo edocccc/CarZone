@@ -26,7 +26,7 @@ import {MieiAppuntamentiComponent} from "./components/miei-appuntamenti/miei-app
 import {LasciaRecensioneComponent} from "./components/lascia-recensione/lascia-recensione.component";
 
 const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '', redirectTo: '/homeCliente', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegistrazioneComponent },
   { path: 'homeCliente', component: HomepageClienteComponent },
