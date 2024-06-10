@@ -40,7 +40,7 @@ export class VeicoloService {
     return this.http.get<ShowDettagliVeicoloManagerResponse>(this.backEndUrl + 'dettagli/' + id);
   }
 
-  //metodo che si occupa di cercare un veicolo tramite i parametri passati come parametro
+  //metodo che si occupa di cercare i veicoli tramite i parametri passati
   ricerca(
     criterio: string,
     targa: string,
@@ -78,7 +78,7 @@ export class VeicoloService {
     return this.http.post<ShowVeicoloResponse[]>(this.backEndUrl + 'cerca', request, {headers: token});
   }
 
-  //metodo che si occupa di registrare una vendita tramite i parametri passati come parametro
+  //metodo che si occupa di registrare una vendita tramite i parametri passati
   registraVendita(idAppuntamento: number, venditaConclusa: boolean): Observable<MessageResponse>{
     //recupero del token per l'autenticazione
     const token: HttpHeaders = this.recuperaToken();

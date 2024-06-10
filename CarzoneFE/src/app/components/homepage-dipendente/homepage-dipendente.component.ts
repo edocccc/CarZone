@@ -29,7 +29,7 @@ export class HomepageDipendenteComponent implements OnInit{
   //dichiarazione della variabile accessoEffettuato per verificare se l'utente è loggato
   accessoEffettuato: boolean = !!localStorage.getItem('token');
 
-  //costruttore che inizializza i service necessario e il router per la navigazione
+  //costruttore che inizializza i service necessari e il router per la navigazione
   constructor(private veicoloService: VeicoloService, private utenteService: UtenteService, private appuntamentoService: AppuntamentoService, private router: Router) { }
 
   //metodo che specifica cosa fare all'inizializzazione della classe

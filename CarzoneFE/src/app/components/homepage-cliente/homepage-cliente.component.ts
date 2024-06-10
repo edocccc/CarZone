@@ -19,7 +19,7 @@ export class HomepageClienteComponent implements OnInit{
   //dichiarazione della variabile targaVeicolo per la ricerca di un veicolo
   statoVeicolo: string = '';
 
-  //costruttore che inizializza il service necessario e il router per la navigazione
+  //costruttore che inizializza i service necessari e il router per la navigazione
   constructor(private veicoloService: VeicoloService, private utenteService: UtenteService, private router: Router) { }
 
   //metodo che specifica cosa fare all'inizializzazione della classe

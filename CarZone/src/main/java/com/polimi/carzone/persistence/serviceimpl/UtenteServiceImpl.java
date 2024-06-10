@@ -53,7 +53,7 @@ public class UtenteServiceImpl implements UtenteService {
     //metodo che a partire da una richiesta, permette il login di un utente
     @Override
     public Utente login(LoginRequestDTO request) {
-        //dichiara una mappa per gli errori
+        //dichiarazione di una mappa per gli errori
         Map<String,String> errori = new TreeMap<>();
 
         //controlli sui campi della request

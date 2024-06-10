@@ -41,7 +41,7 @@ export class AggiungiAppuntamentoComponent implements OnInit{
   prenota() {
     this.appuntamentoService.prenotaAppuntamento(this.dataOra, this.idVeicolo, this.idCliente, this.idDipendente).subscribe({
       next: (response:MessageResponse) => {
-        //se la prenotazione va a buon fine, reindirizza alla pagina di gestione appuntamenti
+        //se la prenotazione va a buon fine, reindirizza alla pagina di gestione appuntamenti e
         console.log(response);
         this.router.navigate(['gestioneAppuntamenti' ]);
       },
