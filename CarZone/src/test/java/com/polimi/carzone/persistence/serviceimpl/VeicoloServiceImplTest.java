@@ -208,7 +208,7 @@ public class VeicoloServiceImplTest {
     void findAllSuccessful() {
         List<Veicolo> veicoli = new ArrayList<>();
         Veicolo veicolo = new Veicolo();
-        veicolo.setFilePath("C:/Users/casca/Desktop/unigenerale/IngegneriaDS/progettofinale/Progetto/CarZone/src/main/resources/immagini/risultatotol.jpg");
+        veicolo.setFilePath("C:/Users/casca/Desktop/unigenerale/IngegneriaDS/progettofinale/Progetto/CarZone/src/main/resources/immagini/panda.jpg");
         veicoli.add(veicolo);
         when(veicoloRepo.findAll()).thenReturn(veicoli);
         assertAll(() -> veicoloService.findAll());
